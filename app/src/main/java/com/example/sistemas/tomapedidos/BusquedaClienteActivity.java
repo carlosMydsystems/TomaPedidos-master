@@ -22,12 +22,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
-import com.example.sistemas.tomapedidos.Entidades.FormaPago;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class BusquedaClienteActivity extends AppCompatActivity {
@@ -38,13 +36,11 @@ public class BusquedaClienteActivity extends AppCompatActivity {
     ArrayList<Clientes> listaClientes;
     Clientes cliente;
     ListView lvclientes;
-    ArrayList<String> listaCliente,listaFormaPago;
+    ArrayList<String> listaCliente;
     EditText etcliente;
     String url, tipoConsulta = "Nombre";
     ProgressDialog progressDialog;
     Usuario usuario;
-    FormaPago formapago;
-    ArrayList<FormaPago> listaFormasPago;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +56,6 @@ public class BusquedaClienteActivity extends AppCompatActivity {
         lvclientes = findViewById(R.id.lvCliente);
         etcliente = findViewById(R.id.etCliente);
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");  //Se pasa el parametro del usuario
-        // buscarFormaPago();
-
 
         btnbuscar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,15 +161,6 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                                         CustomListAdapter(BusquedaClienteActivity.this , R.layout.custom_list , listaCliente);
                                 lvclientes.setAdapter(listAdapter);
 
-
-                                /*
-                                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
-                                        , R.layout.support_simple_spinner_dropdown_item,listaCliente);
-                                lvclientes.setAdapter(adapter);
-
-                                */
-
-
                             }else {
                                 listaCliente.clear();
                                 final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
@@ -184,60 +169,6 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                                 lvclientes.setAdapter(adapter);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
                                 builder.setMessage("No se llego a encontrar el registro")
-                                        .setNegativeButton("Aceptar",null)
-                                        .create()
-                                        .show();
-                            }
-                        } catch (JSONException e) { e.printStackTrace(); }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
-    }
-
-    private void buscarFormaPago() {
-
-        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_FPAGOS";
-
-        listaCliente = new ArrayList<>();
-        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            progressDialog.dismiss();
-
-                            JSONObject jsonObject=new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
-                            if (success){
-                                for(int i=0;i<jsonArray.length();i++) {
-                                    formapago = new FormaPago();
-                                    jsonObject = jsonArray.getJSONObject(i);
-                                    formapago.setCodFormaPago(jsonObject.getString("COD_FPAGO"));
-                                    formapago.setDescripcionFormaPago(jsonObject.getString("DESCRIPCION"));
-                                    listaFormasPago.add(formapago);
-                                    listaFormaPago.add(formapago.getCodFormaPago()+ '\n' + formapago.getDescripcionFormaPago());
-                                }
-
-                            }else {
-                                listaCliente.clear();
-                                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
-                                        , R.layout.support_simple_spinner_dropdown_item,listaCliente);
-
-                                AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
-                                builder.setMessage("No se llego a encontrar la lista de forma de pago")
                                         .setNegativeButton("Aceptar",null)
                                         .create()
                                         .show();
