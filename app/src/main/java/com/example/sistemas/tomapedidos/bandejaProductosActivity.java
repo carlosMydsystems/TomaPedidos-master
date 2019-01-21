@@ -41,7 +41,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
     ListView lvbandejaproductos;
     ArrayList<String> listabandejaproductos,listabandejaproductoselegidos;
     Clientes cliente;
-    String cantidad ,Precio, url, almacen, tipoformapago, fechaRegistro, documento = "Boleta";
+    String cantidad ,Precio, url, almacen, tipoformapago, fechaRegistro, documento = "Boleta";  // se define el documento en el caso que se use en la trama
     View mview;
     Integer cantidadProductos=0;
     ArrayList<Productos> listaproductoselegidos;
@@ -49,8 +49,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
     ProgressDialog progressDialog ;
     Productos producto;
     Double preciolista, precio = 0.0;
-
-    public static Boolean validador;
+    Boolean validador  = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +73,15 @@ public class bandejaProductosActivity extends AppCompatActivity {
         final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
 
         Calendar fecha = Calendar.getInstance();
-        Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
-        Integer mes = fecha.get(Calendar.MONTH) + 1;
+        final Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
+        final Integer mes = fecha.get(Calendar.MONTH) + 1;
         Integer year = fecha.get(Calendar.YEAR);
+        final Integer hora =  fecha.get(Calendar.HOUR_OF_DAY);
+        final Integer minuto = fecha.get(Calendar.MINUTE);
+        final Integer segundo = fecha.get(Calendar.SECOND);
 
-        fechaRegistro = year.toString() + "/" + formatonumerico(mes) +"/"+ formatonumerico(dia);
+        fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
+                "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
 
         // valores para el sumarizado de la bandeja
 
@@ -126,21 +129,34 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // Boton terminar
+
         btnterminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                String id = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
 
-                String Trama =  almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() +
+                /*
+
+                String Trama =  id+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() +
                         "|"+tipoformapago+"|"+fechaRegistro+"|"+fechaRegistro +"|"+formateador.format(precio)+
-                        "|(Bol)|"+documento+listaconcatenada(listaproductoselegidos);
+                        "||";
+                */
+
+                String Trama = almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() +
+                        "|"+tipoformapago+"|"+fechaRegistro+"|"+fechaRegistro +"|"+formateador.format(precio)+
+                        "||"+documento+"|"+listaconcatenada(listaproductoselegidos);
 
 
                 Toast.makeText(bandejaProductosActivity.this, Trama, Toast.LENGTH_LONG).show();
 
-
-
-
+                /*
+                ActualizarProducto(Trama);
+                insertaCampos(listaproductoselegidos,id);
+*/
+                //Toast.makeText(bandejaProductosActivity.this,Trama , Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder builder =  new AlertDialog.Builder(bandejaProductosActivity.this);
                     builder.setMessage("Está seguro que desea grabar el pedido")
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -170,7 +186,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                             finish();
                         }
                     });
-                    builder.create().show();
+                    //builder.create().show();
             }
         });
 
@@ -297,24 +313,26 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+trama+"'";
+        http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
+
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+        Toast.makeText(this, trama, Toast.LENGTH_LONG).show();
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        progressDialog.dismiss();
+                        Toast.makeText(bandejaProductosActivity.this, response, Toast.LENGTH_LONG).show();
                         try {
                             JSONObject jsonObject=new JSONObject(response);
                             boolean success = jsonObject.getBoolean("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("producto");
+                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
                             if (success){
                                 validador = true;
                             }else {
                                 validador = false;
                                 AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
-                                builder.setMessage("No se pudo registrar el articulo " + producto.getCodigo())
+                                builder.setMessage("No se pudo registrar el articulo " )
                                         .setNegativeButton("Aceptar",null)
                                         .create()
                                         .show();
@@ -368,6 +386,22 @@ public class bandejaProductosActivity extends AppCompatActivity {
         return  numeroString;
     }
 
+    private void insertaCampos(ArrayList<Productos> listaproductoselegidos , String id){
+
+        for (int i =0; i<listaproductoselegidos.size();i++){
+
+            String indice = String.valueOf(i+1);
+
+            String campoenviado = id+"|D|"+indice+"|"+listaproductoselegidos.get(i).getCantidad()+"|"+
+                    listaproductoselegidos.get(i).getCodigo()+"|"+ listaproductoselegidos.get(i).
+                    getPrecio()+"|"+ listaproductoselegidos.get(i).getPrecioAcumulado().trim()+"|";
+
+            ActualizarProducto(campoenviado);
+            //Toast.makeText(this, campoenviado, Toast.LENGTH_LONG).show();
+        }
+
+    }
+
     private String listaconcatenada(ArrayList<Productos> listaproductoselegidos){
         String Concatenado="";
 
@@ -379,4 +413,5 @@ public class bandejaProductosActivity extends AppCompatActivity {
         }
     return Concatenado;
     }
+
 }

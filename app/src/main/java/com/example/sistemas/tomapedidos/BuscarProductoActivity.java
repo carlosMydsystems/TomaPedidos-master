@@ -206,8 +206,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
              etproducto.setText("");
          }
      });
-
-
     }
 
     private void buscarproducto(String numero, String tipoConsulta) {
