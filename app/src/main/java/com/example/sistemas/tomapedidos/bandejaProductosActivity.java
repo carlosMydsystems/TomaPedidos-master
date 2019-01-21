@@ -50,6 +50,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
     Productos producto;
     Double preciolista, precio = 0.0;
     Boolean validador  = true;
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,26 +137,29 @@ public class bandejaProductosActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String id = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
+                validador = true;
+                id = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
 
-                /*
+
 
                 String Trama =  id+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() +
                         "|"+tipoformapago+"|"+fechaRegistro+"|"+fechaRegistro +"|"+formateador.format(precio)+
                         "||";
-                */
 
+
+                /*
                 String Trama = almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() +
                         "|"+tipoformapago+"|"+fechaRegistro+"|"+fechaRegistro +"|"+formateador.format(precio)+
                         "||"+documento+"|"+listaconcatenada(listaproductoselegidos);
 
-
-                Toast.makeText(bandejaProductosActivity.this, Trama, Toast.LENGTH_LONG).show();
-
-                /*
-                ActualizarProducto(Trama);
-                insertaCampos(listaproductoselegidos,id);
 */
+                //Toast.makeText(bandejaProductosActivity.this, Trama, Toast.LENGTH_LONG).show();
+
+
+                ActualizarProducto(Trama);
+
+
+
                 //Toast.makeText(bandejaProductosActivity.this,Trama , Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder builder =  new AlertDialog.Builder(bandejaProductosActivity.this);
                     builder.setMessage("Está seguro que desea grabar el pedido")
@@ -323,21 +327,14 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         Toast.makeText(bandejaProductosActivity.this, response, Toast.LENGTH_LONG).show();
-                        try {
-                            JSONObject jsonObject=new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
-                            if (success){
-                                validador = true;
-                            }else {
-                                validador = false;
-                                AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
-                                builder.setMessage("No se pudo registrar el articulo " )
-                                        .setNegativeButton("Aceptar",null)
-                                        .create()
-                                        .show();
-                            }
-                        } catch (JSONException e) { e.printStackTrace(); }
+                       
+                        if (response.equals("OK")){
+
+                            insertaCampos(listaproductoselegidos,id);
+
+
+
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -388,17 +385,24 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
     private void insertaCampos(ArrayList<Productos> listaproductoselegidos , String id){
 
-        for (int i =0; i<listaproductoselegidos.size();i++){
+        if (validador){
 
-            String indice = String.valueOf(i+1);
+            for (int i =0; i<listaproductoselegidos.size();i++){
 
-            String campoenviado = id+"|D|"+indice+"|"+listaproductoselegidos.get(i).getCantidad()+"|"+
-                    listaproductoselegidos.get(i).getCodigo()+"|"+ listaproductoselegidos.get(i).
-                    getPrecio()+"|"+ listaproductoselegidos.get(i).getPrecioAcumulado().trim()+"|";
+                String indice = String.valueOf(i+1);
 
-            ActualizarProducto(campoenviado);
-            //Toast.makeText(this, campoenviado, Toast.LENGTH_LONG).show();
+                String campoenviado = id+"|D|"+indice+"|"+listaproductoselegidos.get(i).getCantidad()+"|"+
+                        listaproductoselegidos.get(i).getCodigo()+"|"+ listaproductoselegidos.get(i).
+                        getPrecio()+"|"+ listaproductoselegidos.get(i).getPrecioAcumulado().trim()+"|";
+
+                ActualizarProducto(campoenviado);
+                //Toast.makeText(this, campoenviado, Toast.LENGTH_LONG).show();
+            }
+
+            validador = false;
+
         }
+
 
     }
 
