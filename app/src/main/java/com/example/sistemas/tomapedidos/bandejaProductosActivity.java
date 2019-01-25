@@ -25,9 +25,6 @@ import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -37,7 +34,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
     TextView tvtitulodinamico;
     Productos productos;
-    Button btnbuscarproducto, btnterminar;
+    Button btnbuscarproducto, btnterminar,btnregresarbandeja,btnvalidarpormociones;
     ListView lvbandejaproductos;
     ArrayList<String> listabandejaproductos,listabandejaproductoselegidos;
     Clientes cliente;
@@ -64,7 +61,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
-
         listabandejaproductos = new ArrayList<>();
         cantidadProductos = listabandejaproductos.size();
         listabandejaproductoselegidos = new ArrayList<>();
@@ -94,16 +90,19 @@ public class bandejaProductosActivity extends AppCompatActivity {
             Aux = Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",",""));
             preciolista = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
             listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo()+ " - " +
-                    listaproductoselegidos.get(i).getDescripcion()+"\nCant: "+listaproductoselegidos.
-                    get(i).getCantidad()+ "                                             Unidad: "+
-                    listaproductoselegidos.get(i).getUnidad() + "\nPrecio: S/ "+formateador.format((double)preciolista) +
-                    "                  Subtotal: S/ "+formateador.format((double)Aux));
+            listaproductoselegidos.get(i).getDescripcion()+"\nCant: "+listaproductoselegidos.
+            get(i).getCantidad()+ "                                             Unidad: "+
+            listaproductoselegidos.get(i).getUnidad() + "\nPrecio: S/ "+formateador.format((double)preciolista) +
+            "                  Subtotal: S/ "+formateador.format((double)Aux));
+
         }
         cantidad = String.valueOf(listaproductoselegidos.size());
         Precio = String.valueOf(precio);
         btnbuscarproducto =  findViewById(R.id.btnproducto);
         btnterminar = findViewById(R.id.btnterminar);
         tvtitulodinamico  = findViewById(R.id.tvtitulodinamico);
+        btnregresarbandeja = findViewById(R.id.btnRegresarBandejaPedidos);
+        btnvalidarpormociones = findViewById(R.id.btnValidarPromociones);
         String cadenaTituloAux = "Productos : "+ cantidad+"   |  Monto : S/ "+formateador.format(precio)+"";
         tvtitulodinamico.setText(cadenaTituloAux);
         mview = getLayoutInflater().inflate(R.layout.listview_dialog,null);
@@ -137,6 +136,11 @@ public class bandejaProductosActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                btnterminar.setVisibility(View.GONE);
+                btnvalidarpormociones.setVisibility(View.VISIBLE);
+                btnbuscarproducto.setVisibility(View.GONE);
+                btnregresarbandeja.setVisibility(View.VISIBLE);
+
                 validador = true;
                 id = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
 
@@ -146,21 +150,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         "|"+tipoformapago+"|"+fechaRegistro+"|"+fechaRegistro +"|"+formateador.format(precio)+
                         "||";
 
+                //ActualizarProducto(Trama);
 
-                /*
-                String Trama = almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() +
-                        "|"+tipoformapago+"|"+fechaRegistro+"|"+fechaRegistro +"|"+formateador.format(precio)+
-                        "||"+documento+"|"+listaconcatenada(listaproductoselegidos);
-
-*/
-                //Toast.makeText(bandejaProductosActivity.this, Trama, Toast.LENGTH_LONG).show();
-
-
-                ActualizarProducto(Trama);
-
-
-
-                //Toast.makeText(bandejaProductosActivity.this,Trama , Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder builder =  new AlertDialog.Builder(bandejaProductosActivity.this);
                     builder.setMessage("Está seguro que desea grabar el pedido")
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -175,11 +166,11 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            /*
-                            progressDialog = new ProgressDialog(bandejaProductosActivity.this);
-                            progressDialog.setMessage("..actualizando");
-                            progressDialog.show();
-*/
+
+                            //progressDialog = new ProgressDialog(bandejaProductosActivity.this);
+                            //progressDialog.setMessage("..actualizando");
+                            //progressDialog.show();
+
                             //ActualizarProducto(Trama);
 
                             Intent intent = new Intent(bandejaProductosActivity.this,MainActivity.class);
@@ -191,6 +182,25 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         }
                     });
                     //builder.create().show();
+            }
+        });
+
+        btnregresarbandeja.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnbuscarproducto.setVisibility(View.VISIBLE);
+                btnterminar.setVisibility(View.VISIBLE);
+                btnvalidarpormociones.setVisibility(View.GONE);
+                btnregresarbandeja.setVisibility(View.GONE);
+            }
+        });
+
+        btnvalidarpormociones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(bandejaProductosActivity.this,PromocionesActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -317,7 +327,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
+       // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
         Toast.makeText(this, trama, Toast.LENGTH_LONG).show();
@@ -402,8 +412,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
             validador = false;
 
         }
-
-
     }
 
     private String listaconcatenada(ArrayList<Productos> listaproductoselegidos){
@@ -411,11 +419,10 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
         for (int i =0; i<listaproductoselegidos.size();i++){
 
-            Concatenado = Concatenado +"*"+listaproductoselegidos.get(i).getCantidad()+"|"+
+            Concatenado = Concatenado + "*"+listaproductoselegidos.get(i).getCantidad()+"|"+
                     listaproductoselegidos.get(i).getCodigo()+"|"+ listaproductoselegidos.get(i).
                     getPrecio()+"|"+ listaproductoselegidos.get(i).getPrecioAcumulado()+"|";
         }
     return Concatenado;
     }
-
 }
