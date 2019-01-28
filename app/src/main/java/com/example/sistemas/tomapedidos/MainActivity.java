@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 
@@ -40,7 +39,6 @@ public class MainActivity extends AppCompatActivity
         String cadenaAux = usuario.getCodVendedor()+ " - "+ usuario.getNombre()+" "+ usuario.getNombre();
         tvusuario.setText(cadenaAux);
         // mostrar el codigo del vendedor
-        Toast.makeText(this, usuario.getCodVendedor(), Toast.LENGTH_SHORT).show();
         btnprimero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -7,9 +7,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.sistemas.tomapedidos.Entidades.Promociones;
+
 import java.util.ArrayList;
 
 public class ListAdapter extends BaseAdapter {
+
+    String indice;
 
     public ArrayList<Product> listProducts;
     private Context context;
@@ -38,7 +44,9 @@ public class ListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView
             , ViewGroup parent)
     {
-        View row;
+
+        ArrayList<Promociones> listaPromocionesElegidas;
+         View row;
         final ListViewHolder listViewHolder;
         if(convertView == null)
         {
@@ -50,7 +58,8 @@ public class ListAdapter extends BaseAdapter {
             listViewHolder.btnPlus = row.findViewById(R.id.ib_addnew);
             listViewHolder.edTextQuantity = row.findViewById(R.id.editTextQuantity);
             listViewHolder.btnMinus = row.findViewById(R.id.ib_remove);
-            listViewHolder.tvidpromociones = row.findViewById(R.id.tvIdPromocion);
+            listViewHolder.tvidpromociones = row.findViewById(R.id.tvIdPromocion);  // Identificador
+
             row.setTag(listViewHolder);
         }
         else
@@ -58,6 +67,7 @@ public class ListAdapter extends BaseAdapter {
             row=convertView;
             listViewHolder= (ListViewHolder) row.getTag();
         }
+
         final Product products = getItem(position);
         listViewHolder.ivProduct.setText(products.ProductImage);
         listViewHolder.tvPrice.setText(products.ProductPrice+"");
@@ -67,9 +77,14 @@ public class ListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v)
             {
+
+                indice = listViewHolder.tvidpromociones.getText().toString();
+
+                Toast.makeText(context, indice, Toast.LENGTH_SHORT).show();
+
                 updateQuantity(position,listViewHolder.edTextQuantity,1);
-                updateQuantityPrice(position,listViewHolder.tvPrice,-1);
-                listViewHolder.tvPrice.setText(listViewHolder.tvPrice.getText().toString());
+                updateQuantityPrice(position,listViewHolder.tvPrice,-1, indice);
+                //listViewHolder.tvPrice.setText(listViewHolder.tvPrice.getText().toString());
             }
         });
 
@@ -77,14 +92,28 @@ public class ListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
+                indice = listViewHolder.tvidpromociones.getText().toString();
+
                 if (listViewHolder.edTextQuantity.getText().toString().equals("0")){
                 }else {
-                    updateQuantityPrice(position,listViewHolder.tvPrice,1);
+                    updateQuantityPrice(position,listViewHolder.tvPrice,1,indice);
                 }
                 updateQuantity(position,listViewHolder.edTextQuantity,-1);
 
             }
         });
+
+
+        for (int i = 0; i<getCount();i++){
+
+            Product producto = getItem(i);
+            listaPromocionesElegidas = new ArrayList<>();
+            if (producto.CartQuantity>0){
+
+                Toast.makeText(context, "lista " + i , Toast.LENGTH_SHORT).show();
+
+            }
+        }
         return row;
     }
 
@@ -106,7 +135,7 @@ public class ListAdapter extends BaseAdapter {
         }  //  Boton Negaativo
         edTextQuantity.setText(products.CartQuantity+"");
     }
-    private void updateQuantityPrice(int position, TextView tvPrice, int value) {
+    private void updateQuantityPrice(int position, TextView tvPrice, int value, String indice) {
 
         String Value;
         Product products = getItem(position);
@@ -129,7 +158,11 @@ public class ListAdapter extends BaseAdapter {
 
         for (int i = 0; i<getCount();i++){
             Product producto = getItem(i);
-            producto.ProductPrice = Double.valueOf(products.ProductPrice+"");
+            if(producto.ProductName.equals(indice)){
+
+                Toast.makeText(context, "Ingreso Area", Toast.LENGTH_SHORT).show();
+                producto.ProductPrice = Double.valueOf(products.ProductPrice+"");
+            }
         }
     }
 
@@ -138,4 +171,5 @@ public class ListAdapter extends BaseAdapter {
 
         tvPrice.setText(products.ProductPrice+"");
     }
+
 }

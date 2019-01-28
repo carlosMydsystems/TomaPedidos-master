@@ -19,7 +19,7 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <Button
-            android:id="@+id/btnPlaceOrder"
+            android:id="@+id/btnRegistrarPromociones"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="REGISTRAR PROMOCIONES" />

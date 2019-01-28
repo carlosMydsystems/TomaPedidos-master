@@ -1,13 +1,10 @@
 package com.example.sistemas.tomapedidos;
 
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,9 +16,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Promociones;
-import com.example.sistemas.tomapedidos.Entidades.Usuario;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,29 +32,28 @@ public class PromocionesActivity extends AppCompatActivity {
     Button btnRegistrarPromociones;
     Boolean validador = true;
     String url;
-
-
     private ListView listView;
     private ListAdapter listAdapter;
     ArrayList<Product> products = new ArrayList<>();
-    Button btnPlaceOrder;
+    Button btnregistrarpromociones;
     ArrayList<Product> productOrders = new ArrayList<>();
-
+    Integer Index ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_promociones);
 
-
         listView = (ListView) findViewById(R.id.customListView);
         listAdapter = new ListAdapter(this,products);
+        Index = Integer.valueOf(getIntent().getStringExtra("Indice"));
 
-        btnPlaceOrder = (Button) findViewById(R.id.btnPlaceOrder);
-        btnPlaceOrder.setOnClickListener(new View.OnClickListener() {
+        btnregistrarpromociones = (Button) findViewById(R.id.btnRegistrarPromociones);
+        btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                placeOrder();
+                //placeOrder();
+                insertaPromocion(listaPromocionesTipoT,id);
             }
         });
 
@@ -86,19 +80,13 @@ public class PromocionesActivity extends AppCompatActivity {
         }
     }
 
-
-
     public void getProduct(ArrayList<Promociones> listaPromociones) {
 
         Double valorcantidad;
 
         for (int i = 0 ; i <listaPromociones.size() ; i++) {
-
-
             valorcantidad = Double.valueOf(listaPromociones.get(i).getEquivalencia()) * Double.valueOf(listaPromociones.get(i).getCantidadBonificada());
-
             products.add(new Product(listaPromociones.get(i).getNumeroPromocion(),valorcantidad,listaPromociones.get(i).getDescripcionPromocion()));
-
         }
     }
 
@@ -152,7 +140,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                         listaPromociones.add(promocion);
 
-                                    }else if(jsonObject.getString("OPCION_SELECCION").equals("S")){
+                                    }else if(jsonObject.getString("OPCION_SELECCION").equals("T")){
 
                                         promocion.setNumeroPromocion(jsonObject.getString("NRO_PROMOCION"));
                                         promocion.setCodArticulo(jsonObject.getString("COD_ARTICULO"));
@@ -182,6 +170,8 @@ public class PromocionesActivity extends AppCompatActivity {
                                     }
                                 }
 
+                                Toast.makeText(PromocionesActivity.this, "Paso", Toast.LENGTH_SHORT).show();
+
                                 getProduct(listaPromociones);
                                 listView.setAdapter(listAdapter);
 
@@ -210,7 +200,6 @@ public class PromocionesActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    /*
     private void insertaPromocion(ArrayList<Promociones> listapromocioneselegidas , String id){
 
         if (validador){
@@ -219,15 +208,21 @@ public class PromocionesActivity extends AppCompatActivity {
 
                 String indice = String.valueOf(i+1);
 
-                String campoenviado = id+"|D|"+indice+"|"+listapromocioneselegidas.get(i).getCantidad()+"|"+
-                        listapromocioneselegidas.get(i).getCodigo()+"|"+ listapromocioneselegidas.get(i).
-                        getPrecio()+"|"+ listapromocioneselegidas.get(i).getPrecioAcumulado().trim()+"|";
+                Double preciototal = Double.valueOf(listapromocioneselegidas.get(i).getPrecioSoles().trim())
+                       * Double.valueOf(listapromocioneselegidas.get(i).getCantidadBonificada());
+
+                Integer auxEntero = Index+i+1;
+
+                String campoenviado = id+"|D|"+auxEntero.toString()+"|"+listapromocioneselegidas.get(i).getCantidadBonificada()+"|"+
+                       listapromocioneselegidas.get(i).getCodArticulo()+"|"+ listapromocioneselegidas.get(i).
+                       getPrecioSoles()+"|"+preciototal.toString() +"|";
+
+                Toast.makeText(this, campoenviado, Toast.LENGTH_SHORT).show();
 
                 // ActualizarProducto(campoenviado);
-                //Toast.makeText(this, campoenviado, Toast.LENGTH_LONG).show();
             }
-            validador = false;
+            //validador = false;
         }
     }
-*/
+
 }

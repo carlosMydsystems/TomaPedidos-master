@@ -204,12 +204,10 @@ public class DetalleProductoActivity extends AppCompatActivity {
                      btndverificarproducto.setEnabled(false);
                      Aux = 0d;
                      tvtotal.setText("");
-
                      Toast.makeText(DetalleProductoActivity.this, "Por favor ingrese un valor valido", Toast.LENGTH_SHORT).show();
 
                  }else {
                      btndverificarproducto.setEnabled(true);
-
                  }
              }
          };

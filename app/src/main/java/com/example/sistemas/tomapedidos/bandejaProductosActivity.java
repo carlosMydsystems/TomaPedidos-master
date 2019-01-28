@@ -150,7 +150,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         "|"+tipoformapago+"|"+fechaRegistro+"|"+fechaRegistro +"|"+formateador.format(precio)+
                         "||";
 
-                //ActualizarProducto(Trama);
+                ActualizarProducto(Trama);
 
                 AlertDialog.Builder builder =  new AlertDialog.Builder(bandejaProductosActivity.this);
                     builder.setMessage("Está seguro que desea grabar el pedido")
@@ -199,6 +199,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(bandejaProductosActivity.this,PromocionesActivity.class);
+                Toast.makeText(bandejaProductosActivity.this, ""+listaproductoselegidos.size(), Toast.LENGTH_SHORT).show();
+                intent.putExtra("Indice",""+listaproductoselegidos.size());
                 startActivity(intent);
                 finish();
             }
@@ -232,9 +234,12 @@ public class bandejaProductosActivity extends AppCompatActivity {
                             case 0:
                                 //Alertsdialog("Editar el prducto");
                                 Editarproductoselecionado(position);
-                            break;
+                                // BorrarRegistroDB();
+
+                                break;
                             case 1:
                                 listaproductoselegidos.remove(position);
+                                // BorrarRegistroDB();
                                 Alertsdialog("Borrar el producto");
                             break;
                             case 2:
