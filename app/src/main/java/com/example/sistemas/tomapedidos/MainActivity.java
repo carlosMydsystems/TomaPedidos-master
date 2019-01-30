@@ -34,11 +34,14 @@ public class MainActivity extends AppCompatActivity
         btnsegundo = findViewById(R.id.btnsegundo);
         btntercero =  findViewById(R.id.btntercero);
         tvusuario = findViewById(R.id.tvUsuario);
+
         //recibe el bundle con los datos del usuario
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
         String cadenaAux = usuario.getCodVendedor()+ " - "+ usuario.getNombre()+" "+ usuario.getNombre();
         tvusuario.setText(cadenaAux);
+
         // mostrar el codigo del vendedor
+
         btnprimero.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

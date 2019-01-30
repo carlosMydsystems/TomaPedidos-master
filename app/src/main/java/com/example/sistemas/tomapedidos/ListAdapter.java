@@ -1,6 +1,7 @@
 package com.example.sistemas.tomapedidos;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 public class ListAdapter extends BaseAdapter {
 
     String indice;
+    private PromocionesActivity.OnRefreshViewListner mrefreshlistener;
 
     public ArrayList<Product> listProducts;
     private Context context;
@@ -59,15 +61,16 @@ public class ListAdapter extends BaseAdapter {
             listViewHolder.edTextQuantity = row.findViewById(R.id.editTextQuantity);
             listViewHolder.btnMinus = row.findViewById(R.id.ib_remove);
             listViewHolder.tvidpromociones = row.findViewById(R.id.tvIdPromocion);  // Identificador
-
             row.setTag(listViewHolder);
+
+
+
         }
         else
         {
             row=convertView;
             listViewHolder= (ListViewHolder) row.getTag();
         }
-
         final Product products = getItem(position);
         listViewHolder.ivProduct.setText(products.ProductImage);
         listViewHolder.tvPrice.setText(products.ProductPrice+"");
@@ -84,7 +87,7 @@ public class ListAdapter extends BaseAdapter {
 
                 updateQuantity(position,listViewHolder.edTextQuantity,1);
                 updateQuantityPrice(position,listViewHolder.tvPrice,-1, indice);
-                //listViewHolder.tvPrice.setText(listViewHolder.tvPrice.getText().toString());
+
             }
         });
 
@@ -93,6 +96,7 @@ public class ListAdapter extends BaseAdapter {
             public void onClick(View v) {
 
                 indice = listViewHolder.tvidpromociones.getText().toString();
+
 
                 if (listViewHolder.edTextQuantity.getText().toString().equals("0")){
                 }else {
@@ -158,12 +162,13 @@ public class ListAdapter extends BaseAdapter {
 
         for (int i = 0; i<getCount();i++){
             Product producto = getItem(i);
-            if(producto.ProductName.equals(indice)){
 
-                Toast.makeText(context, "Ingreso Area", Toast.LENGTH_SHORT).show();
+            if(producto.ProductName.equals(indice)){
                 producto.ProductPrice = Double.valueOf(products.ProductPrice+"");
-            }
+
+           }
         }
+
     }
 
     private void updateQuantityPriceAll(int position, TextView tvPrice, int value) {

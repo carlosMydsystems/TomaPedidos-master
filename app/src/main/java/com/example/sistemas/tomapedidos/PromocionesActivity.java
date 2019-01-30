@@ -1,5 +1,6 @@
 package com.example.sistemas.tomapedidos;
 
+import android.app.Activity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ public class PromocionesActivity extends AppCompatActivity {
     String id;
     Promociones promocion;
     ArrayList<Promociones> listaPromociones,listaPromocionesTipoT;
-    Button btnRegistrarPromociones;
     Boolean validador = true;
     String url;
     private ListView listView;
@@ -52,8 +52,10 @@ public class PromocionesActivity extends AppCompatActivity {
         btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //placeOrder();
-                insertaPromocion(listaPromocionesTipoT,id);
+
+
+                placeOrder();
+                //insertaPromocion(listaPromocionesTipoT,id);
             }
         });
 
@@ -69,11 +71,18 @@ public class PromocionesActivity extends AppCompatActivity {
         {
             if(listAdapter.listProducts.get(i).CartQuantity > 0)
             {
+
                 Product products = new Product(
                         listAdapter.listProducts.get(i).ProductName
                         ,listAdapter.listProducts.get(i).ProductPrice
                         ,listAdapter.listProducts.get(i).ProductImage
                 );
+
+                String Subtrama = listAdapter.listProducts.get(i).CartQuantity+"|"+listAdapter.listProducts.get(i).ProductName+"|"+listAdapter.listProducts.get(i).ProductPrice;
+
+                Toast.makeText(this,Subtrama, Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(this, listAdapter.listProducts.get(i).ProductImage, Toast.LENGTH_SHORT).show();
                 products.CartQuantity = listAdapter.listProducts.get(i).CartQuantity;
                 productOrders.add(products);
             }
@@ -175,6 +184,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                 getProduct(listaPromociones);
                                 listView.setAdapter(listAdapter);
 
+
                             }else{
                                 AlertDialog.Builder build1 = new AlertDialog.Builder(PromocionesActivity.this);
                                 build1.setTitle("Usuario  o Clave incorrecta")
@@ -202,6 +212,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
     private void insertaPromocion(ArrayList<Promociones> listapromocioneselegidas , String id){
 
+
         if (validador){
 
             for (int i =0; i<listapromocioneselegidas.size();i++){
@@ -222,7 +233,16 @@ public class PromocionesActivity extends AppCompatActivity {
                 // ActualizarProducto(campoenviado);
             }
             //validador = false;
+
+            listAdapter.notifyDataSetChanged();
         }
+    }
+
+
+    public interface OnRefreshViewListner{
+
+        public void refreshView();
+
     }
 
 }
