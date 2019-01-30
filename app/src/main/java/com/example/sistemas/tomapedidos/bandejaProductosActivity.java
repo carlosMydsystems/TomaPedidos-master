@@ -398,7 +398,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         return  numeroString;
     }
 
-    private void insertaCampos(ArrayList<Productos> listaproductoselegidos , String id){
+    public void insertaCampos(ArrayList<Productos> listaproductoselegidos , String id){
 
         if (validador){
 

@@ -1,7 +1,6 @@
 package com.example.sistemas.tomapedidos;
 
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,10 +60,8 @@ public class ListAdapter extends BaseAdapter {
             listViewHolder.edTextQuantity = row.findViewById(R.id.editTextQuantity);
             listViewHolder.btnMinus = row.findViewById(R.id.ib_remove);
             listViewHolder.tvidpromociones = row.findViewById(R.id.tvIdPromocion);  // Identificador
+            listViewHolder.tvCodArticulo = row.findViewById(R.id.tvCodArticulo);
             row.setTag(listViewHolder);
-
-
-
         }
         else
         {
@@ -76,15 +73,14 @@ public class ListAdapter extends BaseAdapter {
         listViewHolder.tvPrice.setText(products.ProductPrice+"");
         listViewHolder.edTextQuantity.setText(products.CartQuantity+"");
         listViewHolder.tvidpromociones.setText(products.ProductName);
+        listViewHolder.tvCodArticulo.setText(products.ProductIdArticulo);
         listViewHolder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
 
                 indice = listViewHolder.tvidpromociones.getText().toString();
-
-                Toast.makeText(context, indice, Toast.LENGTH_SHORT).show();
-
+                // Toast.makeText(context, indice, Toast.LENGTH_SHORT).show();
                 updateQuantity(position,listViewHolder.edTextQuantity,1);
                 updateQuantityPrice(position,listViewHolder.tvPrice,-1, indice);
 
@@ -96,7 +92,6 @@ public class ListAdapter extends BaseAdapter {
             public void onClick(View v) {
 
                 indice = listViewHolder.tvidpromociones.getText().toString();
-
 
                 if (listViewHolder.edTextQuantity.getText().toString().equals("0")){
                 }else {

@@ -38,6 +38,7 @@ public class PromocionesActivity extends AppCompatActivity {
     Button btnregistrarpromociones;
     ArrayList<Product> productOrders = new ArrayList<>();
     Integer Index ;
+    ArrayList<String> listaTrama;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +48,8 @@ public class PromocionesActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.customListView);
         listAdapter = new ListAdapter(this,products);
         Index = Integer.valueOf(getIntent().getStringExtra("Indice"));
+
+
 
         btnregistrarpromociones = (Button) findViewById(R.id.btnRegistrarPromociones);
         btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +70,9 @@ public class PromocionesActivity extends AppCompatActivity {
     private void placeOrder()
     {
         productOrders.clear();
+        listaTrama =  new ArrayList<>();
+        Integer ValorIndice;
+
         for(int i=0;i<listAdapter.listProducts.size();i++)
         {
             if(listAdapter.listProducts.get(i).CartQuantity > 0)
@@ -76,16 +82,31 @@ public class PromocionesActivity extends AppCompatActivity {
                         listAdapter.listProducts.get(i).ProductName
                         ,listAdapter.listProducts.get(i).ProductPrice
                         ,listAdapter.listProducts.get(i).ProductImage
+                        ,listAdapter.listProducts.get(i).ProductIdArticulo
+
                 );
 
-                String Subtrama = listAdapter.listProducts.get(i).CartQuantity+"|"+listAdapter.listProducts.get(i).ProductName+"|"+listAdapter.listProducts.get(i).ProductPrice;
+                String Subtrama = listAdapter.listProducts.get(i).CartQuantity+"|"+listAdapter.listProducts.get(i).ProductIdArticulo + "0.0|0.0";
 
-                Toast.makeText(this,Subtrama, Toast.LENGTH_SHORT).show();
+                listaTrama.add(Subtrama);
 
-                Toast.makeText(this, listAdapter.listProducts.get(i).ProductImage, Toast.LENGTH_SHORT).show();
+
+
+
+               // Toast.makeText(this, listaPromociones.get(i).getDescripcionPromocion(), Toast.LENGTH_LONG).show();
+
                 products.CartQuantity = listAdapter.listProducts.get(i).CartQuantity;
                 productOrders.add(products);
             }
+        }
+
+        for (int i =0 ; i<listaTrama.size();i++){
+
+            ValorIndice = Index + i +1 ;
+
+            listaTrama.set(i,id+"|D|"+ValorIndice.toString()+"|"+ listaTrama.get(i));
+
+            Toast.makeText(this,listaTrama.get(i), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -95,12 +116,13 @@ public class PromocionesActivity extends AppCompatActivity {
 
         for (int i = 0 ; i <listaPromociones.size() ; i++) {
             valorcantidad = Double.valueOf(listaPromociones.get(i).getEquivalencia()) * Double.valueOf(listaPromociones.get(i).getCantidadBonificada());
-            products.add(new Product(listaPromociones.get(i).getNumeroPromocion(),valorcantidad,listaPromociones.get(i).getDescripcionPromocion()));
+            products.add(new Product(listaPromociones.get(i).getNumeroPromocion(),valorcantidad,
+                    listaPromociones.get(i).getDescripcionPromocion(),listaPromociones.get(i).getCodArticulo()));
         }
     }
 
     private void CalcularPromociones(String id) {
-        String url;
+
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
@@ -179,8 +201,6 @@ public class PromocionesActivity extends AppCompatActivity {
                                     }
                                 }
 
-                                Toast.makeText(PromocionesActivity.this, "Paso", Toast.LENGTH_SHORT).show();
-
                                 getProduct(listaPromociones);
                                 listView.setAdapter(listAdapter);
 
@@ -244,5 +264,115 @@ public class PromocionesActivity extends AppCompatActivity {
         public void refreshView();
 
     }
+
+    private void registraPromociones(ArrayList<String> listaTrama) {
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTA_PROMOCION&variables=%27"+id+"%27"; // se debe actalizar la URL
+
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response1) {
+                        try {
+                            JSONObject jsonObject=new JSONObject(response1);
+                            boolean success = jsonObject.getBoolean("success");
+                            listaPromociones = new ArrayList<>();
+                            listaPromocionesTipoT = new ArrayList<>();
+
+                            if (success){
+                                JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+
+                                for(int i=0;i<jsonArray.length();i++) {
+                                    promocion = new Promociones();
+                                    jsonObject = jsonArray.getJSONObject(i);
+
+                                    if (jsonObject.getString("OPCION_SELECCION").equals("S")) {
+                                        promocion.setNumeroPromocion(jsonObject.getString("NRO_PROMOCION"));
+                                        promocion.setCodArticulo(jsonObject.getString("COD_ARTICULO"));
+                                        promocion.setDescripcionPromocion(jsonObject.getString("DESCRIPCION"));
+                                        promocion.setMarcaPromocion(jsonObject.getString("DES_MARCA"));
+                                        promocion.setUnidad(jsonObject.getString("UNIDAD"));
+                                        promocion.setCantidadPedida(jsonObject.getString("CANTIDAD_PEDIDA"));
+                                        promocion.setFlgGraba(jsonObject.getString("FLG_GRABA"));
+                                        promocion.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
+                                        promocion.setCodPresentacion(jsonObject.getString("COD_PRESENTACION"));
+                                        promocion.setPrecioSoles(jsonObject.getString("PRECIO_SOLES"));
+                                        promocion.setPrecioDolares(jsonObject.getString("PRECIO_DOLARES"));
+                                        promocion.setStkDisponible(jsonObject.getString("STK_DISPONIBLE"));
+                                        promocion.setStkFisico(jsonObject.getString("STK_FISICO"));
+                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_BONIFICADA"));
+                                        promocion.setFactor(jsonObject.getString("FACTOR"));
+                                        promocion.setFormaPromocion(jsonObject.getString("FORMA_PROMOCION"));
+                                        promocion.setCodDocumento(jsonObject.getString("COD_DOCUMENTO"));
+                                        promocion.setOpcionSeleccion(jsonObject.getString("OPCION_SELECCION"));
+                                        promocion.setPrecioRegularSoles(jsonObject.getString("PRECIO_REGULAR_SOLES"));
+                                        promocion.setPrecioRegularDolares(jsonObject.getString("PRECIO_REGULAR_DOLARES"));
+                                        promocion.setValido(jsonObject.getString("VALIDO"));
+                                        promocion.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
+
+                                        listaPromociones.add(promocion);
+
+                                    }else if(jsonObject.getString("OPCION_SELECCION").equals("T")){
+
+                                        promocion.setNumeroPromocion(jsonObject.getString("NRO_PROMOCION"));
+                                        promocion.setCodArticulo(jsonObject.getString("COD_ARTICULO"));
+                                        promocion.setDescripcionPromocion(jsonObject.getString("DESCRIPCION"));
+                                        promocion.setMarcaPromocion(jsonObject.getString("DES_MARCA"));
+                                        promocion.setUnidad(jsonObject.getString("UNIDAD"));
+                                        promocion.setCantidadPedida(jsonObject.getString("CANTIDAD_PEDIDA"));
+                                        promocion.setFlgGraba(jsonObject.getString("FLG_GRABA"));
+                                        promocion.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
+                                        promocion.setCodPresentacion(jsonObject.getString("COD_PRESENTACION"));
+                                        promocion.setPrecioSoles(jsonObject.getString("PRECIO_SOLES"));
+                                        promocion.setPrecioDolares(jsonObject.getString("PRECIO_DOLARES"));
+                                        promocion.setStkDisponible(jsonObject.getString("STK_DISPONIBLE"));
+                                        promocion.setStkFisico(jsonObject.getString("STK_FISICO"));
+                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_BONIFICADA"));
+                                        promocion.setFactor(jsonObject.getString("FACTOR"));
+                                        promocion.setFormaPromocion(jsonObject.getString("FORMA_PROMOCION"));
+                                        promocion.setCodDocumento(jsonObject.getString("COD_DOCUMENTO"));
+                                        promocion.setOpcionSeleccion(jsonObject.getString("OPCION_SELECCION"));
+                                        promocion.setPrecioRegularSoles(jsonObject.getString("PRECIO_REGULAR_SOLES"));
+                                        promocion.setPrecioRegularDolares(jsonObject.getString("PRECIO_REGULAR_DOLARES"));
+                                        promocion.setValido(jsonObject.getString("VALIDO"));
+                                        promocion.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
+
+                                        listaPromocionesTipoT.add(promocion);
+
+                                    }
+                                }
+
+                                getProduct(listaPromociones);
+                                listView.setAdapter(listAdapter);
+
+
+                            }else{
+                                AlertDialog.Builder build1 = new AlertDialog.Builder(PromocionesActivity.this);
+                                build1.setTitle("Usuario  o Clave incorrecta")
+                                        .setNegativeButton("Regresar",null)
+                                        .create()
+                                        .show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+    }
+
 
 }

@@ -13,4 +13,5 @@ public class ListViewHolder {
     EditText edTextQuantity;
     ImageButton btnMinus;
     TextView tvidpromociones;
+    TextView tvCodArticulo;
 }

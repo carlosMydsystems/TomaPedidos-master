@@ -8,11 +8,19 @@ public class Product {
     public Double ProductPrice;
     public String ProductImage;
     public int    CartQuantity=0;
+    public String ProductIdArticulo;
 
     public Product(String productName, Double productPrice, String productImage) {
         ProductName = productName;
         ProductPrice = productPrice;
         ProductImage = productImage;
+    }
+
+    public Product(String productName, Double productPrice, String productImage, String productIdArticulo) {
+        ProductName = productName;
+        ProductPrice = productPrice;
+        ProductImage = productImage;
+        ProductIdArticulo = productIdArticulo;
     }
 
     public String getJsonObject() {
@@ -23,6 +31,7 @@ public class Product {
             cartItems.put("ProductPrice", ProductPrice);
             cartItems.put("ProductImage",ProductImage);
             cartItems.put("CartQuantity",CartQuantity);
+            cartItems.put("ProductIdArticulo",ProductIdArticulo);
         }
         catch (Exception e) {}
         return cartItems.toString();
