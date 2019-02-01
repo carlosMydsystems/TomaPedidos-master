@@ -79,6 +79,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
         final Integer minuto = fecha.get(Calendar.MINUTE);
         final Integer segundo = fecha.get(Calendar.SECOND);
 
+        Toast.makeText(this,Ind, Toast.LENGTH_SHORT).show();
+
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
 
@@ -100,7 +102,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
 
             if (listaproductoselegidos.get(i).getPrecio().equals("")){
-
 
                 preciolista = 0.0;
             }else {
@@ -134,7 +135,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 Intent intent = new Intent(bandejaProductosActivity.this,BuscarProductoActivity.class);
                 intent.putExtra("TipoPago",tipoformapago);
                 intent.putExtra("indice",Ind);
-                intent.putExtra("validador","true");
+                intent.putExtra("validador","false");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle);
@@ -164,6 +165,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 btnregresarbandeja.setVisibility(View.VISIBLE);
 
 
+                /*
                 validador = true;
                 id = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
                 String Trama =  id+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() +
@@ -200,6 +202,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         }
                     });
                     builder.create().show();
+
+                    */
             }
         });
 
@@ -218,13 +222,11 @@ public class bandejaProductosActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(bandejaProductosActivity.this,PromocionesActivity.class);
-                intent.putExtra("Indice",""+listaproductoselegidos.size());
+                intent.putExtra("indice",""+listaproductoselegidos.size());
                 intent.putExtra("id_pedido",id_pedido);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
                 intent.putExtras(bundle);
-
-
                 startActivity(intent);
                 finish();
             }
@@ -240,6 +242,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         lvbandejaproductos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
                 builder.setCancelable(true);
@@ -287,6 +290,11 @@ public class bandejaProductosActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Double Aux = Double.valueOf(listaproductoselegidos.get(position).getPrecioAcumulado().replace(",",""));
+
+                Integer indice = Integer.valueOf(Ind);
+                if (position<indice){
+                    Toast.makeText(bandejaProductosActivity.this, "Marca Correcta", Toast.LENGTH_SHORT).show();
+                }
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
                 builder.setMessage(

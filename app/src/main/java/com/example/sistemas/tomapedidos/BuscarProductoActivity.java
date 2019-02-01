@@ -68,7 +68,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
         almacen = getIntent().getStringExtra("Almacen");
         indice = getIntent().getStringExtra("indice");
         validador = getIntent().getStringExtra("validador");
-        validadorBooleano = Boolean.valueOf(validador);
+
+
+        Toast.makeText(this, validador, Toast.LENGTH_SHORT).show();
 
 
         listaProductos = new ArrayList<>();
@@ -206,7 +208,8 @@ if (listaproductoselegidos.size() != 0) {
 
                 id_Pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
 
-                if (listaproductoselegidos.size()==0){
+                if (listaproductoselegidos.size()==0 && validador.equals("true")){
+                    Toast.makeText(BuscarProductoActivity.this, "INGRESO A LA TRAMA", Toast.LENGTH_SHORT).show();
 
                     String Trama =  id_Pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() + "|"+tipoPago+"|"+fechaRegistro+"|"+fechaRegistro +"|0.00||";
 

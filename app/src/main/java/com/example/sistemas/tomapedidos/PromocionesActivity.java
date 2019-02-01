@@ -49,7 +49,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.customListView);
         listAdapter = new ListAdapter(this,products);
-        Index = Integer.valueOf(getIntent().getStringExtra("Indice"));
+        Index = Integer.valueOf(getIntent().getStringExtra("indice"));
         id_pedido = getIntent().getStringExtra("id_pedido");
         listaproductoselegidos = (ArrayList<Productos>) getIntent()
                 .getSerializableExtra("listaproductoselegidos");
@@ -60,7 +60,7 @@ public class PromocionesActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                placeOrder();
+                //placeOrder();
             }
         });
 
@@ -70,7 +70,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
     }
 
-    private void placeOrder()
+    private void placeOrder(ArrayList<Productos> listaproductoselegidos)
     {
         productOrders.clear();
         listaTrama =  new ArrayList<>();
@@ -78,6 +78,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
         for(int i=0;i<listAdapter.listProducts.size();i++)
         {
+            productopromocion = new Productos();
             if(listAdapter.listProducts.get(i).CartQuantity > 0)
             {
                 Product products = new Product(
@@ -87,19 +88,32 @@ public class PromocionesActivity extends AppCompatActivity {
                         ,listAdapter.listProducts.get(i).ProductIdArticulo
                 );
 
+                productopromocion.setCodigo(listAdapter.listProducts.get(i).ProductIdArticulo);
+                productopromocion.setDescripcion(listAdapter.listProducts.get(i).ProductName);
+                productopromocion.setUnidad("Uni-Duro");
+                productopromocion.setCantidad(String.valueOf(listAdapter.listProducts.get(i).CartQuantity));
+                productopromocion.setPrecio("0.0");
+                productopromocion.setPrecioAcumulado("0.0");
+                productopromocion.setObservacion("Promocion");
+
+
+                listaproductoselegidos.add(productopromocion);
+
                 String Subtrama = listAdapter.listProducts.get(i).CartQuantity+"|"+listAdapter.listProducts.get(i).ProductIdArticulo + "|||";
-                listaTrama.add(Subtrama);
-                products.CartQuantity = listAdapter.listProducts.get(i).CartQuantity;
-                productOrders.add(products);
+                Toast.makeText(this, Subtrama, Toast.LENGTH_SHORT).show();
+               // listaTrama.add(Subtrama);
+                //products.CartQuantity = listAdapter.listProducts.get(i).CartQuantity;
+                //productOrders.add(products);
             }
         }
 
-        Index++;
-        for (int i =0 ; i<listaTrama.size();i++){
-            Index = Index + i ;
-            listaTrama.set(i,id+"|D|"+Index+"|"+ listaTrama.get(i));
-            //InsertaPromociones(listaTrama.get(i));
-        }
+        Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
+        intent.putExtra("indice",Index );
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        finish();
     }
 
     private void InsertaPromociones(String s){
@@ -243,14 +257,10 @@ public class PromocionesActivity extends AppCompatActivity {
                                         productopromocion.setCantidad(listaPromocionesTipoT.get(i).getCantidadBonificada());
                                         productopromocion.setPrecio("");
                                         productopromocion.setPrecioAcumulado("");
+                                        productopromocion.setObservacion("Promocion");
                                         listaproductoselegidos.add(productopromocion);
                                     }
-                                    Toast.makeText(PromocionesActivity.this, listaproductoselegidos.get(0).getDescripcion(), Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(PromocionesActivity.this, listaproductoselegidos.get(1).getDescripcion(), Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(PromocionesActivity.this, listaproductoselegidos.get(2).getDescripcion(), Toast.LENGTH_SHORT).show();
                                 }
-
-
 
                                 getProduct(listaPromociones);
                                 listView.setAdapter(listAdapter);
@@ -258,7 +268,8 @@ public class PromocionesActivity extends AppCompatActivity {
                                 btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        placeOrder();
+
+                                        placeOrder(listaproductoselegidos);
 
                                         Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
                                         Bundle bundle = new Bundle();

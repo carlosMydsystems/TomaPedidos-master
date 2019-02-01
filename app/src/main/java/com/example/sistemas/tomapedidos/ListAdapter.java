@@ -61,6 +61,7 @@ public class ListAdapter extends BaseAdapter {
             listViewHolder.btnMinus = row.findViewById(R.id.ib_remove);
             listViewHolder.tvidpromociones = row.findViewById(R.id.tvIdPromocion);  // Identificador
             listViewHolder.tvCodArticulo = row.findViewById(R.id.tvCodArticulo);
+            listViewHolder.tvunidadpromocion = row.findViewById(R.id.tvUnidadPromocion);
             row.setTag(listViewHolder);
         }
         else
@@ -74,6 +75,7 @@ public class ListAdapter extends BaseAdapter {
         listViewHolder.edTextQuantity.setText(products.CartQuantity+"");
         listViewHolder.tvidpromociones.setText(products.ProductName);
         listViewHolder.tvCodArticulo.setText(products.ProductIdArticulo);
+        listViewHolder.tvunidadpromocion.setText(products.UnidadProducto);
         listViewHolder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)

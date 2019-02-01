@@ -41,7 +41,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
     ArrayList<Productos> listaproductoselegidos;
     Usuario usuario;
     Button btnregresarformalistapago;
-    String indice="0",validador = "false";
+    String indice="0",validador = "true";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

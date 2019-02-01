@@ -14,4 +14,5 @@ public class ListViewHolder {
     ImageButton btnMinus;
     TextView tvidpromociones;
     TextView tvCodArticulo;
+    TextView tvunidadpromocion;
 }
