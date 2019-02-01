@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     Usuario usuario;
     String url;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -47,7 +47,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
     Productos producto;
     Double preciolista, precio = 0.0;
     Boolean validador  = true;
-    String id;
+    String id,Ind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +61,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
+        Ind = getIntent().getStringExtra("indice");
+        Toast.makeText(this, Ind, Toast.LENGTH_SHORT).show();
         listabandejaproductos = new ArrayList<>();
         cantidadProductos = listabandejaproductos.size();
         listabandejaproductoselegidos = new ArrayList<>();
@@ -113,6 +115,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(bandejaProductosActivity.this,BuscarProductoActivity.class);
                 intent.putExtra("TipoPago",tipoformapago);
+                intent.putExtra("indice",Ind);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle);
@@ -147,7 +150,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
 
                 String Trama =  id+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() +
-                        "|"+tipoformapago+"|"+fechaRegistro+"|"+fechaRegistro +"|"+formateador.format(precio)+
+                        "|"+tipoformapago+"|"+fechaRegistro+"|"+fechaRegistro +"|"+precio+
                         "||";
 
                 ActualizarProducto(Trama);

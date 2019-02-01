@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.FormaPago;
@@ -29,6 +30,7 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
     Usuario usuario;
     ArrayList<FormaPago> listaFormasPago;
     Button btnretornolistadoalmacen;
+    String indice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
         cliente  = new Clientes();
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
+        indice = getIntent().getStringExtra("indice");
         //listaFormasPago = (ArrayList<FormaPago>) getIntent().getSerializableExtra("ListaFomasPago");
 
         // se hace la insercion del codigo en duro
@@ -80,6 +83,7 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent =  new Intent(ListadoAlmacenActivity.this,MostrarClienteActivity.class);
+
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle);
@@ -99,6 +103,7 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent =  new Intent(ListadoAlmacenActivity.this,ListadoFormaPagoActivity.class);
+
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle);

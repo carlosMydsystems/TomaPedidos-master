@@ -31,6 +31,9 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+
+
+
 public class DetalleProductoActivity extends AppCompatActivity {
 
     TextView tvcodigoproducto,tvnombreproducto,tvalmacenproducto,tvstock,tvprecio,tvsubtotal,
@@ -41,12 +44,13 @@ public class DetalleProductoActivity extends AppCompatActivity {
     ArrayList<Productos> listaproductoselegidos;
     EditText etcantidadelegida;
     Double preciounitario,cantidad, Aux;
-    String url,almacen,tipoPago;
+    String url,almacen,tipoPago,id_pedido;
     ProgressDialog progressDialog;
     Productos producto;
     ArrayList<Productos> listaProductos;
     ArrayList<String> listaProducto;
     Usuario usuario;
+    String Ind;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,10 @@ public class DetalleProductoActivity extends AppCompatActivity {
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         almacen =  getIntent().getStringExtra("Almacen");
         tipoPago = getIntent().getStringExtra("TipoPago");
+        id_pedido = getIntent().getStringExtra("id_pedido");
+        Ind = getIntent().getStringExtra("indice");
+
+        Toast.makeText(this, Ind, Toast.LENGTH_SHORT).show();
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
 
         // Se referencia a todas las partes del XML asociado al Activity
@@ -74,6 +82,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
         btndverificarproducto = findViewById(R.id.btnVerificar);
         tvprecioreal = findViewById(R.id.tvPrecioReal);
         tvunidades = findViewById(R.id.tvUnidad);
+
 
         btndverificarproducto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,6 +106,10 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvprecio = findViewById(R.id.tvPrecioElegido);
         tvsubtotal = findViewById(R.id.tvSubtotal);
         tvtotal = findViewById(R.id.tvTotalElegido);
+
+
+        Toast.makeText(DetalleProductoActivity.this,tvprecio.getText(), Toast.LENGTH_SHORT).show();
+
         btnguardaryrevisar = findViewById(R.id.btnGuardarrevisar);
         btnguardaryagregar = findViewById(R.id.btnGuardaryagregar);
 
@@ -107,6 +120,14 @@ public class DetalleProductoActivity extends AppCompatActivity {
                 if (etcantidadelegida.getText().toString().equals("")){
                 }else{
 
+
+                    String trama = id_pedido+"|D|"+Ind+"|"+etcantidadelegida.getText()+"|"+
+                            productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText()+"|";
+
+
+
+                    ActualizarProducto(trama);
+
                     productos.setCantidad(etcantidadelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecio.getText().toString());
                     cantidad = Double.valueOf(etcantidadelegida.getText().toString());
@@ -114,8 +135,15 @@ public class DetalleProductoActivity extends AppCompatActivity {
                     productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
                     productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
                     listaproductoselegidos.add(productos);
+
+
+
+
+
+
                     Intent intent = new Intent(DetalleProductoActivity.this,bandejaProductosActivity.class);
                     intent.putExtra("TipoPago",tipoPago);
+                    intent.putExtra("indice",Ind);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
                     intent.putExtras(bundle);
@@ -137,6 +165,14 @@ public class DetalleProductoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                Toast.makeText(DetalleProductoActivity.this,tvtotal.getText(), Toast.LENGTH_SHORT).show();
+
+                String trama = id_pedido+"|D|"+Ind+"|"+etcantidadelegida.getText()+"|"+
+                        productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText()+"|";
+
+
+
+                ActualizarProducto(trama);
 
                 if (etcantidadelegida.getText().toString().equals("")){
                 }else{
@@ -153,6 +189,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(DetalleProductoActivity.this,BuscarProductoActivity.class);
                     intent.putExtra("TipoPago",tipoPago);
+                    intent.putExtra("indice",Ind);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
                     intent.putExtras(bundle);
@@ -365,4 +402,39 @@ public class DetalleProductoActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
+
+    private void ActualizarProducto(String trama) {
+
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+        // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
+
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+        Toast.makeText(this, trama, Toast.LENGTH_LONG).show();
+
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        if (response.equals("OK")){
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+    }
+
+
 }

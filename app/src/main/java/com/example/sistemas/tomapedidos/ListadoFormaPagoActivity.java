@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class ListadoFormaPagoActivity extends AppCompatActivity {
@@ -40,6 +43,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
     ArrayList<Productos> listaproductoselegidos;
     Usuario usuario;
     Button btnregresarformalistapago;
+    String indice="0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +57,22 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         almacen = getIntent().getStringExtra("Almacen") ;
         listatipopago =  new ArrayList<>();
         listaAux = new ArrayList<>();
+        String fechaRegistro;
+
+
+        Calendar fecha = Calendar.getInstance();
+        final Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
+        final Integer mes = fecha.get(Calendar.MONTH) + 1;
+        Integer year = fecha.get(Calendar.YEAR);
+        final Integer hora =  fecha.get(Calendar.HOUR_OF_DAY);
+        final Integer minuto = fecha.get(Calendar.MINUTE);
+        final Integer segundo = fecha.get(Calendar.SECOND);
+
+
+        fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
+                "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
+
+
 
         btnregresarformalistapago = findViewById(R.id.btnRegresarListaFormaPago);
         btnregresarformalistapago.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +126,9 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
                                         Intent intent =  new Intent(ListadoFormaPagoActivity.this,BuscarProductoActivity.class);
                                         intent.putExtra("Almacen",almacen);
+                                        intent.putExtra("indice",indice);
+                                        intent.putExtra("validar","true");
+                                        Toast.makeText(ListadoFormaPagoActivity.this, indice, Toast.LENGTH_SHORT).show();
                                         Bundle bundle = new Bundle();
                                         bundle.putSerializable("Cliente",cliente);
                                         intent.putExtras(bundle);
@@ -178,4 +201,14 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
             return mView;
         }
     }
+
+    private String formatonumerico (Integer numero){
+
+        String numeroString = numero.toString();
+        if (numero <= 9){
+            numeroString = "0"+ numero.toString();
+        }
+        return  numeroString;
+    }
+
 }

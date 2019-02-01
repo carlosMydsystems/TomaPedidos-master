@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -30,7 +32,11 @@ import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class BuscarProductoActivity extends AppCompatActivity {
 
@@ -43,9 +49,11 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ArrayList<String> listaProducto;
     Clientes cliente;
     EditText etproducto;
-    String url,Tipobusqueda = "Nombre",tipoPago,almacen;
+    String url,Tipobusqueda = "Nombre",tipoPago,almacen,Ind= "1";
     ProgressDialog progressDialog;
     Usuario usuario;
+    String id_Pedido,fechaRegistro,precio = "0.0";
+    String indice,validador;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,11 @@ public class BuscarProductoActivity extends AppCompatActivity {
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
         tipoPago = getIntent().getStringExtra("TipoPago");
         almacen = getIntent().getStringExtra("Almacen");
+        indice = getIntent().getStringExtra("indice");
+
+
+        Toast.makeText(this, indice.toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, almacen, Toast.LENGTH_SHORT).show();
         listaProductos = new ArrayList<>();
         listaProducto = new ArrayList<>();
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
@@ -66,7 +79,29 @@ public class BuscarProductoActivity extends AppCompatActivity {
         btnbuscarProducto = findViewById(R.id.btnBuscarProducto);
         lvProducto = findViewById(R.id.lvProducto);
         etproducto  = findViewById(R.id.etPrducto);
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
+        simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
+        final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
+
+
         btnregresarproducto = findViewById(R.id.btnRegresarProducto);
+
+
+        // Calendario
+
+
+        Calendar fecha = Calendar.getInstance();
+        final Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
+        final Integer mes = fecha.get(Calendar.MONTH) + 1;
+        Integer year = fecha.get(Calendar.YEAR);
+        final Integer hora =  fecha.get(Calendar.HOUR_OF_DAY);
+        final Integer minuto = fecha.get(Calendar.MINUTE);
+        final Integer segundo = fecha.get(Calendar.SECOND);
+
+
+        fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
+                "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
 
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(btnbuscarProducto.getWindowToken(), 0);
@@ -120,6 +155,16 @@ public class BuscarProductoActivity extends AppCompatActivity {
                 progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
                 progressDialog.show();
 
+                id_Pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
+
+                if (indice.equals("0")){
+
+                    String Trama =  id_Pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() + "|"+tipoPago+"|"+fechaRegistro+"|"+fechaRegistro +"|0.00||";
+
+                    ActualizarProducto(Trama);
+
+                }
+
                 Boolean verficador = false;
                 Integer posicion=0;
 
@@ -170,6 +215,10 @@ public class BuscarProductoActivity extends AppCompatActivity {
                 Intent intent =  new Intent(BuscarProductoActivity.this,DetalleProductoActivity.class);
                 intent.putExtra("TipoPago",tipoPago);
                 intent.putExtra("Almacen",almacen);
+                intent.putExtra("id_pedido",id_Pedido);
+
+                Integer  aux = Integer.valueOf(indice) + 1;
+                intent.putExtra("indice",aux.toString());
                 Bundle bundle = new Bundle();
                 producto =  listaProductos.get(position);
                 bundle.putSerializable("Producto",producto);
@@ -320,4 +369,47 @@ public class BuscarProductoActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
+
+    private String formatonumerico (Integer numero){
+
+        String numeroString = numero.toString();
+        if (numero <= 9){
+            numeroString = "0"+ numero.toString();
+        }
+        return  numeroString;
+    }
+
+    private void ActualizarProducto(String trama) {
+
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+        // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
+
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+        Toast.makeText(this, trama, Toast.LENGTH_LONG).show();
+
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        if (response.equals("OK")){
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+    }
+
 }
