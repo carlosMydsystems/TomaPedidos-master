@@ -54,6 +54,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
     Usuario usuario;
     String id_Pedido,fechaRegistro,precio = "0.0";
     String indice,validador;
+    boolean validadorBooleano;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +67,10 @@ public class BuscarProductoActivity extends AppCompatActivity {
         tipoPago = getIntent().getStringExtra("TipoPago");
         almacen = getIntent().getStringExtra("Almacen");
         indice = getIntent().getStringExtra("indice");
+        validador = getIntent().getStringExtra("validador");
+        validadorBooleano = Boolean.valueOf(validador);
 
 
-        Toast.makeText(this, indice.toString(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, almacen, Toast.LENGTH_SHORT).show();
         listaProductos = new ArrayList<>();
         listaProducto = new ArrayList<>();
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
@@ -106,40 +107,89 @@ public class BuscarProductoActivity extends AppCompatActivity {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(btnbuscarProducto.getWindowToken(), 0);
 
-        btnregresarproducto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
-                    .setMessage("Esta seguro que desea regresar, Todos los cambios serán eliminados")
-                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
 
-                });
-                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+if (validadorBooleano) {
+    btnregresarproducto.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
 
-                        Intent intent =  new Intent(BuscarProductoActivity.this,ListadoFormaPagoActivity.class);
-                        intent.putExtra("Almacen",almacen);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("Cliente",cliente);
-                        intent.putExtras(bundle);
-                        Bundle bundle1 = new Bundle();
-                        bundle1.putSerializable("Usuario",usuario);
-                        intent.putExtras(bundle1);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
+            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
+                    .setMessage("Esta seguro que desea regresar, los cambios actuales serán eliminados")
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
 
-                builder.create()
-                        .show();
-            }
-        });
+                    });
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    Intent intent = new Intent(BuscarProductoActivity.this, bandejaProductosActivity.class);
+
+                    intent.putExtra("TipoPago", tipoPago);
+                    intent.putExtra("indice", indice);
+                    intent.putExtra("id_pedido", id_Pedido);
+                    intent.putExtra("Almacen", almacen);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Cliente", cliente);
+                    intent.putExtras(bundle);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("Usuario", usuario);
+                    intent.putExtras(bundle1);
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                    intent.putExtras(bundle2);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            builder.create()
+                    .show();
+        }
+    });
+}else {
+
+    btnregresarproducto.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
+                    .setMessage("Esta seguro que desea regresar")
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+
+                    });
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    Intent intent =  new Intent(BuscarProductoActivity.this,ListadoFormaPagoActivity.class);
+                    intent.putExtra("Almacen",almacen);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Cliente",cliente);
+                    intent.putExtras(bundle);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("Usuario",usuario);
+                    intent.putExtras(bundle1);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            builder.create()
+                    .show();
+        }
+    });
+
+
+}
 
         btnbuscarProducto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,7 +207,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
                 id_Pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
 
-                if (indice.equals("0")){
+                if (listaproductoselegidos.size()==0){
 
                     String Trama =  id_Pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() + "|"+tipoPago+"|"+fechaRegistro+"|"+fechaRegistro +"|0.00||";
 
@@ -217,7 +267,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
                 intent.putExtra("Almacen",almacen);
                 intent.putExtra("id_pedido",id_Pedido);
 
-                Integer  aux = Integer.valueOf(indice) + 1;
+                Integer  aux = listaproductoselegidos.size() + 1;
                 intent.putExtra("indice",aux.toString());
                 Bundle bundle = new Bundle();
                 producto =  listaProductos.get(position);

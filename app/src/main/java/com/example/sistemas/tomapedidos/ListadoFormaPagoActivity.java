@@ -43,7 +43,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
     ArrayList<Productos> listaproductoselegidos;
     Usuario usuario;
     Button btnregresarformalistapago;
-    String indice="0";
+    String indice="0",validador = "false";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +80,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent =  new Intent(ListadoFormaPagoActivity.this,ListadoAlmacenActivity.class);
+                intent.putExtra("validador",validador);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle);
@@ -127,7 +128,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                                         Intent intent =  new Intent(ListadoFormaPagoActivity.this,BuscarProductoActivity.class);
                                         intent.putExtra("Almacen",almacen);
                                         intent.putExtra("indice",indice);
-                                        intent.putExtra("validar","true");
+                                        intent.putExtra("validador",validador);
                                         Toast.makeText(ListadoFormaPagoActivity.this, indice, Toast.LENGTH_SHORT).show();
                                         Bundle bundle = new Bundle();
                                         bundle.putSerializable("Cliente",cliente);

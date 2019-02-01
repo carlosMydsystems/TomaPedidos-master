@@ -47,7 +47,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
     Productos producto;
     Double preciolista, precio = 0.0;
     Boolean validador  = true;
-    String id,Ind;
+    String id,Ind,id_pedido;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +62,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("indice");
+        id_pedido = getIntent().getStringExtra("id_pedido");
         Toast.makeText(this, Ind, Toast.LENGTH_SHORT).show();
         listabandejaproductos = new ArrayList<>();
         cantidadProductos = listabandejaproductos.size();
@@ -87,10 +88,28 @@ public class bandejaProductosActivity extends AppCompatActivity {
         for (int i=0;i<listaproductoselegidos.size();i++){
            // calcula numero de productos
             Double Aux = 0.0;
-            precio = precio + Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",",""));
+            if (listaproductoselegidos.get(i).getPrecioAcumulado().equals("")){
 
-            Aux = Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",",""));
-            preciolista = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
+                precio = 0.0;
+
+            }else {
+
+                precio = precio + Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",",""));
+
+                Aux = Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",",""));
+            }
+
+
+            if (listaproductoselegidos.get(i).getPrecio().equals("")){
+
+
+                preciolista = 0.0;
+            }else {
+
+                preciolista = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
+            }
+
+
             listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo()+ " - " +
             listaproductoselegidos.get(i).getDescripcion()+"\nCant: "+listaproductoselegidos.
             get(i).getCantidad()+ "                                             Unidad: "+
@@ -116,6 +135,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 Intent intent = new Intent(bandejaProductosActivity.this,BuscarProductoActivity.class);
                 intent.putExtra("TipoPago",tipoformapago);
                 intent.putExtra("indice",Ind);
+                intent.putExtra("validador","true");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle);
@@ -138,12 +158,13 @@ public class bandejaProductosActivity extends AppCompatActivity {
         btnterminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+/*
                 btnterminar.setVisibility(View.GONE);
                 btnvalidarpormociones.setVisibility(View.VISIBLE);
                 btnbuscarproducto.setVisibility(View.GONE);
                 btnregresarbandeja.setVisibility(View.VISIBLE);
 
+                /*
                 validador = true;
                 id = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
 
@@ -155,6 +176,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                 ActualizarProducto(Trama);
 
+*/
                 AlertDialog.Builder builder =  new AlertDialog.Builder(bandejaProductosActivity.this);
                     builder.setMessage("Está seguro que desea grabar el pedido")
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -184,7 +206,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                             finish();
                         }
                     });
-                    //builder.create().show();
+                    builder.create().show();
             }
         });
 
@@ -201,9 +223,21 @@ public class bandejaProductosActivity extends AppCompatActivity {
         btnvalidarpormociones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+                Toast.makeText(bandejaProductosActivity.this, id_pedido, Toast.LENGTH_SHORT).show();
+
+
+
                 Intent intent = new Intent(bandejaProductosActivity.this,PromocionesActivity.class);
                 Toast.makeText(bandejaProductosActivity.this, ""+listaproductoselegidos.size(), Toast.LENGTH_SHORT).show();
                 intent.putExtra("Indice",""+listaproductoselegidos.size());
+                intent.putExtra("id_pedido",id_pedido);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
+                intent.putExtras(bundle);
+
+
                 startActivity(intent);
                 finish();
             }
@@ -348,7 +382,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                        
                         if (response.equals("OK")){
 
-                            insertaCampos(listaproductoselegidos,id);
+                           // insertaCampos(listaproductoselegidos,id);
 
 
 

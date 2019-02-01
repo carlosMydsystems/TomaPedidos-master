@@ -1,5 +1,6 @@
 package com.example.sistemas.tomapedidos;
 
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Promociones;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +30,7 @@ public class PromocionesActivity extends AppCompatActivity {
     Promociones promocion;
     ArrayList<Promociones> listaPromociones,listaPromocionesTipoT;
     Boolean validador = true;
-    String url;
+    String url,id_pedido;
     private ListView listView;
     private ListAdapter listAdapter;
     ArrayList<Product> products = new ArrayList<>();
@@ -36,7 +38,9 @@ public class PromocionesActivity extends AppCompatActivity {
     ArrayList<Product> productOrders = new ArrayList<>();
     Integer Index ;
     ArrayList<String> listaTrama;
-    Integer ValorIndice;
+    Productos productopromocion;
+
+    ArrayList<Productos> listaProductosPromociones,listaproductoselegidos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,23 +50,23 @@ public class PromocionesActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.customListView);
         listAdapter = new ListAdapter(this,products);
         Index = Integer.valueOf(getIntent().getStringExtra("Indice"));
+        id_pedido = getIntent().getStringExtra("id_pedido");
+        listaproductoselegidos = (ArrayList<Productos>) getIntent()
+                .getSerializableExtra("listaproductoselegidos");
 
-        Index = 16;
-
-
-
+        listaProductosPromociones = new ArrayList<>();
         btnregistrarpromociones = (Button) findViewById(R.id.btnRegistrarPromociones);
         btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 placeOrder();
-
             }
         });
 
         id = "30011659";
         CalcularPromociones(id);
+
 
     }
 
@@ -90,10 +94,11 @@ public class PromocionesActivity extends AppCompatActivity {
             }
         }
 
+        Index++;
         for (int i =0 ; i<listaTrama.size();i++){
-            Index = Index + i +1 ;
+            Index = Index + i ;
             listaTrama.set(i,id+"|D|"+Index+"|"+ listaTrama.get(i));
-            InsertaPromociones(listaTrama.get(i));
+            //InsertaPromociones(listaTrama.get(i));
         }
     }
 
@@ -104,7 +109,7 @@ public class PromocionesActivity extends AppCompatActivity {
         // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+s+"'";
-        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, s, Toast.LENGTH_LONG).show();
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -143,9 +148,11 @@ public class PromocionesActivity extends AppCompatActivity {
         }
     }
 
-    private void CalcularPromociones(String identificador) {
+    public void CalcularPromociones(String identificador) {
 
         final String Id = identificador;
+
+
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
@@ -220,6 +227,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         listaPromocionesTipoT.add(promocion);
                                     }
                                 }
+
                                 if (listaPromocionesTipoT.size() == 0){
 
                                     Toast.makeText(PromocionesActivity.this, "no existe promociones T", Toast.LENGTH_SHORT).show();
@@ -228,26 +236,38 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                     for (int i = 0; i < listaPromocionesTipoT.size();i++){
 
-                                        Index = Index + i +1 ;
-                                        String cadena = Id+"|D|"+Index.toString()+"|";
-                                        Toast.makeText(PromocionesActivity.this, cadena, Toast.LENGTH_SHORT).show();
-                                        InsertaPromociones(cadena);
-
-
-                                        /*
-
-                                        listaTrama.set(i,cadena);
-                                        InsertaPromociones(listaTrama.get(i));
-
-                                        */
+                                        productopromocion = new Productos();
+                                        productopromocion.setCodigo(listaPromocionesTipoT.get(i).getCodArticulo());
+                                        productopromocion.setDescripcion(listaPromocionesTipoT.get(i).getDescripcionPromocion());
+                                        productopromocion.setUnidad(listaPromocionesTipoT.get(i).getUnidad());
+                                        productopromocion.setCantidad(listaPromocionesTipoT.get(i).getCantidadBonificada());
+                                        productopromocion.setPrecio("");
+                                        productopromocion.setPrecioAcumulado("");
+                                        listaproductoselegidos.add(productopromocion);
                                     }
-
+                                    Toast.makeText(PromocionesActivity.this, listaproductoselegidos.get(0).getDescripcion(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PromocionesActivity.this, listaproductoselegidos.get(1).getDescripcion(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PromocionesActivity.this, listaproductoselegidos.get(2).getDescripcion(), Toast.LENGTH_SHORT).show();
                                 }
+
+
+
                                 getProduct(listaPromociones);
                                 listView.setAdapter(listAdapter);
 
+                                btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        placeOrder();
 
-
+                                        Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                });
                             }else{
                                 AlertDialog.Builder build1 = new AlertDialog.Builder(PromocionesActivity.this);
                                 build1.setTitle("No se ha encontrado registros")

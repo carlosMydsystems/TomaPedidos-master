@@ -124,8 +124,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
                     String trama = id_pedido+"|D|"+Ind+"|"+etcantidadelegida.getText()+"|"+
                             productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText()+"|";
 
-
-
                     ActualizarProducto(trama);
 
                     productos.setCantidad(etcantidadelegida.getText().toString());
@@ -136,14 +134,10 @@ public class DetalleProductoActivity extends AppCompatActivity {
                     productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
                     listaproductoselegidos.add(productos);
 
-
-
-
-
-
                     Intent intent = new Intent(DetalleProductoActivity.this,bandejaProductosActivity.class);
                     intent.putExtra("TipoPago",tipoPago);
                     intent.putExtra("indice",Ind);
+                    intent.putExtra("id_pedido",id_pedido);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
                     intent.putExtras(bundle);

@@ -1,5 +1,6 @@
 package com.example.sistemas.tomapedidos.Adaptadores;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,7 +23,6 @@ public class bandejaproductosadapter extends RecyclerView.Adapter<bandejaproduct
     public bandejaproductosadapter(List<Productos> listaProductos) {
         this.listaProductos = listaProductos;
     }
-
 
     @NonNull
     @Override
@@ -50,6 +50,7 @@ public class bandejaproductosadapter extends RecyclerView.Adapter<bandejaproduct
         bandejaProductosHolder.tvFleteProductoBandeja.setText(listaProductos.get(i).getFlete());
         Double subtotal = Double.valueOf(listaProductos.get(i).getCantidad()) * Double.valueOf(listaProductos.get(i).getPrecio());
         bandejaProductosHolder.tvSubtotalProductoBandeja.setText(subtotal.toString());
+        bandejaProductosHolder.tvFlagPromocion.setText(listaProductos.get(i).getObservacion());
     }
     @Override
     public int getItemCount() {
@@ -68,7 +69,7 @@ public class bandejaproductosadapter extends RecyclerView.Adapter<bandejaproduct
     public class BandejaProductosHolder extends RecyclerView.ViewHolder {
 
         TextView tvNombreProductoBandeja,tvcantidadProductoBandeja,tvstockProductoBandeja,
-                tvPrecioProdustoBandeja,tvSubtotalProductoBandeja,tvFleteProductoBandeja;
+                tvPrecioProdustoBandeja,tvSubtotalProductoBandeja,tvFleteProductoBandeja,tvFlagPromocion;
 
         public BandejaProductosHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,6 +79,8 @@ public class bandejaproductosadapter extends RecyclerView.Adapter<bandejaproduct
             tvPrecioProdustoBandeja = itemView.findViewById(R.id.tvPrecioProdustoBandeja);
             tvSubtotalProductoBandeja = itemView.findViewById(R.id.tvSubtotalProductoBandeja);
             tvFleteProductoBandeja = itemView.findViewById(R.id.tvFleteProductoBandeja);
+            tvFlagPromocion = itemView.findViewById(R.id.tvFlagPromocion);
+
         }
     }
 }
