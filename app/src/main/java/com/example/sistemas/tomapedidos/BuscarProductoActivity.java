@@ -108,8 +108,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(btnbuscarProducto.getWindowToken(), 0);
 
 
-
-if (validadorBooleano) {
+if (listaproductoselegidos.size() != 0) {
     btnregresarproducto.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -437,7 +436,6 @@ if (validadorBooleano) {
         // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
-        Toast.makeText(this, trama, Toast.LENGTH_LONG).show();
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {

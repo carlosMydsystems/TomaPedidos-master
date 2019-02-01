@@ -303,7 +303,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                     if (etcantprodelegida.getText().toString().equals("")){
 
                                         Toast.makeText(ActualizarRegistroPedidosActivity.this,
-                                                "cantidad invalidad", Toast.LENGTH_SHORT).show();
+                                                "cantidad invalida", Toast.LENGTH_SHORT).show();
 
                                     }else{
 

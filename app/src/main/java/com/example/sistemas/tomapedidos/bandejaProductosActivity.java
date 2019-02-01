@@ -63,7 +63,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("indice");
         id_pedido = getIntent().getStringExtra("id_pedido");
-        Toast.makeText(this, Ind, Toast.LENGTH_SHORT).show();
         listabandejaproductos = new ArrayList<>();
         cantidadProductos = listabandejaproductos.size();
         listabandejaproductoselegidos = new ArrayList<>();
@@ -158,25 +157,19 @@ public class bandejaProductosActivity extends AppCompatActivity {
         btnterminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*
+
                 btnterminar.setVisibility(View.GONE);
                 btnvalidarpormociones.setVisibility(View.VISIBLE);
                 btnbuscarproducto.setVisibility(View.GONE);
                 btnregresarbandeja.setVisibility(View.VISIBLE);
 
-                /*
+
                 validador = true;
                 id = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
-
-
-
                 String Trama =  id+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() +
-                        "|"+tipoformapago+"|"+fechaRegistro+"|"+fechaRegistro +"|"+precio+
-                        "||";
-
+                        "|"+tipoformapago+"|"+fechaRegistro+"|"+fechaRegistro +"|"+precio+ "||";
                 ActualizarProducto(Trama);
 
-*/
                 AlertDialog.Builder builder =  new AlertDialog.Builder(bandejaProductosActivity.this);
                     builder.setMessage("Está seguro que desea grabar el pedido")
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -224,13 +217,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
-                Toast.makeText(bandejaProductosActivity.this, id_pedido, Toast.LENGTH_SHORT).show();
-
-
-
                 Intent intent = new Intent(bandejaProductosActivity.this,PromocionesActivity.class);
-                Toast.makeText(bandejaProductosActivity.this, ""+listaproductoselegidos.size(), Toast.LENGTH_SHORT).show();
                 intent.putExtra("Indice",""+listaproductoselegidos.size());
                 intent.putExtra("id_pedido",id_pedido);
                 Bundle bundle = new Bundle();
@@ -372,14 +359,12 @@ public class bandejaProductosActivity extends AppCompatActivity {
        // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
-        Toast.makeText(this, trama, Toast.LENGTH_LONG).show();
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(bandejaProductosActivity.this, response, Toast.LENGTH_LONG).show();
-                       
+
                         if (response.equals("OK")){
 
                            // insertaCampos(listaproductoselegidos,id);

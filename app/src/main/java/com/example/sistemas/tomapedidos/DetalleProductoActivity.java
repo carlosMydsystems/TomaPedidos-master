@@ -72,7 +72,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         id_pedido = getIntent().getStringExtra("id_pedido");
         Ind = getIntent().getStringExtra("indice");
 
-        Toast.makeText(this, Ind, Toast.LENGTH_SHORT).show();
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
 
         // Se referencia a todas las partes del XML asociado al Activity
@@ -107,9 +106,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvsubtotal = findViewById(R.id.tvSubtotal);
         tvtotal = findViewById(R.id.tvTotalElegido);
 
-
-        Toast.makeText(DetalleProductoActivity.this,tvprecio.getText(), Toast.LENGTH_SHORT).show();
-
         btnguardaryrevisar = findViewById(R.id.btnGuardarrevisar);
         btnguardaryagregar = findViewById(R.id.btnGuardaryagregar);
 
@@ -136,7 +132,8 @@ public class DetalleProductoActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(DetalleProductoActivity.this,bandejaProductosActivity.class);
                     intent.putExtra("TipoPago",tipoPago);
-                    intent.putExtra("indice",Ind);
+                    intent.putExtra("indice",listaproductoselegidos.size());
+                    intent.putExtra("validador","true");
                     intent.putExtra("id_pedido",id_pedido);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
@@ -158,8 +155,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         btnguardaryagregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(DetalleProductoActivity.this,tvtotal.getText(), Toast.LENGTH_SHORT).show();
 
                 String trama = id_pedido+"|D|"+Ind+"|"+etcantidadelegida.getText()+"|"+
                         productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText()+"|";
@@ -184,6 +179,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
                     Intent intent = new Intent(DetalleProductoActivity.this,BuscarProductoActivity.class);
                     intent.putExtra("TipoPago",tipoPago);
                     intent.putExtra("indice",Ind);
+                    intent.putExtra("validador","true");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
                     intent.putExtras(bundle);
@@ -405,7 +401,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
-        Toast.makeText(this, trama, Toast.LENGTH_LONG).show();
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {

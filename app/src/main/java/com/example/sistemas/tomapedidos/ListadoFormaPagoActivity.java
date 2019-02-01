@@ -14,8 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -129,7 +127,6 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                                         intent.putExtra("Almacen",almacen);
                                         intent.putExtra("indice",indice);
                                         intent.putExtra("validador",validador);
-                                        Toast.makeText(ListadoFormaPagoActivity.this, indice, Toast.LENGTH_SHORT).show();
                                         Bundle bundle = new Bundle();
                                         bundle.putSerializable("Cliente",cliente);
                                         intent.putExtras(bundle);
