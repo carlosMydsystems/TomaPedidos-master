@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -56,6 +58,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
         lvclientes = findViewById(R.id.lvCliente);
         etcliente = findViewById(R.id.etCliente);
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");  //Se pasa el parametro del usuario
+
 
         btnbuscar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -72,6 +72,9 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
         tipoformapago =  getIntent().getStringExtra("TipoPago");
 
+        Toast.makeText(this, usuario.getLugar(), Toast.LENGTH_SHORT).show();
+
+
         etcantprodelegida.setText(productos.getCantidad());
         // Se referencia a todas las partes del XML asociado al Activity
         tvcodprodelegido =  findViewById(R.id.tvCodProdElegido);

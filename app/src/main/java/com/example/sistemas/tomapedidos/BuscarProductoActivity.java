@@ -69,10 +69,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
         indice = getIntent().getStringExtra("indice");
         validador = getIntent().getStringExtra("validador");
 
-
-        Toast.makeText(this, validador, Toast.LENGTH_SHORT).show();
-
-
         listaProductos = new ArrayList<>();
         listaProducto = new ArrayList<>();
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");

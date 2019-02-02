@@ -34,7 +34,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
     TextView tvtitulodinamico;
     Productos productos;
-    Button btnbuscarproducto, btnterminar,btnregresarbandeja,btnvalidarpormociones;
+    Button btnbuscarproducto, btnterminar,btnregresarbandeja, btnvalidarpromociones;
     ListView lvbandejaproductos;
     ArrayList<String> listabandejaproductos,listabandejaproductoselegidos;
     Clientes cliente;
@@ -56,15 +56,13 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
         // Se captura los parametros de los otros Intent
         listaproductoselegidos = (ArrayList<Productos>) getIntent()
-                .getSerializableExtra("listaProductoselegidos");
-        cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
-        usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
+                .getSerializableExtra("listaProductoselegidos");   //
+        cliente = (Clientes)getIntent().getSerializableExtra("Cliente");   //
+        usuario = (Usuario)getIntent().getSerializableExtra("Usuario");    //
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("indice");
         cantidadlista =  getIntent().getStringExtra("cantidadlista");
-
-        Toast.makeText(this, "La cantidad es : "+tipoformapago, Toast.LENGTH_SHORT).show();
         id_pedido = getIntent().getStringExtra("id_pedido");
         listabandejaproductos = new ArrayList<>();
         cantidadProductos = listabandejaproductos.size();
@@ -74,6 +72,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
 
+
+
         Calendar fecha = Calendar.getInstance();
         final Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
         final Integer mes = fecha.get(Calendar.MONTH) + 1;
@@ -81,6 +81,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         final Integer hora =  fecha.get(Calendar.HOUR_OF_DAY);
         final Integer minuto = fecha.get(Calendar.MINUTE);
         final Integer segundo = fecha.get(Calendar.SECOND);
+
 
 
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
@@ -95,13 +96,13 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                 precio = 0.0;
 
+
             }else {
 
                 precio = precio + Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",",""));
 
                 Aux = Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",",""));
             }
-
 
             if (listaproductoselegidos.get(i).getPrecio().equals("")){
 
@@ -110,7 +111,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                 preciolista = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
             }
-
 
             listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo()+ " - " +
             listaproductoselegidos.get(i).getDescripcion()+"\nCant: "+listaproductoselegidos.
@@ -125,10 +125,15 @@ public class bandejaProductosActivity extends AppCompatActivity {
         btnterminar = findViewById(R.id.btnterminar);
         tvtitulodinamico  = findViewById(R.id.tvtitulodinamico);
         btnregresarbandeja = findViewById(R.id.btnRegresarBandejaPedidos);
-        btnvalidarpormociones = findViewById(R.id.btnValidarPromociones);
+        btnvalidarpromociones = findViewById(R.id.btnValidarPromociones);
         String cadenaTituloAux = "Productos : "+ cantidad+"   |  Monto : S/ "+formateador.format(precio)+"";
         tvtitulodinamico.setText(cadenaTituloAux);
         mview = getLayoutInflater().inflate(R.layout.listview_dialog,null);
+
+        Toast.makeText(this, usuario.getLugar(), Toast.LENGTH_SHORT).show();
+
+
+
         btnbuscarproducto.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -162,7 +167,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 btnterminar.setVisibility(View.GONE);
-                btnvalidarpormociones.setVisibility(View.VISIBLE);
+                btnvalidarpromociones.setVisibility(View.VISIBLE);
                 btnbuscarproducto.setVisibility(View.GONE);
                 btnregresarbandeja.setVisibility(View.VISIBLE);
 
@@ -214,20 +219,37 @@ public class bandejaProductosActivity extends AppCompatActivity {
             public void onClick(View v) {
                 btnbuscarproducto.setVisibility(View.VISIBLE);
                 btnterminar.setVisibility(View.VISIBLE);
-                btnvalidarpormociones.setVisibility(View.GONE);
+                btnvalidarpromociones.setVisibility(View.GONE);
                 btnregresarbandeja.setVisibility(View.GONE);
             }
         });
 
-        btnvalidarpormociones.setOnClickListener(new View.OnClickListener() {
+        btnvalidarpromociones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Intent intent = new Intent(bandejaProductosActivity.this,PromocionesActivity.class);
+
                 intent.putExtra("indice",""+listaproductoselegidos.size());
+                intent.putExtra("TipoPago",tipoformapago);
+                intent.putExtra("indice",Ind);
+                intent.putExtra("validador","false");
+
                 Bundle bundle = new Bundle();
+                Bundle bundle2 = new Bundle();
+                Bundle bundle3 = new Bundle();
+
                 bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
+                bundle2.putSerializable("Cliente",cliente);
+                bundle3.putSerializable("Usuario",usuario);
+
                 intent.putExtras(bundle);
+                intent.putExtras(bundle2);
+                intent.putExtras(bundle3);
+
+
+
+
                 startActivity(intent);
                 finish();
             }

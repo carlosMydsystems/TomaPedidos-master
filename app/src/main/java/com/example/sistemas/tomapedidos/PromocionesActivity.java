@@ -16,8 +16,11 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Promociones;
+import com.example.sistemas.tomapedidos.Entidades.Usuario;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -29,7 +32,7 @@ public class PromocionesActivity extends AppCompatActivity {
     String id;
     Promociones promocion;
     ArrayList<Promociones> listaPromociones,listaPromocionesTipoT;
-    String url,id_pedido,cantidadlista;
+    String url,id_pedido,cantidadlista,almacen,tipoformapago,Ind;
     private ListView listView;
     private ListAdapter listAdapter;
     ArrayList<Product> products = new ArrayList<>();
@@ -38,6 +41,9 @@ public class PromocionesActivity extends AppCompatActivity {
     Integer indice ;
     ArrayList<String> listaTrama;
     Productos productopromocion;
+    Clientes cliente;
+    Usuario usuario;
+
 
     ArrayList<Productos> listaProductosPromociones,listaproductoselegidos;
 
@@ -50,6 +56,16 @@ public class PromocionesActivity extends AppCompatActivity {
         listAdapter = new ListAdapter(this,products);
         id_pedido = getIntent().getStringExtra("id_pedido");
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
+
+        cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
+        usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
+        almacen =  getIntent().getStringExtra("Almacen");
+        tipoformapago =  getIntent().getStringExtra("TipoPago");
+        Ind = getIntent().getStringExtra("indice");
+        cantidadlista =  getIntent().getStringExtra("cantidadlista");
+
+
+        Toast.makeText(this, usuario.getLugar(), Toast.LENGTH_SHORT).show();
 
         indice = listaproductoselegidos.size();
         listaProductosPromociones = new ArrayList<>();
@@ -107,9 +123,23 @@ public class PromocionesActivity extends AppCompatActivity {
         Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
         Toast.makeText(this, cantidadlista, Toast.LENGTH_SHORT).show();
         intent.putExtra("cantidadlista",cantidadlista);
+        intent.putExtra("Almacen",almacen);
+        intent.putExtra("TipoPago",tipoformapago);
+        intent.putExtra("indice",Ind);
+        intent.putExtra("id_pedido",id_pedido);
+
         Bundle bundle = new Bundle();
+        Bundle bundle1 = new Bundle();
+        Bundle bundle2 = new Bundle();
+
         bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+        bundle2.putSerializable("Usuario", usuario);
+        bundle1.putSerializable("Cliente", cliente);
+
         intent.putExtras(bundle);
+        intent.putExtras(bundle2);
+        intent.putExtras(bundle1);
+
         startActivity(intent);
         finish();
     }
@@ -184,10 +214,12 @@ public class PromocionesActivity extends AppCompatActivity {
                                 JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
 
                                 for(int i=0;i<jsonArray.length();i++) {
+
                                     promocion = new Promociones();
                                     jsonObject = jsonArray.getJSONObject(i);
 
                                     if (jsonObject.getString("OPCION_SELECCION").equals("S")) {
+
                                         promocion.setNumeroPromocion(jsonObject.getString("NRO_PROMOCION"));
                                         promocion.setCodArticulo(jsonObject.getString("COD_ARTICULO"));
                                         promocion.setDescripcionPromocion(jsonObject.getString("DESCRIPCION"));
@@ -268,13 +300,13 @@ public class PromocionesActivity extends AppCompatActivity {
                                     public void onClick(View v) {
 
                                         placeOrder(listaproductoselegidos);
-
                                         Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
                                         Bundle bundle = new Bundle();
                                         bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
                                         intent.putExtras(bundle);
                                         startActivity(intent);
                                         finish();
+
                                     }
                                 });
                             }else{
@@ -307,6 +339,4 @@ public class PromocionesActivity extends AppCompatActivity {
         public void refreshView();
 
     }
-
-
 }

@@ -78,6 +78,7 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
 
         */
 
+
         btnretornolistadoalmacen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
