@@ -47,7 +47,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
     Productos producto;
     Double preciolista, precio = 0.0;
     Boolean validador  = true;
-    String id,Ind,id_pedido;
+    String id,Ind,id_pedido,cantidadlista;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +62,9 @@ public class bandejaProductosActivity extends AppCompatActivity {
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("indice");
+        cantidadlista =  getIntent().getStringExtra("cantidadlista");
+
+        Toast.makeText(this, "La cantidad es : "+tipoformapago, Toast.LENGTH_SHORT).show();
         id_pedido = getIntent().getStringExtra("id_pedido");
         listabandejaproductos = new ArrayList<>();
         cantidadProductos = listabandejaproductos.size();
@@ -79,7 +82,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
         final Integer minuto = fecha.get(Calendar.MINUTE);
         final Integer segundo = fecha.get(Calendar.SECOND);
 
-        Toast.makeText(this,Ind, Toast.LENGTH_SHORT).show();
 
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
@@ -223,7 +225,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(bandejaProductosActivity.this,PromocionesActivity.class);
                 intent.putExtra("indice",""+listaproductoselegidos.size());
-                intent.putExtra("id_pedido",id_pedido);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
                 intent.putExtras(bundle);
@@ -290,12 +291,12 @@ public class bandejaProductosActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Double Aux = Double.valueOf(listaproductoselegidos.get(position).getPrecioAcumulado().replace(",",""));
-
+/*
                 Integer indice = Integer.valueOf(Ind);
                 if (position<indice){
                     Toast.makeText(bandejaProductosActivity.this, "Marca Correcta", Toast.LENGTH_SHORT).show();
                 }
-
+*/
                 AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
                 builder.setMessage(
                         "Codigo       :   "  + listaproductoselegidos.get(position).getCodigo() + "\n" +

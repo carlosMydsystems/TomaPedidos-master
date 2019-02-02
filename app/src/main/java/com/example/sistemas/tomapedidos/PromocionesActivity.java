@@ -29,14 +29,13 @@ public class PromocionesActivity extends AppCompatActivity {
     String id;
     Promociones promocion;
     ArrayList<Promociones> listaPromociones,listaPromocionesTipoT;
-    Boolean validador = true;
-    String url,id_pedido;
+    String url,id_pedido,cantidadlista;
     private ListView listView;
     private ListAdapter listAdapter;
     ArrayList<Product> products = new ArrayList<>();
     Button btnregistrarpromociones;
     ArrayList<Product> productOrders = new ArrayList<>();
-    Integer Index ;
+    Integer indice ;
     ArrayList<String> listaTrama;
     Productos productopromocion;
 
@@ -49,11 +48,10 @@ public class PromocionesActivity extends AppCompatActivity {
 
         listView = (ListView) findViewById(R.id.customListView);
         listAdapter = new ListAdapter(this,products);
-        Index = Integer.valueOf(getIntent().getStringExtra("indice"));
         id_pedido = getIntent().getStringExtra("id_pedido");
-        listaproductoselegidos = (ArrayList<Productos>) getIntent()
-                .getSerializableExtra("listaproductoselegidos");
+        listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
 
+        indice = listaproductoselegidos.size();
         listaProductosPromociones = new ArrayList<>();
         btnregistrarpromociones = (Button) findViewById(R.id.btnRegistrarPromociones);
         btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
@@ -64,10 +62,10 @@ public class PromocionesActivity extends AppCompatActivity {
             }
         });
 
+        cantidadlista = ""+listaproductoselegidos.size();
+
         id = "30011659";
         CalcularPromociones(id);
-
-
     }
 
     private void placeOrder(ArrayList<Productos> listaproductoselegidos)
@@ -100,7 +98,6 @@ public class PromocionesActivity extends AppCompatActivity {
                 listaproductoselegidos.add(productopromocion);
 
                 String Subtrama = listAdapter.listProducts.get(i).CartQuantity+"|"+listAdapter.listProducts.get(i).ProductIdArticulo + "|||";
-                Toast.makeText(this, Subtrama, Toast.LENGTH_SHORT).show();
                // listaTrama.add(Subtrama);
                 //products.CartQuantity = listAdapter.listProducts.get(i).CartQuantity;
                 //productOrders.add(products);
@@ -108,7 +105,8 @@ public class PromocionesActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
-        intent.putExtra("indice",Index );
+        Toast.makeText(this, cantidadlista, Toast.LENGTH_SHORT).show();
+        intent.putExtra("cantidadlista",cantidadlista);
         Bundle bundle = new Bundle();
         bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
         intent.putExtras(bundle);

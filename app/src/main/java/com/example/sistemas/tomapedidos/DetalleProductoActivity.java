@@ -26,6 +26,9 @@ import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -51,6 +54,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
     ArrayList<String> listaProducto;
     Usuario usuario;
     String Ind;
+    BigDecimal redondeado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,10 +128,15 @@ public class DetalleProductoActivity extends AppCompatActivity {
 
                     productos.setCantidad(etcantidadelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecio.getText().toString());
-                    cantidad = Double.valueOf(etcantidadelegida.getText().toString());
+                    cantidad =Double.valueOf(etcantidadelegida.getText().toString());
+
+                     redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
+
+                    //cantidad = Math.ceil(Double.valueOf(etcantidadelegida.getText().toString()));
+                    Toast.makeText(DetalleProductoActivity.this, redondeado.toString(), Toast.LENGTH_SHORT).show();
                     productos.setPrecio(tvprecio.getText().toString());
                     productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
-                    productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
+                    productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
                     listaproductoselegidos.add(productos);
 
                     Intent intent = new Intent(DetalleProductoActivity.this,bandejaProductosActivity.class);
@@ -350,7 +359,8 @@ public class DetalleProductoActivity extends AppCompatActivity {
                                     producto.setAlmacen(almacen);
                                     listaProductos.add(producto);
                                     tvprecio.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
-                                    preciounitario = Double.valueOf(producto.getPrecio());
+                                    //preciounitario = Double.valueOf(producto.getPrecio());
+                                    preciounitario = Double.valueOf(formateador.format((double)Double.valueOf(producto.getPrecio())));
 
                                     if (etcantidadelegida.getText().toString().equals("")){
 
@@ -424,6 +434,5 @@ public class DetalleProductoActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
-
 
 }
