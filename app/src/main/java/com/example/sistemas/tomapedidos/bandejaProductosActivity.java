@@ -136,7 +136,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
         }
 
-
         mview = getLayoutInflater().inflate(R.layout.listview_dialog,null);
         btnbuscarproducto.setOnClickListener(new View.OnClickListener() {
 
@@ -218,9 +217,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
         btnvalidarpromociones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-
 
             }
         });
