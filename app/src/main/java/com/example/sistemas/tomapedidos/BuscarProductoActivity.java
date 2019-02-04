@@ -86,9 +86,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
         btnregresarproducto = findViewById(R.id.btnRegresarProducto);
 
-
         // Calendario
-
 
         Calendar fecha = Calendar.getInstance();
         final Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
@@ -97,7 +95,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
         final Integer hora =  fecha.get(Calendar.HOUR_OF_DAY);
         final Integer minuto = fecha.get(Calendar.MINUTE);
         final Integer segundo = fecha.get(Calendar.SECOND);
-
 
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
@@ -184,8 +181,6 @@ if (listaproductoselegidos.size() != 0) {
                     .show();
         }
     });
-
-
 }
 
         btnbuscarProducto.setOnClickListener(new View.OnClickListener() {
@@ -205,7 +200,6 @@ if (listaproductoselegidos.size() != 0) {
                 id_Pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
 
                 if (listaproductoselegidos.size()==0 && validador.equals("true")){
-                    Toast.makeText(BuscarProductoActivity.this, "INGRESO A LA TRAMA", Toast.LENGTH_SHORT).show();
 
                     String Trama =  id_Pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() + "|"+tipoPago+"|"+fechaRegistro+"|"+fechaRegistro +"|0.00||";
 

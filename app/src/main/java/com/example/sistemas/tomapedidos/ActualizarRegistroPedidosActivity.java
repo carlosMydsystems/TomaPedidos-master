@@ -71,10 +71,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
 
         tipoformapago =  getIntent().getStringExtra("TipoPago");
-
-        Toast.makeText(this, usuario.getLugar(), Toast.LENGTH_SHORT).show();
-
-
         etcantprodelegida.setText(productos.getCantidad());
         // Se referencia a todas las partes del XML asociado al Activity
         tvcodprodelegido =  findViewById(R.id.tvCodProdElegido);
@@ -131,6 +127,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                     */
                     Intent intent = new Intent(ActualizarRegistroPedidosActivity.this,bandejaProductosActivity.class);
                     intent.putExtra("TipoPago",tipoformapago);
+                    intent.putExtra("validador","true");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
                     intent.putExtras(bundle);

@@ -20,7 +20,6 @@ import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Promociones;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,7 +31,7 @@ public class PromocionesActivity extends AppCompatActivity {
     String id;
     Promociones promocion;
     ArrayList<Promociones> listaPromociones,listaPromocionesTipoT;
-    String url,id_pedido,cantidadlista,almacen,tipoformapago,Ind;
+    String url,id_pedido,cantidadlista,almacen,tipoformapago,Ind,validador;
     private ListView listView;
     private ListAdapter listAdapter;
     ArrayList<Product> products = new ArrayList<>();
@@ -43,7 +42,6 @@ public class PromocionesActivity extends AppCompatActivity {
     Productos productopromocion;
     Clientes cliente;
     Usuario usuario;
-
 
     ArrayList<Productos> listaProductosPromociones,listaproductoselegidos;
 
@@ -63,20 +61,16 @@ public class PromocionesActivity extends AppCompatActivity {
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("indice");
         cantidadlista =  getIntent().getStringExtra("cantidadlista");
-
-
-        Toast.makeText(this, usuario.getLugar(), Toast.LENGTH_SHORT).show();
-
         indice = listaproductoselegidos.size();
         listaProductosPromociones = new ArrayList<>();
         btnregistrarpromociones = (Button) findViewById(R.id.btnRegistrarPromociones);
         btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //placeOrder();
             }
         });
+        validador = getIntent().getStringExtra("validador");
 
         cantidadlista = ""+listaproductoselegidos.size();
 
@@ -100,16 +94,17 @@ public class PromocionesActivity extends AppCompatActivity {
                         ,listAdapter.listProducts.get(i).ProductPrice
                         ,listAdapter.listProducts.get(i).ProductImage
                         ,listAdapter.listProducts.get(i).ProductIdArticulo
+                        ,listAdapter.listProducts.get(i).UnidadProducto
+
                 );
 
                 productopromocion.setCodigo(listAdapter.listProducts.get(i).ProductIdArticulo);
                 productopromocion.setDescripcion(listAdapter.listProducts.get(i).ProductName);
-                productopromocion.setUnidad("Uni-Duro");
+                productopromocion.setUnidad(listAdapter.listProducts.get(i).UnidadProducto);
                 productopromocion.setCantidad(String.valueOf(listAdapter.listProducts.get(i).CartQuantity));
                 productopromocion.setPrecio("0.0");
                 productopromocion.setPrecioAcumulado("0.0");
                 productopromocion.setObservacion("Promocion");
-
 
                 listaproductoselegidos.add(productopromocion);
 
@@ -274,7 +269,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                 if (listaPromocionesTipoT.size() == 0){
 
-                                    Toast.makeText(PromocionesActivity.this, "no existe promociones T", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PromocionesActivity.this, "No existe promociones T", Toast.LENGTH_SHORT).show();
 
                                 }else {
 
@@ -285,10 +280,11 @@ public class PromocionesActivity extends AppCompatActivity {
                                         productopromocion.setDescripcion(listaPromocionesTipoT.get(i).getDescripcionPromocion());
                                         productopromocion.setUnidad(listaPromocionesTipoT.get(i).getUnidad());
                                         productopromocion.setCantidad(listaPromocionesTipoT.get(i).getCantidadBonificada());
-                                        productopromocion.setPrecio("");
-                                        productopromocion.setPrecioAcumulado("");
+                                        productopromocion.setPrecio("0.0");
+                                        productopromocion.setPrecioAcumulado("0.0");
                                         productopromocion.setObservacion("Promocion");
                                         listaproductoselegidos.add(productopromocion);
+                                        listaProductosPromociones.add(productopromocion);
                                     }
                                 }
 
@@ -301,9 +297,26 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                         placeOrder(listaproductoselegidos);
                                         Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
+
+                                        intent.putExtra("cantidadlista",cantidadlista);
+                                        intent.putExtra("Almacen",almacen);
+                                        intent.putExtra("TipoPago",tipoformapago);
+                                        intent.putExtra("indice",Ind);
+                                        intent.putExtra("id_pedido",id_pedido);
+                                        intent.putExtra("validador","false");
+
                                         Bundle bundle = new Bundle();
+                                        Bundle bundle1 = new Bundle();
+                                        Bundle bundle2 = new Bundle();
+
                                         bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                                        bundle2.putSerializable("Usuario", usuario);
+                                        bundle1.putSerializable("Cliente", cliente);
+
                                         intent.putExtras(bundle);
+                                        intent.putExtras(bundle2);
+                                        intent.putExtras(bundle1);
+
                                         startActivity(intent);
                                         finish();
 
