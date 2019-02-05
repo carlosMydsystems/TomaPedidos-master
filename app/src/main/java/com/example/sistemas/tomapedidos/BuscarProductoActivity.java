@@ -88,7 +88,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
 
-
         btnregresarproducto = findViewById(R.id.btnRegresarProducto);
 
         // Calendario
@@ -106,7 +105,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(btnbuscarProducto.getWindowToken(), 0);
-
 
 if (listaproductoselegidos.size() != 0) {
     btnregresarproducto.setOnClickListener(new View.OnClickListener() {
@@ -143,6 +141,7 @@ if (listaproductoselegidos.size() != 0) {
                     intent.putExtras(bundle2);
                     startActivity(intent);
                     finish();
+
                 }
             });
 
@@ -179,6 +178,7 @@ if (listaproductoselegidos.size() != 0) {
                     intent.putExtras(bundle1);
                     startActivity(intent);
                     finish();
+
                 }
             });
 
@@ -187,6 +187,16 @@ if (listaproductoselegidos.size() != 0) {
         }
     });
 }
+
+
+        if (listaproductoselegidos.size()==0 && validador.equals("true")){
+
+            String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
+                    getCodVendedor() + "|"+tipoPago+"|"+fechaRegistro+"|"+fechaRegistro +"|0.00|"+etglosa.getText().toString()+"|";
+
+            ActualizarProducto(Trama);
+
+        }
 
         btnbuscarProducto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,6 +214,7 @@ if (listaproductoselegidos.size() != 0) {
 
                // id_Pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
 
+                /*
                 if (listaproductoselegidos.size()==0 && validador.equals("true")){
 
                     String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
@@ -212,6 +223,7 @@ if (listaproductoselegidos.size() != 0) {
                     ActualizarProducto(Trama);
 
                 }
+                */
 
                 Boolean verficador = false;
                 Integer posicion=0;
@@ -429,10 +441,7 @@ if (listaproductoselegidos.size() != 0) {
 
     private void ActualizarProducto(String trama) {
 
-
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
-        // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
 
@@ -442,9 +451,7 @@ if (listaproductoselegidos.size() != 0) {
                     public void onResponse(String response) {
 
                         if (response.equals("OK")){
-
                             Toast.makeText(BuscarProductoActivity.this, "Se hizo el registro", Toast.LENGTH_SHORT).show();
-
                         }
                     }
                 }, new Response.ErrorListener() {

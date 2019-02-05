@@ -1,6 +1,7 @@
 package com.example.sistemas.tomapedidos;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -51,6 +52,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
     Usuario usuario;
     String Ind;
     BigDecimal redondeado;
+    Double validarStock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +108,19 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvsubtotal = findViewById(R.id.tvSubtotal);
         tvtotal = findViewById(R.id.tvTotalElegido);
 
+if (tvstock.getText() == null){
+
+    tvstock.setText("0.0");
+}
+
+else if (etcantidadelegida.getText()== null){
+
+    etcantidadelegida.setText("0.0");
+
+}else {
+
+
+}
         btnguardaryrevisar = findViewById(R.id.btnGuardarrevisar);
         btnguardaryagregar = findViewById(R.id.btnGuardaryagregar);
 
@@ -113,19 +128,63 @@ public class DetalleProductoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (etcantidadelegida.getText().toString().equals("")){
-                }else{
+                validarStock = Double.valueOf(tvstock.getText().toString()) - Double.valueOf(etcantidadelegida.getText().toString());
 
-                    String trama = id_pedido+"|D|"+Ind+"|"+etcantidadelegida.getText()+"|"+
-                            productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText().toString().trim()+"|";
+                if (validarStock < 0) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
+                            .setMessage("El Stock es insuficiente, desea elegir otro articulo")
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+
+                            });
+                    builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
+
+                            intent.putExtra("TipoPago",tipoPago);
+                            intent.putExtra("indice",Ind);
+                            intent.putExtra("validador","false");
+                            intent.putExtra("Almacen",almacen);
+                            intent.putExtra("id_pedido",id_pedido);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("Cliente",cliente);
+                            intent.putExtras(bundle);
+                            Bundle bundle1 = new Bundle();
+                            bundle1.putSerializable("listaproductoselegidos",listaproductoselegidos);
+                            intent.putExtras(bundle1);
+                            Bundle bundle3 = new Bundle();
+                            bundle3.putSerializable("Usuario",usuario);
+                            intent.putExtras(bundle3);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+
+                    builder.create()
+                            .show();
+
+                } else {
+
+                    if (etcantidadelegida.getText().toString().equals("")) {
+                    } else {
+
+
+                    String trama = id_pedido + "|D|" + Ind + "|" + etcantidadelegida.getText() + "|" +
+                            productos.getCodigo() + "|" + tvprecio.getText() + "|" + tvtotal.getText().toString().trim() + "|";
 
                     ActualizarProducto(trama);
 
                     productos.setCantidad(etcantidadelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecio.getText().toString());
-                    cantidad =Double.valueOf(etcantidadelegida.getText().toString());
+                    cantidad = Double.valueOf(etcantidadelegida.getText().toString());
 
-                     redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
+                    redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
 
                     //cantidad = Math.ceil(Double.valueOf(etcantidadelegida.getText().toString()));
                     Toast.makeText(DetalleProductoActivity.this, redondeado.toString(), Toast.LENGTH_SHORT).show();
@@ -134,68 +193,114 @@ public class DetalleProductoActivity extends AppCompatActivity {
                     productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
                     listaproductoselegidos.add(productos);
 
-                    Intent intent = new Intent(DetalleProductoActivity.this,bandejaProductosActivity.class);
-                    intent.putExtra("TipoPago",tipoPago);
-                    intent.putExtra("indice",listaproductoselegidos.size());
-                    intent.putExtra("validador","true");
-                    intent.putExtra("id_pedido",id_pedido);
+                    Intent intent = new Intent(DetalleProductoActivity.this, bandejaProductosActivity.class);
+                    intent.putExtra("TipoPago", tipoPago);
+                    intent.putExtra("indice", listaproductoselegidos.size());
+                    intent.putExtra("validador", "true");
+                    intent.putExtra("id_pedido", id_pedido);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
                     intent.putExtras(bundle);
                     Bundle bundle1 = new Bundle();
-                    bundle1.putSerializable("Cliente",cliente);
+                    bundle1.putSerializable("Cliente", cliente);
                     intent.putExtras(bundle1);
                     Bundle bundle2 = new Bundle();
-                    bundle2.putSerializable("Usuario",usuario);
+                    bundle2.putSerializable("Usuario", usuario);
                     intent.putExtras(bundle2);
                     Bundle bundle3 = new Bundle();
-                    bundle3.putSerializable("Almacen",almacen);
+                    bundle3.putSerializable("Almacen", almacen);
                     intent.putExtras(bundle3);
                     startActivity(intent);
                     finish();
                 }
+            }
             }
         });
         btnguardaryagregar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String trama = id_pedido+"|D|"+Ind+"|"+etcantidadelegida.getText()+"|"+
-                        productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText().toString().trim()+"||";
+                validarStock = Double.valueOf(tvstock.getText().toString()) - Double.valueOf(etcantidadelegida.getText().toString());
 
-                ActualizarProducto(trama);
+                if (validarStock < 0) {
 
-                if (etcantidadelegida.getText().toString().equals("")){
-                }else{
+                    AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
+                            .setMessage("El Stock es insuficiente, desea elegir otro articulo")
+                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+
+                            });
+                    builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
+
+                            intent.putExtra("TipoPago",tipoPago);
+                            intent.putExtra("indice",Ind);
+                            intent.putExtra("validador","false");
+                            intent.putExtra("Almacen",almacen);
+                            intent.putExtra("id_pedido",id_pedido);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("Cliente",cliente);
+                            intent.putExtras(bundle);
+                            Bundle bundle1 = new Bundle();
+                            bundle1.putSerializable("listaproductoselegidos",listaproductoselegidos);
+                            intent.putExtras(bundle1);
+                            Bundle bundle3 = new Bundle();
+                            bundle3.putSerializable("Usuario",usuario);
+                            intent.putExtras(bundle3);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+
+                    builder.create()
+                            .show();
+
+                } else {
 
 
-                    productos.setCantidad(etcantidadelegida.getText().toString());
-                    preciounitario = Double.valueOf(tvprecio.getText().toString());
-                    cantidad = Double.valueOf(etcantidadelegida.getText().toString());
-                    productos.setPrecio(tvprecio.getText().toString());
-                    productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
-                    productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
-                   // productos.setAlmacen(almacen);
-                    listaproductoselegidos.add(productos);
+                    String trama = id_pedido + "|D|" + Ind + "|" + etcantidadelegida.getText() + "|" +
+                            productos.getCodigo() + "|" + tvprecio.getText() + "|" + tvtotal.getText().toString().trim() + "||";
 
-                    Intent intent = new Intent(DetalleProductoActivity.this,BuscarProductoActivity.class);
-                    intent.putExtra("TipoPago",tipoPago);
-                    intent.putExtra("indice",Ind);
-                    intent.putExtra("validador","true");
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
-                    intent.putExtras(bundle);
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putSerializable("Cliente",cliente);
-                    intent.putExtras(bundle1);
-                    Bundle bundle2 = new Bundle();
-                    bundle2.putSerializable("Usuario",usuario);
-                    intent.putExtras(bundle2);
-                    Bundle bundle3 = new Bundle();
-                    bundle3.putSerializable("Almacen",almacen);
-                    intent.putExtras(bundle3);
-                    startActivity(intent);
-                    finish();
+                    ActualizarProducto(trama);
+
+                    if (etcantidadelegida.getText().toString().equals("")) {
+                    } else {
+
+
+                        productos.setCantidad(etcantidadelegida.getText().toString());
+                        preciounitario = Double.valueOf(tvprecio.getText().toString());
+                        cantidad = Double.valueOf(etcantidadelegida.getText().toString());
+                        productos.setPrecio(tvprecio.getText().toString());
+                        productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
+                        productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
+                        // productos.setAlmacen(almacen);
+                        listaproductoselegidos.add(productos);
+
+                        Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
+                        intent.putExtra("TipoPago", tipoPago);
+                        intent.putExtra("indice", Ind);
+                        intent.putExtra("validador", "true");
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
+                        intent.putExtras(bundle);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putSerializable("Cliente", cliente);
+                        intent.putExtras(bundle1);
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putSerializable("Usuario", usuario);
+                        intent.putExtras(bundle2);
+                        Bundle bundle3 = new Bundle();
+                        bundle3.putSerializable("Almacen", almacen);
+                        intent.putExtras(bundle3);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             }
         });

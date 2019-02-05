@@ -53,6 +53,8 @@ public class PromocionesActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.customListView);
         listAdapter = new ListAdapter(this,products);
         id_pedido = getIntent().getStringExtra("id_pedido");
+
+        Toast.makeText(this, id_pedido, Toast.LENGTH_SHORT).show();
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
 
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
@@ -103,10 +105,12 @@ public class PromocionesActivity extends AppCompatActivity {
                 productopromocion.setDescripcion(listAdapter.listProducts.get(i).ProductName);
                 productopromocion.setUnidad(listAdapter.listProducts.get(i).UnidadProducto);
                 productopromocion.setCantidad(String.valueOf(listAdapter.listProducts.get(i).CartQuantity));
-                productopromocion.setPrecio("12.0");
-                productopromocion.setPrecioAcumulado("10.0");
+                productopromocion.setPrecio(listAdapter.listProducts.get(i).ProductPrice.toString());
+                productopromocion.setPrecioAcumulado("0.0");
                 productopromocion.setNumPromocion(listAdapter.listProducts.get(i).ProductName);
                 productopromocion.setObservacion("Promocion");
+
+                Toast.makeText(this, listAdapter.listProducts.get(i).ProductPrice+"", Toast.LENGTH_SHORT).show();
 
                 listaproductoselegidos.add(productopromocion);
 
@@ -187,7 +191,7 @@ public class PromocionesActivity extends AppCompatActivity {
                     valorcantidad,
                     listaPromociones.get(i).getDescripcionPromocion(),
                     listaPromociones.get(i).getCodArticulo(),
-                    valorcantidad.toString()
+                    listaPromociones.get(i).getPrecioRegularSoles()
                    ));
             //Toast.makeText(this, "Este es el precio "+ listaPromociones.get(i).getPrecioSoles() , Toast.LENGTH_SHORT).show();
         }
@@ -293,7 +297,6 @@ public class PromocionesActivity extends AppCompatActivity {
                                         productopromocion.setPrecio(listaPromocionesTipoT.get(i).getPrecioSoles());
                                         productopromocion.setPrecioAcumulado("0.0");
                                         productopromocion.setObservacion("Promocion");
-
                                         listaproductoselegidos.add(productopromocion);
                                         listaProductosPromociones.add(productopromocion);
                                     }

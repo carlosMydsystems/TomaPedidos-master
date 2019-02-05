@@ -198,8 +198,11 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                     startActivity(intent);
                     finish();
+
                 }else {
+
                     Toast.makeText(bandejaProductosActivity.this, "La canasta esta vacia", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -207,6 +210,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         btnregresarbandeja.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 btnbuscarproducto.setVisibility(View.VISIBLE);
                 btnterminar.setVisibility(View.VISIBLE);
                 btnvalidarpromociones.setVisibility(View.GONE);
@@ -321,15 +325,15 @@ public class bandejaProductosActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                if (listaproductoselegidos.get(position).getPrecioAcumulado()==null){
+               // if (listaproductoselegidos.get(position).getPrecioAcumulado()==null){
 
                     Double Aux = Double.valueOf(listaproductoselegidos.get(position).getPrecioAcumulado().replace(",",""));
-
+/*
                 }else {
 
                     Aux = 0.0;
                 }
-
+*/
                 AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
                 builder.setMessage(
                         "Codigo       :   "  + listaproductoselegidos.get(position).getCodigo() + "\n" +
@@ -406,14 +410,10 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-
                         if (response.equals("OK")){
-
                            // insertaCampos(listaproductoselegidos,id);
-
                         }
                     }
-
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -493,8 +493,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 }
             }
         }
-
-
     }
 }
 
