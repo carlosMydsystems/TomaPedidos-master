@@ -46,6 +46,4 @@ public class Product {
         catch (Exception e) {}
         return cartItems.toString();
     }
-
-
 }

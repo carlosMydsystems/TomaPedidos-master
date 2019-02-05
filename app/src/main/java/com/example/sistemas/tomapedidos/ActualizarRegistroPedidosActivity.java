@@ -43,7 +43,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
     ArrayList<Productos> listaproductoselegidos;
     EditText etcantprodelegida;
     Double preciounitario,cantidad,  total, Aux;
-    String url,almacen,position,tipoformapago;
+    String url,almacen,position,tipoformapago,id_pedido;
     ProgressDialog progressDialog;
     Productos producto;
     ArrayList<Productos> listaProductos;
@@ -70,8 +70,8 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         almacen =  getIntent().getStringExtra("Almacen");
         position =  getIntent().getStringExtra("position");
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
-
         tipoformapago =  getIntent().getStringExtra("TipoPago");
+        id_pedido = getIntent().getStringExtra("id_pedido");
         etcantprodelegida.setText(productos.getCantidad());
         // Se referencia a todas las partes del XML asociado al Activity
         tvcodprodelegido =  findViewById(R.id.tvCodProdElegido);
@@ -114,12 +114,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                     productos.setCantidad(etcantprodelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
                     cantidad = Double.valueOf(etcantprodelegida.getText().toString());
-
-
                     redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
-
-
-
                     productos.setPrecio(tvprecioelegido.getText().toString());
                     productos.setPrecioAcumulado(tvtotalelegido.getText().toString()); // Se hace la definicion del precio que se va ha acumular
                     productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
@@ -128,13 +123,17 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                     listaproductoselegidos.get(i).setCantidad(redondeado.toString());
                     listaproductoselegidos.get(i).setPrecio(tvprecioelegido.getText().toString());
                     listaproductoselegidos.get(i).setPrecioAcumulado(tvtotalelegido.getText().toString());
+
                     /*
                     listaproductoselegidos.get(i).setCantidad(cantidad.toString());
                     listaproductoselegidos.get(i).setPrecio();
                     */
+
                     Intent intent = new Intent(ActualizarRegistroPedidosActivity.this,bandejaProductosActivity.class);
                     intent.putExtra("TipoPago",tipoformapago);
+                    intent.putExtra("id_pedido",id_pedido);
                     intent.putExtra("validador","true");
+                    intent.putExtra("Almacen",almacen);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
                     intent.putExtras(bundle);

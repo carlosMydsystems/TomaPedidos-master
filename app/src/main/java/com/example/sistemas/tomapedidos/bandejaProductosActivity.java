@@ -38,7 +38,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
     ListView lvbandejaproductos;
     ArrayList<String> listabandejaproductos,listabandejaproductoselegidos;
     Clientes cliente;
-    String cantidad ,Precio, url, almacen, tipoformapago, fechaRegistro, documento = "Boleta", validador;  // se define el documento en el caso que se use en la trama
+    String cantidad ,Precio, url, almacen, tipoformapago, fechaRegistro, documento = "Boleta",
+            validador;  // se define el documento en el caso que se use en la trama
     View mview;
     Integer cantidadProductos=0;
     ArrayList<Productos> listaproductoselegidos;
@@ -65,7 +66,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("indice");
-        cantidadlista =  getIntent().getStringExtra("cantidadlista");
         id_pedido = getIntent().getStringExtra("id_pedido");
         validador = getIntent().getStringExtra("validador");
         valida = Boolean.valueOf(validador);
@@ -87,7 +87,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
 
-        separador(listaproductoselegidos);
+        // separador(listaproductoselegidos);
 
         // valores para el sumarizado de la bandeja
 
@@ -152,6 +152,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 intent.putExtra("indice",Ind);
                 intent.putExtra("validador","false");
                 intent.putExtra("Almacen",almacen);
+                intent.putExtra("id_pedido",id_pedido);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle);
@@ -178,8 +179,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                     intent.putExtra("TipoPago",tipoformapago);
                     intent.putExtra("indice",Ind);
-                    Toast.makeText(bandejaProductosActivity.this, ""+Ind, Toast.LENGTH_SHORT).show();
-                    intent.putExtra("cantidadlista",cantidadlista);
+                    intent.putExtra("cantidadlista",listaproductoselegidos.size()+"");
                     intent.putExtra("Almacen",almacen);
                     intent.putExtra("id_pedido",id_pedido);
                     intent.putExtra("validador","false");
@@ -352,6 +352,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
         Intent intent = new Intent(bandejaProductosActivity.this, bandejaProductosActivity.class);
         intent.putExtra("validador","true");
+        intent.putExtra("id_pedido",id_pedido);
         intent.putExtra("TipoPago",tipoformapago);
         Bundle bundle = new Bundle();
         bundle.putSerializable("Producto", productos);
@@ -433,6 +434,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
         Intent intent =  new Intent(bandejaProductosActivity.this, ActualizarRegistroPedidosActivity.class);
         intent.putExtra("TipoPago",tipoformapago);
+        intent.putExtra("id_pedido",id_pedido);
         intent.putExtra("position",position.toString());
         Bundle bundle = new Bundle();
         bundle.putSerializable("Usuario",usuario);
@@ -466,7 +468,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
         Productos productopromocionenviar;
         String trama;
 
-        for (int i =0; i<listaPromocioneselegidas.size();i++){
+
+        for (int i =listaproductoselegidos.size()+1; i<listaPromocioneselegidas.size();i++){
 
             productopromocionenviar = new Productos();
             if (listaPromocioneselegidas.get(i).getObservacion() != null) {
@@ -483,10 +486,10 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     listaaenviar.add(productopromocionenviar);
 
                     Toast.makeText(this, Ind+"", Toast.LENGTH_SHORT).show();
-                    /*
+
                     trama = listaPromocioneselegidas.get(i).getCodigo()+"|D|"+Ind+"|"+listaPromocioneselegidas.get(i).getCantidad()+"|0.0|0.0";
                     ActualizarProducto(trama);
-*/
+
                 }
             }
         }

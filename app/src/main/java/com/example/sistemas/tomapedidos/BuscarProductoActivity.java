@@ -54,7 +54,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     Usuario usuario;
     String id_Pedido,fechaRegistro,precio = "0.0";
-    String indice,validador,Glosa;
+    String indice,validador,Glosa,id_pedido;
     boolean validadorBooleano;
 
 
@@ -70,6 +70,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
         almacen = getIntent().getStringExtra("Almacen");
         indice = getIntent().getStringExtra("indice");
         validador = getIntent().getStringExtra("validador");
+        id_pedido = getIntent().getStringExtra("id_pedido");
 
         listaProductos = new ArrayList<>();
         listaProducto = new ArrayList<>();
@@ -201,11 +202,11 @@ if (listaproductoselegidos.size() != 0) {
                 progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
                 progressDialog.show();
 
-                id_Pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
+               // id_Pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
 
                 if (listaproductoselegidos.size()==0 && validador.equals("true")){
 
-                    String Trama =  id_Pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
+                    String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
                             getCodVendedor() + "|"+tipoPago+"|"+fechaRegistro+"|"+fechaRegistro +"|0.00|"+etglosa.getText().toString()+"|";
 
                     ActualizarProducto(Trama);
@@ -262,7 +263,7 @@ if (listaproductoselegidos.size() != 0) {
                 Intent intent =  new Intent(BuscarProductoActivity.this,DetalleProductoActivity.class);
                 intent.putExtra("TipoPago",tipoPago);
                 intent.putExtra("Almacen",almacen);
-                intent.putExtra("id_pedido",id_Pedido);
+                intent.putExtra("id_pedido",id_pedido);
 
                 Integer  aux = listaproductoselegidos.size() + 1;
                 intent.putExtra("indice",aux.toString());

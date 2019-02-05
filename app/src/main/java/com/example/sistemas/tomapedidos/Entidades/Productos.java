@@ -19,12 +19,13 @@ public class Productos implements Serializable {
     private String almacen;
     private String observacion;
     private String distrito;
+    private String numPromocion;
 
 
     public Productos(String descripcion, String nombre, String codigo, String stock, String precio,
                      String cantidad, String flete, String idProducto, String marca, String unidad,
                      String estado, String precioAcumulado, String almacen, String observacion,
-                     String distrito) {
+                     String distrito, String numPromocion) {
         this.descripcion = descripcion;
         this.nombre = nombre;
         this.codigo = codigo;
@@ -40,9 +41,18 @@ public class Productos implements Serializable {
         this.almacen = almacen;
         this.observacion = observacion;
         this.distrito = distrito;
+        this.numPromocion = numPromocion;
     }
 
     public Productos() {
+    }
+
+    public String getNumPromocion() {
+        return numPromocion;
+    }
+
+    public void setNumPromocion(String numPromocion) {
+        this.numPromocion = numPromocion;
     }
 
     public String getDistrito() { return distrito; }

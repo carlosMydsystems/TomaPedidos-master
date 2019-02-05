@@ -161,7 +161,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String trama = id_pedido+"|D|"+Ind+"|"+etcantidadelegida.getText()+"|"+
-                        productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText().toString().trim()+"|";
+                        productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText().toString().trim()+"||";
 
                 ActualizarProducto(trama);
 

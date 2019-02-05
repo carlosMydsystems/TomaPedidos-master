@@ -43,7 +43,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
     ArrayList<Productos> listaproductoselegidos;
     Usuario usuario;
     Button btnregresarformalistapago;
-    String indice="0",validador = "true";
+    String indice="0",validador = "true",id_pedido;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         almacen = getIntent().getStringExtra("Almacen") ;
         listatipopago =  new ArrayList<>();
         listaAux = new ArrayList<>();
-        String fechaRegistro;
+        String fechaRegistro ;
 
 
         Calendar fecha = Calendar.getInstance();
@@ -67,6 +67,15 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         final Integer hora =  fecha.get(Calendar.HOUR_OF_DAY);
         final Integer minuto = fecha.get(Calendar.MINUTE);
         final Integer segundo = fecha.get(Calendar.SECOND);
+
+
+
+
+
+
+
+        id_pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
+
 
 
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
@@ -125,10 +134,12 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                                        Toast.makeText(ListadoFormaPagoActivity.this, id_pedido, Toast.LENGTH_SHORT).show();
                                         Intent intent =  new Intent(ListadoFormaPagoActivity.this,BuscarProductoActivity.class);
                                         intent.putExtra("Almacen",almacen);
                                         intent.putExtra("indice",indice);
                                         intent.putExtra("validador",validador);
+                                        intent.putExtra("id_pedido",id_pedido);
                                         Bundle bundle = new Bundle();
                                         bundle.putSerializable("Cliente",cliente);
                                         intent.putExtras(bundle);
