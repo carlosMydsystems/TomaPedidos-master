@@ -14,8 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -131,7 +129,6 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                                        Toast.makeText(ListadoFormaPagoActivity.this, id_pedido, Toast.LENGTH_SHORT).show();
                                         Intent intent =  new Intent(ListadoFormaPagoActivity.this,BuscarProductoActivity.class);
                                         intent.putExtra("Almacen",almacen);
                                         intent.putExtra("indice",indice);

@@ -187,7 +187,6 @@ else if (etcantidadelegida.getText()== null){
                     redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
 
                     //cantidad = Math.ceil(Double.valueOf(etcantidadelegida.getText().toString()));
-                    Toast.makeText(DetalleProductoActivity.this, redondeado.toString(), Toast.LENGTH_SHORT).show();
                     productos.setPrecio(tvprecio.getText().toString());
                     productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
                     productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
@@ -449,7 +448,6 @@ else if (etcantidadelegida.getText()== null){
                     public void onResponse(String response) {
 
                         response = response.toString().trim();
-                        Toast.makeText(DetalleProductoActivity.this, response, Toast.LENGTH_SHORT).show();
 
                         if (response.equals("OK")){
 

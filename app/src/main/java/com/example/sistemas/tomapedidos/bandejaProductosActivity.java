@@ -255,8 +255,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                Toast.makeText(bandejaProductosActivity.this,listaproductoselegidos.size()+"", Toast.LENGTH_SHORT).show();
-
                 for (int position1 = 0;position1 < listaproductoselegidos.size();position1++){
 
                     if (listaproductoselegidos.get(position1).getObservacion() == null){
@@ -497,8 +495,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     productopromocionenviar.setPrecio("0.0");
                     productopromocionenviar.setPrecioAcumulado("0.0");
                     listaaenviar.add(productopromocionenviar);
-
-                    Toast.makeText(this, Ind+"", Toast.LENGTH_SHORT).show();
 
                     trama = listaPromocioneselegidas.get(i).getCodigo()+"|D|"+Ind+"|"+listaPromocioneselegidas.get(i).getCantidad()+"|0.0|0.0";
                     ActualizarProducto(trama);
