@@ -1,5 +1,6 @@
 package com.example.sistemas.tomapedidos;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -77,7 +78,10 @@ public class PromocionesActivity extends AppCompatActivity {
 
         cantidadlista = ""+listaproductoselegidos.size();
 
-        id = "30011659";
+        id = id_pedido;
+
+
+        //id = "30011659";
         CalcularPromociones(id);
     }
 
@@ -342,7 +346,37 @@ public class PromocionesActivity extends AppCompatActivity {
                             }else{
                                 AlertDialog.Builder build1 = new AlertDialog.Builder(PromocionesActivity.this);
                                 build1.setTitle("No se ha encontrado registros")
-                                        .setNegativeButton("Regresar",null)
+                                        .setNegativeButton("Regresar",new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+
+                                                Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
+
+                                                intent.putExtra("cantidadlista",cantidadlista);
+                                                intent.putExtra("Almacen",almacen);
+                                                intent.putExtra("TipoPago",tipoformapago);
+                                                intent.putExtra("indice",Ind);
+                                                intent.putExtra("id_pedido",id_pedido);
+                                                intent.putExtra("validador","false");
+                                                intent.putExtra("retorno", "retorno");
+
+                                                Bundle bundle = new Bundle();
+                                                Bundle bundle1 = new Bundle();
+                                                Bundle bundle2 = new Bundle();
+
+                                                bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                                                bundle2.putSerializable("Usuario", usuario);
+                                                bundle1.putSerializable("Cliente", cliente);
+
+                                                intent.putExtras(bundle);
+                                                intent.putExtras(bundle2);
+                                                intent.putExtras(bundle1);
+
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        })
+
                                         .create()
                                         .show();
                             }

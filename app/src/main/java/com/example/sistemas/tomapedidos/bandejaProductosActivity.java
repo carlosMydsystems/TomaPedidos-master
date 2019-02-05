@@ -47,7 +47,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
     ProgressDialog progressDialog ;
     Productos producto;
     Double preciolista, precio = 0.0,Aux;
-    String id,Ind,id_pedido,cantidadlista;
+    String id,Ind,id_pedido,cantidadlista,retorno;
     ListView listView;
     Boolean valida;
     Integer Index1;
@@ -68,6 +68,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         Ind = getIntent().getStringExtra("indice");
         id_pedido = getIntent().getStringExtra("id_pedido");
         validador = getIntent().getStringExtra("validador");
+        retorno = getIntent().getStringExtra("retorno");
         valida = Boolean.valueOf(validador);
         listabandejaproductos = new ArrayList<>();
         cantidadProductos = listabandejaproductos.size();
@@ -90,6 +91,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
         // separador(listaproductoselegidos);
 
         // valores para el sumarizado de la bandeja
+
+
 
         for (int i=0;i<listaproductoselegidos.size();i++){
            // calcula numero de productos
@@ -128,6 +131,16 @@ public class bandejaProductosActivity extends AppCompatActivity {
         btnvalidarpromociones = findViewById(R.id.btnValidarPromociones);
         String cadenaTituloAux = "Productos : "+ cantidad+"   |  Monto : S/ "+formateador.format(precio)+"";
         tvtitulodinamico.setText(cadenaTituloAux);
+
+        if (retorno == null){
+
+        }else if (retorno.equals("retorno")){
+
+            salirlistview();
+            btnterminar.setVisibility(View.VISIBLE);
+            btnvalidarpromociones.setVisibility(View.GONE);
+
+        }
 
         if (valida){
 

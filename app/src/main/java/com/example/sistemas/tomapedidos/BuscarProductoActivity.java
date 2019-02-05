@@ -130,6 +130,7 @@ if (listaproductoselegidos.size() != 0) {
                     intent.putExtra("indice", indice);
                     intent.putExtra("id_pedido", id_Pedido);
                     intent.putExtra("Almacen", almacen);
+                    intent.putExtra("retorno", "retorno");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("Cliente", cliente);
                     intent.putExtras(bundle);

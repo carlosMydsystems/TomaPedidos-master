@@ -68,20 +68,17 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         final Integer minuto = fecha.get(Calendar.MINUTE);
         final Integer segundo = fecha.get(Calendar.SECOND);
 
+        // Donde se va a colocar el nuevo id del pedido
 
 
+        //ObtenerId();
 
-
-
+        // id segun el antiguo metodo
 
         id_pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
 
-
-
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
-
-
 
         btnregresarformalistapago = findViewById(R.id.btnRegresarListaFormaPago);
         btnregresarformalistapago.setOnClickListener(new View.OnClickListener() {
@@ -220,6 +217,46 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
             numeroString = "0"+ numero.toString();
         }
         return  numeroString;
+    }
+
+    private void ObtenerId() {
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_FPAGO";
+        listatipopago = new ArrayList<>();
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject=new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                            if (success){
+
+
+
+                            }else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ListadoFormaPagoActivity.this);
+                                builder.setMessage("No se pudo obtener el id");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
     }
 
 }
