@@ -14,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -57,6 +59,8 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         listaAux = new ArrayList<>();
         String fechaRegistro ;
 
+        btnregresarformalistapago = findViewById(R.id.btnRegresarListaFormaPago);
+
 
         Calendar fecha = Calendar.getInstance();
         final Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
@@ -69,7 +73,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         // Donde se va a colocar el nuevo id del pedido
 
 
-        //ObtenerId();
+        ObtenerId();
 
         // id segun el antiguo metodo
 
@@ -78,27 +82,10 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
 
-        btnregresarformalistapago = findViewById(R.id.btnRegresarListaFormaPago);
-        btnregresarformalistapago.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Intent intent =  new Intent(ListadoFormaPagoActivity.this,ListadoAlmacenActivity.class);
-                intent.putExtra("validador",validador);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Cliente",cliente);
-                intent.putExtras(bundle);
-                Bundle bundle2 = new Bundle();
-                bundle2.putSerializable("Usuario",usuario);
-                intent.putExtras(bundle2);
-                startActivity(intent);
-                finish();
 
-            }
-        });
 
-        Consultartipopago();
-        lvtipopago = findViewById(R.id.lvtipopago);
+
     }
 
     private void Consultartipopago() {
@@ -219,28 +206,36 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
     private void ObtenerId() {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_FPAGO";
-        listatipopago = new ArrayList<>();
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=" +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_COR_PEDIDO_MOVIL&variables=%27PWE%27,%27888%27,%27TH000%27";
+
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject=new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
-                            if (success){
 
+                            id_pedido = response.replace("OK:","");
+                        btnregresarformalistapago.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
 
+                                Intent intent =  new Intent(ListadoFormaPagoActivity.this,ListadoAlmacenActivity.class);
+                                intent.putExtra("validador",validador);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("Cliente",cliente);
+                                intent.putExtras(bundle);
+                                Bundle bundle2 = new Bundle();
+                                bundle2.putSerializable("Usuario",usuario);
+                                intent.putExtras(bundle2);
+                                startActivity(intent);
+                                finish();
 
-                            }else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(ListadoFormaPagoActivity.this);
-                                builder.setMessage("No se pudo obtener el id");
                             }
+                        });
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        Consultartipopago();
+                        lvtipopago = findViewById(R.id.lvtipopago);
+
                     }
                 }, new Response.ErrorListener() {
             @Override

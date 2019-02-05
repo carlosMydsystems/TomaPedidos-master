@@ -102,7 +102,6 @@ public class PromocionesActivity extends AppCompatActivity {
                         ,listAdapter.listProducts.get(i).ProductImage
                         ,listAdapter.listProducts.get(i).ProductIdArticulo
                         ,listAdapter.listProducts.get(i).UnidadProducto
-
                 );
 
                 productopromocion.setCodigo(listAdapter.listProducts.get(i).ProductIdArticulo);
