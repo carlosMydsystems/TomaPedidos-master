@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,11 +23,12 @@ import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -49,6 +49,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
     ArrayList<Productos> listaProductos;
     ArrayList<String> listaProducto;
     Usuario usuario;
+    BigDecimal redondeado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,12 +114,18 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                     productos.setCantidad(etcantprodelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
                     cantidad = Double.valueOf(etcantprodelegida.getText().toString());
+
+
+                    redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
+
+
+
                     productos.setPrecio(tvprecioelegido.getText().toString());
                     productos.setPrecioAcumulado(tvtotalelegido.getText().toString()); // Se hace la definicion del precio que se va ha acumular
-                    productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
+                    productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
                     productos.setAlmacen(almacen);
                     Integer i = Integer.valueOf(position);
-                    listaproductoselegidos.get(i).setCantidad(cantidad.toString());
+                    listaproductoselegidos.get(i).setCantidad(redondeado.toString());
                     listaproductoselegidos.get(i).setPrecio(tvprecioelegido.getText().toString());
                     listaproductoselegidos.get(i).setPrecioAcumulado(tvtotalelegido.getText().toString());
                     /*

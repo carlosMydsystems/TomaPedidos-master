@@ -49,6 +49,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
     String id,Ind,id_pedido,cantidadlista;
     ListView listView;
     Boolean valida;
+    Integer Index1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
         // Se captura los parametros de los otros Intent
         listaproductoselegidos = (ArrayList<Productos>) getIntent()
                 .getSerializableExtra("listaProductoselegidos");   //
+
+
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");   //
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");    //
         almacen =  getIntent().getStringExtra("Almacen");
@@ -83,6 +86,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
         final Integer segundo = fecha.get(Calendar.SECOND);
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
+
+        separador(listaproductoselegidos);
 
         // valores para el sumarizado de la bandeja
 
@@ -166,12 +171,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
         btnterminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-/*
-                btnterminar.setVisibility(View.GONE);
-                btnvalidarpromociones.setVisibility(View.VISIBLE);
-                btnbuscarproducto.setVisibility(View.GONE);
-                btnregresarbandeja.setVisibility(View.VISIBLE);
-*/
 
                 if (listaproductoselegidos.size() > 0){
 
@@ -179,6 +178,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                     intent.putExtra("TipoPago",tipoformapago);
                     intent.putExtra("indice",Ind);
+                    Toast.makeText(bandejaProductosActivity.this, ""+Ind, Toast.LENGTH_SHORT).show();
                     intent.putExtra("cantidadlista",cantidadlista);
                     intent.putExtra("Almacen",almacen);
                     intent.putExtra("id_pedido",id_pedido);
@@ -217,6 +217,12 @@ public class bandejaProductosActivity extends AppCompatActivity {
         btnvalidarpromociones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+/*
+                String trama = id_pedido+"|D|"+Ind+"|"+etcantidadelegida.getText()+"|"+
+                        productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText()+"|";
+*/
+               // ActualizarProducto(trama);
 
             }
         });
@@ -286,10 +292,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                     break;
 
                                 }else {
-
                                     salirlistview();
                                     break;
-
                                 }
 
                             case 2:
@@ -299,7 +303,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                 btnvalidarpromociones.setVisibility(View.GONE);
                                 valida = true;
                                 break;
-
                         }
                     }
                 });
@@ -409,6 +412,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                         }
                     }
+
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -455,4 +459,39 @@ public class bandejaProductosActivity extends AppCompatActivity {
         }
         return  numeroString;
     }
+
+    private void separador(ArrayList<Productos> listaPromocioneselegidas){
+
+        ArrayList<Productos> listaaenviar = new ArrayList<>();
+        Productos productopromocionenviar;
+        String trama;
+
+        for (int i =0; i<listaPromocioneselegidas.size();i++){
+
+            productopromocionenviar = new Productos();
+            if (listaPromocioneselegidas.get(i).getObservacion() != null) {
+
+                if (listaPromocioneselegidas.get(i).getObservacion().equals("Promocion")){
+
+                    // Toast.makeText(this, listaPromocioneselegidas.get(i).getDescripcion(), Toast.LENGTH_SHORT).show();
+
+                    productopromocionenviar.setCodigo(listaPromocioneselegidas.get(i).getCodigo());
+                    productopromocionenviar.setDescripcion(listaPromocioneselegidas.get(i).getDescripcion());
+                    productopromocionenviar.setCantidad(listaPromocioneselegidas.get(i).getCantidad());
+                    productopromocionenviar.setPrecio("0.0");
+                    productopromocionenviar.setPrecioAcumulado("0.0");
+                    listaaenviar.add(productopromocionenviar);
+
+                    Toast.makeText(this, Ind+"", Toast.LENGTH_SHORT).show();
+                    /*
+                    trama = listaPromocioneselegidas.get(i).getCodigo()+"|D|"+Ind+"|"+listaPromocioneselegidas.get(i).getCantidad()+"|0.0|0.0";
+                    ActualizarProducto(trama);
+*/
+                }
+            }
+        }
+
+
+    }
 }
+

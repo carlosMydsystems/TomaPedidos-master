@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -48,13 +49,14 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ListView lvProducto;
     ArrayList<String> listaProducto;
     Clientes cliente;
-    EditText etproducto;
+    EditText etproducto,etglosa;
     String url,Tipobusqueda = "Nombre",tipoPago,almacen,Ind= "1";
     ProgressDialog progressDialog;
     Usuario usuario;
     String id_Pedido,fechaRegistro,precio = "0.0";
-    String indice,validador;
+    String indice,validador,Glosa;
     boolean validadorBooleano;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,8 @@ public class BuscarProductoActivity extends AppCompatActivity {
         btnbuscarProducto = findViewById(R.id.btnBuscarProducto);
         lvProducto = findViewById(R.id.lvProducto);
         etproducto  = findViewById(R.id.etPrducto);
+        etglosa = findViewById(R.id.etGlosa);
+
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
@@ -201,7 +205,8 @@ if (listaproductoselegidos.size() != 0) {
 
                 if (listaproductoselegidos.size()==0 && validador.equals("true")){
 
-                    String Trama =  id_Pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor() + "|"+tipoPago+"|"+fechaRegistro+"|"+fechaRegistro +"|0.00||";
+                    String Trama =  id_Pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
+                            getCodVendedor() + "|"+tipoPago+"|"+fechaRegistro+"|"+fechaRegistro +"|0.00|"+etglosa.getText().toString()+"|";
 
                     ActualizarProducto(Trama);
 
@@ -436,6 +441,8 @@ if (listaproductoselegidos.size() != 0) {
                     public void onResponse(String response) {
 
                         if (response.equals("OK")){
+
+                            Toast.makeText(BuscarProductoActivity.this, "Se hizo el registro", Toast.LENGTH_SHORT).show();
 
                         }
                     }

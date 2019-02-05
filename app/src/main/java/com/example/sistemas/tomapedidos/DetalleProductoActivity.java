@@ -32,10 +32,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Calendar;
-
-
-
 
 public class DetalleProductoActivity extends AppCompatActivity {
 
@@ -120,9 +116,8 @@ public class DetalleProductoActivity extends AppCompatActivity {
                 if (etcantidadelegida.getText().toString().equals("")){
                 }else{
 
-
                     String trama = id_pedido+"|D|"+Ind+"|"+etcantidadelegida.getText()+"|"+
-                            productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText()+"|";
+                            productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText().toString().trim()+"|";
 
                     ActualizarProducto(trama);
 
@@ -166,9 +161,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String trama = id_pedido+"|D|"+Ind+"|"+etcantidadelegida.getText()+"|"+
-                        productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText()+"|";
-
-
+                        productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText().toString().trim()+"|";
 
                 ActualizarProducto(trama);
 
@@ -251,74 +244,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         etcantidadelegida.addTextChangedListener(textWatcher);
     }
 
-    private void RegistroPedido() {
-
-        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion = PKG_WEB_HERRAMIENTAS." +
-                "FN_WS_GENERA_PEDIDO&variables="; // Se debe de encontrar el metodo
-        //listaProducto = new ArrayList<>();
-        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        try {
-                            JSONObject jsonObject=new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
-                            if (success){
-                                for(int i=0;i<jsonArray.length();i++) {
-                                    producto = new Productos();
-                                    jsonObject = jsonArray.getJSONObject(i);
-                                    producto.setIdProducto(jsonObject.getString("IdProducto"));
-                                    producto.setCodigo(jsonObject.getString("CodigoProducto"));
-                                    producto.setMarca(jsonObject.getString("Marca"));
-                                    producto.setDescripcion(jsonObject.getString("DescripcionProducto"));
-                                    producto.setPrecio(jsonObject.getString("Precio"));
-                                    producto.setStock(jsonObject.getString("Stock"));
-                                    producto.setUnidad(jsonObject.getString("Unidad"));
-                                    producto.setFlete(jsonObject.getString("Flete"));
-                                    producto.setEstado(jsonObject.getString("Estado"));
-                                    listaProductos.add(producto);
-                                    listaProducto.add(producto.getCodigo()+ " - " + producto.getDescripcion());
-                                }
-                                Intent intent =  new Intent(DetalleProductoActivity.this,MainActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                                intent.putExtras(bundle);
-                                Bundle bundle1 = new Bundle();
-                                bundle1.putSerializable("Cliente",cliente);
-                                intent.putExtras(bundle1);
-                                Bundle bundle2 = new Bundle();
-                                bundle2.putSerializable("Usuario",usuario);
-                                intent.putExtras(bundle2);
-                                startActivity(intent);
-                                finish();
-
-                            }else {
-                                listaProducto.clear();
-                                AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
-                                builder.setMessage("No se llego a encontrar el registro")
-                                        .setNegativeButton("Aceptar",null)
-                                        .create()
-                                        .show();
-                            }
-                        } catch (JSONException e) { e.printStackTrace(); }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
-    }
-
     private void VerificarCantidad(String cantidad) {
 
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
@@ -357,6 +282,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
                                     producto.setStock(jsonObject.getString("STOCK"));
                                     producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
                                     producto.setAlmacen(almacen);
+
                                     listaProductos.add(producto);
                                     tvprecio.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
                                     //preciounitario = Double.valueOf(producto.getPrecio());
@@ -416,6 +342,9 @@ public class DetalleProductoActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+
+                        response = response.toString().trim();
+                        Toast.makeText(DetalleProductoActivity.this, response, Toast.LENGTH_SHORT).show();
 
                         if (response.equals("OK")){
 

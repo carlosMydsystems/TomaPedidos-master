@@ -60,6 +60,7 @@ public class PromocionesActivity extends AppCompatActivity {
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("indice");
+        Toast.makeText(this, Ind, Toast.LENGTH_SHORT).show();
         cantidadlista =  getIntent().getStringExtra("cantidadlista");
         indice = listaproductoselegidos.size();
         listaProductosPromociones = new ArrayList<>();
