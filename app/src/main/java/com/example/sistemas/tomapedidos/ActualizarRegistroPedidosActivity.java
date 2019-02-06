@@ -120,7 +120,9 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                     productos.setCantidad(etcantprodelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
                     cantidad = Double.valueOf(etcantprodelegida.getText().toString());
+                    Toast.makeText(ActualizarRegistroPedidosActivity.this, cantidad.toString(), Toast.LENGTH_SHORT).show();
                     redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
+                    Toast.makeText(ActualizarRegistroPedidosActivity.this, ""+redondeado, Toast.LENGTH_SHORT).show();
                     productos.setPrecio(tvprecioelegido.getText().toString());
                     productos.setPrecioAcumulado(tvtotalelegido.getText().toString()); // Se hace la definicion del precio que se va ha acumular
                     productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
@@ -317,7 +319,17 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                     producto.setAlmacen(almacen);
                                     listaProductos.add(producto);
                                     tvprecioelegido.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
+
+                                    preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
+
+
+                                    /*
                                     preciounitario = Double.valueOf(producto.getPrecio());
+                                    */
+
+
+
+
                                     if (etcantprodelegida.getText().toString().equals("")){
 
                                         Toast.makeText(ActualizarRegistroPedidosActivity.this,

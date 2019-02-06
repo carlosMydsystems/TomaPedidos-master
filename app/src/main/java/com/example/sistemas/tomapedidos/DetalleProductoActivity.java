@@ -128,7 +128,7 @@ else if (etcantidadelegida.getText()== null){
             @Override
             public void onClick(View v) {
 
-                validarStock = Double.valueOf(tvstock.getText().toString()) - Double.valueOf(etcantidadelegida.getText().toString());
+                    validarStock = Double.valueOf(tvstock.getText().toString().replace(",","")) - Double.valueOf(etcantidadelegida.getText().toString());
 
                 if (validarStock < 0) {
 

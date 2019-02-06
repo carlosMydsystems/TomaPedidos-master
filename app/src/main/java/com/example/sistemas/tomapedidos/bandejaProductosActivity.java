@@ -299,7 +299,13 @@ public class bandejaProductosActivity extends AppCompatActivity {
                             case 1:
 
                                 if (listaproductoselegidos.get(position).getObservacion() == null) {
+
                                     listaproductoselegidos.remove(position);
+                                    String tramaEliminaSeleccion;
+                                    int posfinal = position+1;
+                                    tramaEliminaSeleccion = id_pedido+"|"+posfinal;
+                                    Toast.makeText(bandejaProductosActivity.this, tramaEliminaSeleccion, Toast.LENGTH_SHORT).show();
+                                    EliminarProducto(tramaEliminaSeleccion);
                                     btnterminar.setVisibility(View.VISIBLE);
                                     btnvalidarpromociones.setVisibility(View.GONE);
                                     Alertsdialog("Borrar el producto");
@@ -472,36 +478,36 @@ public class bandejaProductosActivity extends AppCompatActivity {
         }
         return  numeroString;
     }
+    private void EliminarProducto(String tramaElimina) {
 
-    private void separador(ArrayList<Productos> listaPromocioneselegidas){
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        ArrayList<Productos> listaaenviar = new ArrayList<>();
-        Productos productopromocionenviar;
-        String trama;
+        // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
 
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_TRAMA_MOVIL&variables='"+tramaElimina+"'";
 
-        for (int i =listaproductoselegidos.size()+1; i<listaPromocioneselegidas.size();i++){
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
 
-            productopromocionenviar = new Productos();
-            if (listaPromocioneselegidas.get(i).getObservacion() != null) {
-
-                if (listaPromocioneselegidas.get(i).getObservacion().equals("Promocion")){
-
-                    // Toast.makeText(this, listaPromocioneselegidas.get(i).getDescripcion(), Toast.LENGTH_SHORT).show();
-
-                    productopromocionenviar.setCodigo(listaPromocioneselegidas.get(i).getCodigo());
-                    productopromocionenviar.setDescripcion(listaPromocioneselegidas.get(i).getDescripcion());
-                    productopromocionenviar.setCantidad(listaPromocioneselegidas.get(i).getCantidad());
-                    productopromocionenviar.setPrecio("0.0");
-                    productopromocionenviar.setPrecioAcumulado("0.0");
-                    listaaenviar.add(productopromocionenviar);
-
-                    trama = listaPromocioneselegidas.get(i).getCodigo()+"|D|"+Ind+"|"+listaPromocioneselegidas.get(i).getCantidad()+"|0.0|0.0";
-                    ActualizarProducto(trama);
-
-                }
+                        if (response.equals("OK")){
+                            // insertaCampos(listaproductoselegidos,id);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
             }
-        }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
     }
+
 }
 
