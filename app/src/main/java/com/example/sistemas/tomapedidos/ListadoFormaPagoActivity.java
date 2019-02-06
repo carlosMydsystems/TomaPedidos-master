@@ -72,7 +72,6 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
         // Donde se va a colocar el nuevo id del pedido
 
-
         ObtenerId();
 
         // id segun el antiguo metodo
@@ -81,10 +80,6 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
-
-
-
-
 
     }
 

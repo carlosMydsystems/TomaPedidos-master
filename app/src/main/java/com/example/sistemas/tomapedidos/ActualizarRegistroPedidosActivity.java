@@ -57,7 +57,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_actualizar_registro_pedidos);
 
         etcantprodelegida =  findViewById(R.id.etCantProdElegida);
-
         listaproductoselegidos = new ArrayList<>();
         productos  = new Productos();
         listaProductos=new ArrayList<>();
@@ -69,6 +68,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         almacen =  getIntent().getStringExtra("Almacen");
         position =  getIntent().getStringExtra("position");
+
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         id_pedido = getIntent().getStringExtra("id_pedido");
@@ -111,6 +111,12 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
                 }else{
 
+                    Integer pos = Integer.valueOf(position)+1;
+
+                    String trama = id_pedido + "|D|" + pos + "|" + etcantprodelegida.getText() + "|" +
+                            productos.getCodigo() + "|" + tvprecioelegido.getText() + "|" + tvtotalelegido.getText().toString().trim() + "||";
+                    ActualizarProducto(trama);
+
                     productos.setCantidad(etcantprodelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
                     cantidad = Double.valueOf(etcantprodelegida.getText().toString());
@@ -151,6 +157,12 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                 }
             }
         });
+        Integer pos = Integer.valueOf(position)+1;
+
+        String trama = id_pedido + "|D|" + pos + "|" + etcantprodelegida.getText() + "|" +
+                productos.getCodigo() + "|" + tvprecioelegido.getText() + "|" + tvtotalelegido.getText().toString().trim() + "||";
+        ActualizarProducto(trama);
+
 
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
@@ -196,7 +208,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         etcantprodelegida.addTextChangedListener(textWatcher);
     }
 
-    private void RegistroPedido() {
+    public void RegistroPedido() {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion = " +
@@ -344,5 +356,39 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
+
+    private void ActualizarProducto(String trama) {
+
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        response = response.toString().trim();
+
+                        if (response.equals("OK")){
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+    }
+
 
 }
