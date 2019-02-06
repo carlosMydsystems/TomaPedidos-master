@@ -211,19 +211,6 @@ if (listaproductoselegidos.size() != 0) {
                 progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
                 progressDialog.show();
 
-               // id_Pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
-
-                /*
-                if (listaproductoselegidos.size()==0 && validador.equals("true")){
-
-                    String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
-                            getCodVendedor() + "|"+tipoPago+"|"+fechaRegistro+"|"+fechaRegistro +"|0.00|"+etglosa.getText().toString()+"|";
-
-                    ActualizarProducto(Trama);
-
-                }
-                */
-
                 Boolean verficador = false;
                 Integer posicion=0;
 
