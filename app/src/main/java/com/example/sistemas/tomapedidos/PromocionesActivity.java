@@ -80,8 +80,6 @@ public class PromocionesActivity extends AppCompatActivity {
 
         id = id_pedido;
 
-
-        //id = "30011659";
         CalcularPromociones(id);
     }
 
@@ -113,11 +111,10 @@ public class PromocionesActivity extends AppCompatActivity {
                 productopromocion.setNumPromocion(listAdapter.listProducts.get(i).ProductName);
                 productopromocion.setObservacion("Promocion");
 
-                Toast.makeText(this, listAdapter.listProducts.get(i).ProductPrice+"", Toast.LENGTH_SHORT).show();
-
                 listaproductoselegidos.add(productopromocion);
 
                 String Subtrama = listAdapter.listProducts.get(i).CartQuantity+"|"+listAdapter.listProducts.get(i).ProductIdArticulo + "|||";
+                Toast.makeText(this, Subtrama, Toast.LENGTH_SHORT).show();
                // listaTrama.add(Subtrama);
                 //products.CartQuantity = listAdapter.listProducts.get(i).CartQuantity;
                 //productOrders.add(products);
@@ -125,7 +122,6 @@ public class PromocionesActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
-        Toast.makeText(this, cantidadlista, Toast.LENGTH_SHORT).show();
         intent.putExtra("cantidadlista",cantidadlista);
         intent.putExtra("Almacen",almacen);
         intent.putExtra("TipoPago",tipoformapago);
@@ -146,41 +142,6 @@ public class PromocionesActivity extends AppCompatActivity {
 
         startActivity(intent);
         finish();
-    }
-
-    private void InsertaPromociones(String s){
-
-        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
-        // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
-
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+s+"'";
-        //Toast.makeText(this, s, Toast.LENGTH_LONG).show();
-
-        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        if (response.equals("OK")){
-
-                            Toast.makeText(PromocionesActivity.this, "se hizo la insersion de forma correcta", Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
-
     }
 
     public void getProduct(ArrayList<Promociones> listaPromociones) {
@@ -344,7 +305,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                 });
                             }else{
                                 AlertDialog.Builder build1 = new AlertDialog.Builder(PromocionesActivity.this);
-                                build1.setTitle("No se ha encontrado registros")
+                                build1.setTitle("No se han encontrado Promociones")
                                         .setNegativeButton("Regresar",new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
@@ -357,7 +318,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                                 intent.putExtra("indice",Ind);
                                                 intent.putExtra("id_pedido",id_pedido);
                                                 intent.putExtra("validador","false");
-                                                intent.putExtra("retorno", "retorno");
+                                                //intent.putExtra("retorno", "retorno");
 
                                                 Bundle bundle = new Bundle();
                                                 Bundle bundle1 = new Bundle();

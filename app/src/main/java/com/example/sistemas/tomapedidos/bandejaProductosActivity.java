@@ -44,13 +44,11 @@ public class bandejaProductosActivity extends AppCompatActivity {
     Integer cantidadProductos=0;
     ArrayList<Productos> listaproductoselegidos;
     Usuario  usuario;
-    ProgressDialog progressDialog ;
     Productos producto;
     Double preciolista, precio = 0.0,Aux;
     String id,Ind,id_pedido,cantidadlista,retorno;
     ListView listView;
     Boolean valida;
-    Integer Index1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +57,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
         // Se captura los parametros de los otros Intent
         listaproductoselegidos = (ArrayList<Productos>) getIntent()
                 .getSerializableExtra("listaProductoselegidos");   //
-
 
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");   //
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");    //
@@ -304,7 +301,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                     String tramaEliminaSeleccion;
                                     int posfinal = position+1;
                                     tramaEliminaSeleccion = id_pedido+"|"+posfinal;
-                                    Toast.makeText(bandejaProductosActivity.this, tramaEliminaSeleccion, Toast.LENGTH_SHORT).show();
                                     EliminarProducto(tramaEliminaSeleccion);
                                     btnterminar.setVisibility(View.VISIBLE);
                                     btnvalidarpromociones.setVisibility(View.GONE);
@@ -342,15 +338,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-               // if (listaproductoselegidos.get(position).getPrecioAcumulado()==null){
+                Double Aux = Double.valueOf(listaproductoselegidos.get(position).getPrecioAcumulado().replace(",",""));
 
-                    Double Aux = Double.valueOf(listaproductoselegidos.get(position).getPrecioAcumulado().replace(",",""));
-/*
-                }else {
-
-                    Aux = 0.0;
-                }
-*/
                 AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
                 builder.setMessage(
                         "Codigo       :   "  + listaproductoselegidos.get(position).getCodigo() + "\n" +

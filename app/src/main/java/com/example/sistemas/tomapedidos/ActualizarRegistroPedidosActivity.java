@@ -26,7 +26,6 @@ import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -42,7 +41,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
     Clientes cliente;
     ArrayList<Productos> listaproductoselegidos;
     EditText etcantprodelegida;
-    Double preciounitario,cantidad,  total, Aux;
+    Double preciounitario,cantidad, Aux;
     String url,almacen,position,tipoformapago,id_pedido;
     ProgressDialog progressDialog;
     Productos producto;
@@ -120,9 +119,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                     productos.setCantidad(etcantprodelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
                     cantidad = Double.valueOf(etcantprodelegida.getText().toString());
-                    Toast.makeText(ActualizarRegistroPedidosActivity.this, cantidad.toString(), Toast.LENGTH_SHORT).show();
                     redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
-                    Toast.makeText(ActualizarRegistroPedidosActivity.this, ""+redondeado, Toast.LENGTH_SHORT).show();
                     productos.setPrecio(tvprecioelegido.getText().toString());
                     productos.setPrecioAcumulado(tvtotalelegido.getText().toString()); // Se hace la definicion del precio que se va ha acumular
                     productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
@@ -159,12 +156,15 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                 }
             }
         });
+
+        /*
         Integer pos = Integer.valueOf(position)+1;
 
         String trama = id_pedido + "|D|" + pos + "|" + etcantprodelegida.getText() + "|" +
                 productos.getCodigo() + "|" + tvprecioelegido.getText() + "|" + tvtotalelegido.getText().toString().trim() + "||";
         ActualizarProducto(trama);
 
+        */
 
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
@@ -259,7 +259,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                             }else {
                                 listaProducto.clear();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this);
-                                builder.setMessage("No se llego a encontrar el registro")
+                                builder.setMessage("No se llegaron a encontrar Promociones")
                                         .setNegativeButton("Aceptar",null)
                                         .create()
                                         .show();
@@ -348,7 +348,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                             }else {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this);
-                                builder.setMessage("No se llego a encontrar el registro")
+                                builder.setMessage("No se llegaron a encontrar registros")
                                         .setNegativeButton("Aceptar",null)
                                         .create()
                                         .show();
