@@ -276,7 +276,7 @@ else if (etcantidadelegida.getText()== null){
                         productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
                         // productos.setAlmacen(almacen);
                         listaproductoselegidos.add(productos);
-
+                        Index = String.valueOf(Integer.valueOf(Index)+1);
                         Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
 
                         intent.putExtra("TipoPago", tipoPago);

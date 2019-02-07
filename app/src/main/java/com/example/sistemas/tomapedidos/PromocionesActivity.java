@@ -31,7 +31,7 @@ public class PromocionesActivity extends AppCompatActivity {
     String id;
     Promociones promocion;
     ArrayList<Promociones> listaPromociones,listaPromocionesTipoT;
-    String url,id_pedido,cantidadlista,almacen,tipoformapago,Ind,validador,trama;
+    String url,id_pedido,cantidadlista,almacen,tipoformapago,Ind,validador,trama,Index;
     private ListView listView;
     private ListAdapter listAdapter;
     ArrayList<Product> products = new ArrayList<>();
@@ -53,7 +53,7 @@ public class PromocionesActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.customListView);
         listAdapter = new ListAdapter(this,products);
         id_pedido = getIntent().getStringExtra("id_pedido");
-
+        Index = getIntent().getStringExtra("Index");
         Toast.makeText(this, id_pedido, Toast.LENGTH_SHORT).show();
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
 
@@ -254,7 +254,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                         productopromocion = new Productos();
                                         productopromocion.setNumPromocion(listaPromocionesTipoT.get(i).getNumeroPromocion());
-                                        productopromocion.setCodigo(listaPromocionesTipoT.get(i).getNumeroPromocion());
+                                        productopromocion.setCodigo(id_pedido);
                                         productopromocion.setIdProducto(listaPromocionesTipoT.get(i).getCodArticulo());
                                         productopromocion.setDescripcion(listaPromocionesTipoT.get(i).getDescripcionPromocion());
                                         productopromocion.setUnidad(listaPromocionesTipoT.get(i).getUnidad());
@@ -284,6 +284,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         intent.putExtra("Almacen",almacen);
                                         intent.putExtra("TipoPago",tipoformapago);
                                         intent.putExtra("Ind",Ind);
+                                        intent.putExtra("Index",Index);
                                         intent.putExtra("id_pedido",id_pedido);
                                         intent.putExtra("validador","false");
 
@@ -317,6 +318,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                                 intent.putExtra("Almacen",almacen);
                                                 intent.putExtra("TipoPago",tipoformapago);
                                                 intent.putExtra("Ind",Ind);
+                                                intent.putExtra("Index",Index);
                                                 intent.putExtra("id_pedido",id_pedido);
                                                 intent.putExtra("validador","false");
                                                 //intent.putExtra("retorno", "retorno");

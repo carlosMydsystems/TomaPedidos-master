@@ -29,18 +29,14 @@ public class IntermediaActivity extends AppCompatActivity {
     String id;
     Promociones promocion;
     ArrayList<Promociones> listaPromociones,listaPromocionesTipoT;
-    String url,id_pedido,cantidadlista,almacen,tipoformapago,Ind,validador,trama;
+    String url,id_pedido,cantidadlista,almacen,tipoformapago,Ind,validador,trama,Index;
     private ListView listView;
     private ListAdapter listAdapter;
     ArrayList<Product> products = new ArrayList<>();
-    Button btnregistrarpromociones;
-    ArrayList<Product> productOrders = new ArrayList<>();
     Integer indice ;
-    ArrayList<String> listaTrama;
-    Productos productopromocion;
-    Clientes cliente;
+    ArrayList<String> listaTrama;    Clientes cliente;
     Usuario usuario;
-    ArrayList<Productos> listaProductosPromociones,listaproductoselegidos;
+    ArrayList<Productos>listaproductoselegidos;
 
 
 
@@ -57,12 +53,10 @@ public class IntermediaActivity extends AppCompatActivity {
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("indice");
         cantidadlista =  getIntent().getStringExtra("cantidadlista");
+        Index = getIntent().getStringExtra("Index");
 
         listaproductoselegidos = (ArrayList<Productos>) getIntent()
                 .getSerializableExtra("listaProductoselegidos");
-
-
-
 
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
@@ -80,13 +74,12 @@ public class IntermediaActivity extends AppCompatActivity {
 
             Integer indice = i+1;
             String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
-                    get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getCodigo() + "|" +
+                    get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getNumPromocion() + "|" +
                     listaproductoselegidos.get(i).getPrecio() + "|" + listaproductoselegidos.get(i)
                     .getPrecio() + "|";
 
             ActualizarProducto(trama);
         }
-
 
         Intent intent = new Intent(IntermediaActivity.this,bandejaProductosActivity.class);
 
@@ -96,7 +89,7 @@ public class IntermediaActivity extends AppCompatActivity {
         intent.putExtra("indice",Ind);
         intent.putExtra("cantidadlista",cantidadlista);
         intent.putExtra("validador","false");
-
+        intent.putExtra("Index",Index);
         Bundle bundle = new Bundle();
         Bundle bundle1 = new Bundle();
         Bundle bundle2 = new Bundle();
