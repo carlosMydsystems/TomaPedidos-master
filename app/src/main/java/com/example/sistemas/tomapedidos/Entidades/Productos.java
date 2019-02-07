@@ -20,12 +20,13 @@ public class Productos implements Serializable {
     private String observacion;
     private String distrito;
     private String numPromocion;
+    private Integer indice;
 
 
     public Productos(String descripcion, String nombre, String codigo, String stock, String precio,
                      String cantidad, String flete, String idProducto, String marca, String unidad,
                      String estado, String precioAcumulado, String almacen, String observacion,
-                     String distrito, String numPromocion) {
+                     String distrito, String numPromocion, Integer indice) {
         this.descripcion = descripcion;
         this.nombre = nombre;
         this.codigo = codigo;
@@ -42,9 +43,18 @@ public class Productos implements Serializable {
         this.observacion = observacion;
         this.distrito = distrito;
         this.numPromocion = numPromocion;
+        this.indice = indice;
     }
 
     public Productos() {
+    }
+
+    public Integer getIndice() {
+        return indice;
+    }
+
+    public void setIndice(Integer indice) {
+        this.indice = indice;
     }
 
     public String getNumPromocion() {

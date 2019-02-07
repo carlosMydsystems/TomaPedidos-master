@@ -27,7 +27,6 @@ import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -50,7 +49,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
     ArrayList<Productos> listaProductos;
     ArrayList<String> listaProducto;
     Usuario usuario;
-    String Ind;
+    String Ind,Index;
     BigDecimal redondeado;
     Double validarStock;
 
@@ -73,6 +72,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tipoPago = getIntent().getStringExtra("TipoPago");
         id_pedido = getIntent().getStringExtra("id_pedido");
         Ind = getIntent().getStringExtra("indice");
+        Index = getIntent().getStringExtra("Index");
 
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
 
@@ -123,7 +123,6 @@ else if (etcantidadelegida.getText()== null){
 }
         btnguardaryrevisar = findViewById(R.id.btnGuardarrevisar);
         btnguardaryagregar = findViewById(R.id.btnGuardaryagregar);
-
         btnguardaryrevisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,7 +138,6 @@ else if (etcantidadelegida.getText()== null){
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
-
                             });
                     builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         @Override
@@ -151,6 +149,7 @@ else if (etcantidadelegida.getText()== null){
                             intent.putExtra("indice",Ind);
                             intent.putExtra("validador","false");
                             intent.putExtra("Almacen",almacen);
+                            intent.putExtra("Index",Index);
                             intent.putExtra("id_pedido",id_pedido);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("Cliente",cliente);
@@ -174,28 +173,26 @@ else if (etcantidadelegida.getText()== null){
                     if (etcantidadelegida.getText().toString().equals("")) {
                     } else {
 
-
-                    String trama = id_pedido + "|D|" + Ind + "|" + etcantidadelegida.getText() + "|" +
+                    String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
                             productos.getCodigo() + "|" + tvprecio.getText() + "|" + tvtotal.getText().toString().trim() + "|";
-
                     ActualizarProducto(trama);
-
                     productos.setCantidad(etcantidadelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecio.getText().toString());
                     cantidad = Double.valueOf(etcantidadelegida.getText().toString());
-
                     redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
 
                     //cantidad = Math.ceil(Double.valueOf(etcantidadelegida.getText().toString()));
                     productos.setPrecio(tvprecio.getText().toString());
                     productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
-                    productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
+                    productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tene
+                    productos.setIndice(Integer.valueOf(Index));
                     listaproductoselegidos.add(productos);
 
                     Intent intent = new Intent(DetalleProductoActivity.this, bandejaProductosActivity.class);
                     intent.putExtra("TipoPago", tipoPago);
                     intent.putExtra("indice", listaproductoselegidos.size());
                     intent.putExtra("validador", "true");
+                    intent.putExtra("Index", Index);
                     intent.putExtra("id_pedido", id_pedido);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
@@ -220,7 +217,7 @@ else if (etcantidadelegida.getText()== null){
             public void onClick(View v) {
 
                 validarStock = Double.valueOf(tvstock.getText().toString().replace(",","")) - Double.valueOf(etcantidadelegida.getText().toString());
-
+                
                 if (validarStock < 0) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
@@ -230,7 +227,6 @@ else if (etcantidadelegida.getText()== null){
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                 }
-
                             });
                     builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         @Override
@@ -242,6 +238,7 @@ else if (etcantidadelegida.getText()== null){
                             intent.putExtra("indice",Ind);
                             intent.putExtra("validador","false");
                             intent.putExtra("Almacen",almacen);
+                            intent.putExtra("Index",Index);
                             intent.putExtra("id_pedido",id_pedido);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("Cliente",cliente);
@@ -262,15 +259,14 @@ else if (etcantidadelegida.getText()== null){
 
                 } else {
 
-
-                    String trama = id_pedido + "|D|" + Ind + "|" + etcantidadelegida.getText() + "|" +
-                            productos.getCodigo() + "|" + tvprecio.getText() + "|" + tvtotal.getText().toString().trim() + "||";
-
-                    ActualizarProducto(trama);
-
                     if (etcantidadelegida.getText().toString().equals("")) {
+
                     } else {
 
+                String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
+                        productos.getCodigo() + "|" + tvprecio.getText() + "|" + tvtotal.getText().toString().trim() + "|";
+
+                        ActualizarProducto(trama);
 
                         productos.setCantidad(etcantidadelegida.getText().toString());
                         preciounitario = Double.valueOf(tvprecio.getText().toString());
@@ -282,9 +278,12 @@ else if (etcantidadelegida.getText()== null){
                         listaproductoselegidos.add(productos);
 
                         Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
+
                         intent.putExtra("TipoPago", tipoPago);
                         intent.putExtra("indice", Ind);
                         intent.putExtra("validador", "true");
+                        intent.putExtra("Index",Index);
+                        intent.putExtra("id_pedido",id_pedido);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
                         intent.putExtras(bundle);
@@ -399,14 +398,25 @@ else if (etcantidadelegida.getText()== null){
                                     }else {
 
                                         Double cant = Double.valueOf(etcantidadelegida.getText().toString());
-                                        Double preciototal = (cant*preciounitario*100.00)/100.00; // Se hace la definicion del precio que se va ha acumular
+                                        Double preciototal = cant*preciounitario; // Se hace la definicion del precio que se va ha acumular
+
+                                        String preciototalredondeado = preciototal+"";
+                                        BigDecimal precioTotalBig = new BigDecimal(preciototalredondeado);
+                                        precioTotalBig = precioTotalBig.setScale(2,RoundingMode.HALF_UP);
+
+                                        double valor = 1254.005;
+                                        String val = valor+"";
+                                        BigDecimal big = new BigDecimal(val);
+                                        big = big.setScale(2, RoundingMode.HALF_UP);
+
+                                        Toast.makeText(DetalleProductoActivity.this, big+"", Toast.LENGTH_SHORT).show();
 
                                         // String AuxiliarMatriz[] = preciototal.toString().split(".");
 
                                         tvunidades.setText(producto.getUnidad().toUpperCase());
                                         Double Aux = Double.valueOf(producto.getStock());
                                         tvstock.setText(formateador.format((double)Aux) + " ");
-                                        tvtotal.setText(formateador.format((double)preciototal) + " ");
+                                        tvtotal.setText(formateador.format((BigDecimal)precioTotalBig) + " ");
                                     }
                                 }
                             }else {

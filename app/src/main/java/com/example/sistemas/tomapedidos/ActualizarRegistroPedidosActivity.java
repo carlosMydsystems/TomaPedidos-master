@@ -35,14 +35,14 @@ import java.util.ArrayList;
 public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
     TextView tvcodprodelegido, tvnomprodelegido, tvalmprodelegido, tvstockelegido, tvprecioelegido,
-            tvtotalelegido, tvpreciorealelegido,tvunidadelegida;
+             tvtotalelegido, tvpreciorealelegido,tvunidadelegida;
     Productos productos;
     Button   btndverificarproductoelegido,btnactualizarproductoelegido;
     Clientes cliente;
     ArrayList<Productos> listaproductoselegidos;
     EditText etcantprodelegida;
     Double preciounitario,cantidad, Aux;
-    String url,almacen,position,tipoformapago,id_pedido;
+    String url,almacen,position,tipoformapago,id_pedido,Index;
     ProgressDialog progressDialog;
     Productos producto;
     ArrayList<Productos> listaProductos;
@@ -67,12 +67,16 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         almacen =  getIntent().getStringExtra("Almacen");
         position =  getIntent().getStringExtra("position");
+        Index =  getIntent().getStringExtra("Index");
+
 
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         id_pedido = getIntent().getStringExtra("id_pedido");
         etcantprodelegida.setText(productos.getCantidad());
+
         // Se referencia a todas las partes del XML asociado al Activity
+
         tvcodprodelegido =  findViewById(R.id.tvCodProdElegido);
         tvnomprodelegido = findViewById(R.id.tvNomProdElegido);
         tvalmprodelegido = findViewById(R.id.tvAlmProdElegido);
@@ -112,7 +116,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
                     Integer pos = Integer.valueOf(position)+1;
 
-                    String trama = id_pedido + "|D|" + pos + "|" + etcantprodelegida.getText() + "|" +
+                    String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
                             productos.getCodigo() + "|" + tvprecioelegido.getText() + "|" + tvtotalelegido.getText().toString().trim() + "||";
                     ActualizarProducto(trama);
 
@@ -139,6 +143,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                     intent.putExtra("id_pedido",id_pedido);
                     intent.putExtra("validador","true");
                     intent.putExtra("Almacen",almacen);
+                    intent.putExtra("Index",Index);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
                     intent.putExtras(bundle);

@@ -82,7 +82,7 @@ public class IntermediaActivity extends AppCompatActivity {
             String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
                     get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getCodigo() + "|" +
                     listaproductoselegidos.get(i).getPrecio() + "|" + listaproductoselegidos.get(i)
-                    .getPrecio() + "|"+listaproductoselegidos.get(i).getNumPromocion();
+                    .getPrecio() + "|";
 
             ActualizarProducto(trama);
         }

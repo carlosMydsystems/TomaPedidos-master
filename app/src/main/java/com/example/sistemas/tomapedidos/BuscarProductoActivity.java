@@ -52,7 +52,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     Usuario usuario;
     String id_Pedido,fechaRegistro,precio = "0.0";
-    String indice,validador,Glosa,id_pedido;
+    String indice,validador,Glosa,id_pedido,Index;
     boolean validadorBooleano;
 
 
@@ -69,7 +69,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
         indice = getIntent().getStringExtra("indice");
         validador = getIntent().getStringExtra("validador");
         id_pedido = getIntent().getStringExtra("id_pedido");
-
+        Index = getIntent().getStringExtra("Index");
         listaProductos = new ArrayList<>();
         listaProducto = new ArrayList<>();
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
@@ -128,6 +128,7 @@ if (listaproductoselegidos.size() != 0) {
                     intent.putExtra("indice", indice);
                     intent.putExtra("id_pedido", id_Pedido);
                     intent.putExtra("Almacen", almacen);
+                    intent.putExtra("Index", Index);
                     intent.putExtra("retorno", "retorno");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("Cliente", cliente);
@@ -155,7 +156,7 @@ if (listaproductoselegidos.size() != 0) {
         public void onClick(View v) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
-                    .setMessage("Esta seguro que desea regresar")
+                    .setMessage("Esta seguro que desea regresar, se perderan todos los pedidos ")
                     .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -262,6 +263,7 @@ if (listaproductoselegidos.size() != 0) {
                 intent.putExtra("TipoPago",tipoPago);
                 intent.putExtra("Almacen",almacen);
                 intent.putExtra("id_pedido",id_pedido);
+                intent.putExtra("Index",Index);
 
                 Integer  aux = listaproductoselegidos.size() + 1;
                 intent.putExtra("indice",aux.toString());

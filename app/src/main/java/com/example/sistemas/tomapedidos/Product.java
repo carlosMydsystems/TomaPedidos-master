@@ -11,6 +11,7 @@ public class Product {
     public String ProductIdArticulo;
     public String UnidadProducto;
 
+    /*
     public Product(String productName, Double productPrice, String productImage) {
         ProductName = productName;
         ProductPrice = productPrice;
@@ -23,7 +24,7 @@ public class Product {
         ProductImage = productImage;
         ProductIdArticulo = productIdArticulo;
     }
-
+*/
     public Product(String productName, Double productPrice, String productImage, String productIdArticulo, String unidadProducto) {
         ProductName = productName;
         ProductPrice = productPrice;

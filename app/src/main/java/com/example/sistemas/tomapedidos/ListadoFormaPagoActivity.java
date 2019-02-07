@@ -14,8 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -72,6 +70,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
         // Donde se va a colocar el nuevo id del pedido
 
+
         ObtenerId();
 
         // id segun el antiguo metodo
@@ -114,6 +113,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                                         Intent intent =  new Intent(ListadoFormaPagoActivity.this,BuscarProductoActivity.class);
                                         intent.putExtra("Almacen",almacen);
                                         intent.putExtra("indice",indice);
+                                        intent.putExtra("Index","1");
                                         intent.putExtra("validador",validador);
                                         intent.putExtra("id_pedido",id_pedido);
                                         Bundle bundle = new Bundle();

@@ -24,7 +24,6 @@ import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 public class PromocionesActivity extends AppCompatActivity {
@@ -62,7 +61,7 @@ public class PromocionesActivity extends AppCompatActivity {
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
-        Ind = getIntent().getStringExtra("indice");
+        Ind = getIntent().getStringExtra("Ind");
         cantidadlista =  getIntent().getStringExtra("cantidadlista");
         Toast.makeText(this, cantidadlista, Toast.LENGTH_SHORT).show();
         indice = listaproductoselegidos.size();
@@ -85,7 +84,7 @@ public class PromocionesActivity extends AppCompatActivity {
         CalcularPromociones(id);
     }
 
-    private void placeOrder(ArrayList<Productos> listaproductoselegidos)
+    private void placeOrder(ArrayList<Productos> listaproductoselegidos) // Captura el listado
     {
         productOrders.clear();
         listaTrama =  new ArrayList<>();
@@ -115,7 +114,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
                 listaproductoselegidos.add(productopromocion);
 
-                String Subtrama = listAdapter.listProducts.get(i).CartQuantity+"|"+listAdapter.listProducts.get(i).ProductIdArticulo + "|||";
+                String Subtrama = listAdapter.listProducts.get(i).CartQuantity+"|"+listAdapter.listProducts.get(i).UnidadProducto + "|||";
                 Toast.makeText(this, Subtrama, Toast.LENGTH_SHORT).show();
                // listaTrama.add(Subtrama);
                 //products.CartQuantity = listAdapter.listProducts.get(i).CartQuantity;
@@ -127,7 +126,7 @@ public class PromocionesActivity extends AppCompatActivity {
         intent.putExtra("cantidadlista",cantidadlista);
         intent.putExtra("Almacen",almacen);
         intent.putExtra("TipoPago",tipoformapago);
-        intent.putExtra("indice",Ind);
+        intent.putExtra("Ind",Ind);
         intent.putExtra("id_pedido",id_pedido);
 
         Bundle bundle = new Bundle();
@@ -157,7 +156,7 @@ public class PromocionesActivity extends AppCompatActivity {
                     valorcantidad,
                     listaPromociones.get(i).getDescripcionPromocion(),
                     listaPromociones.get(i).getCodArticulo(),
-                    listaPromociones.get(i).getPrecioRegularSoles()
+                    listaPromociones.get(i).getUnidad()
                    ));
             //Toast.makeText(this, "Este es el precio "+ listaPromociones.get(i).getPrecioSoles() , Toast.LENGTH_SHORT).show();
         }
@@ -255,7 +254,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                         productopromocion = new Productos();
                                         productopromocion.setNumPromocion(listaPromocionesTipoT.get(i).getNumeroPromocion());
-                                        productopromocion.setCodigo(listaPromocionesTipoT.get(i).getCodArticulo());
+                                        productopromocion.setCodigo(listaPromocionesTipoT.get(i).getNumeroPromocion());
                                         productopromocion.setIdProducto(listaPromocionesTipoT.get(i).getCodArticulo());
                                         productopromocion.setDescripcion(listaPromocionesTipoT.get(i).getDescripcionPromocion());
                                         productopromocion.setUnidad(listaPromocionesTipoT.get(i).getUnidad());
@@ -284,7 +283,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         intent.putExtra("cantidadlista",cantidadlista);
                                         intent.putExtra("Almacen",almacen);
                                         intent.putExtra("TipoPago",tipoformapago);
-                                        intent.putExtra("indice",Ind);
+                                        intent.putExtra("Ind",Ind);
                                         intent.putExtra("id_pedido",id_pedido);
                                         intent.putExtra("validador","false");
 
@@ -317,7 +316,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                                 intent.putExtra("cantidadlista",cantidadlista);
                                                 intent.putExtra("Almacen",almacen);
                                                 intent.putExtra("TipoPago",tipoformapago);
-                                                intent.putExtra("indice",Ind);
+                                                intent.putExtra("Ind",Ind);
                                                 intent.putExtra("id_pedido",id_pedido);
                                                 intent.putExtra("validador","false");
                                                 //intent.putExtra("retorno", "retorno");

@@ -40,7 +40,7 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
         cliente  = new Clientes();
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
-        indice = getIntent().getStringExtra("indice");
+        indice = getIntent().getStringExtra("Ind");
         //listaFormasPago = (ArrayList<FormaPago>) getIntent().getSerializableExtra("ListaFomasPago");
 
         // se hace la insercion del codigo en duro

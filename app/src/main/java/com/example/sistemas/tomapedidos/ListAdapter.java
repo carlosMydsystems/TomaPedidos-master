@@ -8,9 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.sistemas.tomapedidos.Entidades.Promociones;
-
 import java.util.ArrayList;
 
 public class ListAdapter extends BaseAdapter {
@@ -82,7 +80,7 @@ public class ListAdapter extends BaseAdapter {
             {
 
                 indice = listViewHolder.tvidpromociones.getText().toString();
-                // Toast.makeText(context, indice, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(context, Ind, Toast.LENGTH_SHORT).show();
                 updateQuantity(position,listViewHolder.edTextQuantity,1);
                 updateQuantityPrice(position,listViewHolder.tvPrice,-1, indice);
 
