@@ -46,8 +46,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
     Usuario  usuario;
     ProgressDialog progressDialog ;
     Productos producto;
-    Double preciolista, precio = 0.0,Aux;
-    String id,Ind,id_pedido,cantidadlista,retorno;
+    Double preciolista, precio = 0.0;
+    String id,Ind,id_pedido,retorno;
     ListView listView;
     Boolean valida;
     String Index;
@@ -59,7 +59,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
         // Se captura los parametros de los otros Intent
         listaproductoselegidos = (ArrayList<Productos>) getIntent()
                 .getSerializableExtra("listaProductoselegidos");   //
-
 
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");   //
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");    //
@@ -242,6 +241,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText()+"|";
 */
                // ActualizarProducto(trama);
+                RegistrarPedido(id_pedido);
 
             }
         });
@@ -331,7 +331,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                 }else {
 
-
                     return true;
 
                 }
@@ -366,6 +365,42 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         .show();
             }
         });
+    }
+
+    private void RegistrarPedido(String id_pedido) {
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"'";
+
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(bandejaProductosActivity.this, response, Toast.LENGTH_LONG).show();
+                        if (response.equals("OK:")){
+                            // insertaCampos(listaproductoselegidos,id);
+
+                            Intent intent = new Intent(bandejaProductosActivity.this,BusquedaClienteActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("Usuario",usuario);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
     }
 
     private void EliminaPromocion(){

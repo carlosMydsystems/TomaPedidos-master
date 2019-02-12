@@ -33,6 +33,9 @@ public class Product {
         UnidadProducto = unidadProducto;
     }
 
+    public Product() {
+    }
+
     public String getJsonObject() {
         JSONObject cartItems = new JSONObject();
         try

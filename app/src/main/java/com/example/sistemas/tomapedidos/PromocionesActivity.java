@@ -77,9 +77,9 @@ public class PromocionesActivity extends AppCompatActivity {
 
         cantidadlista = ""+listaproductoselegidos.size();
 
-        //id = id_pedido;
+        id = id_pedido;
 
-        id = "30011659";
+        //id = "30011659";
 
         CalcularPromociones(id);
     }

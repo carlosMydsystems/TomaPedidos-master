@@ -68,8 +68,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         almacen =  getIntent().getStringExtra("Almacen");
         position =  getIntent().getStringExtra("position");
         Index =  getIntent().getStringExtra("Index");
-
-
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         id_pedido = getIntent().getStringExtra("id_pedido");
@@ -133,11 +131,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                     listaproductoselegidos.get(i).setPrecio(tvprecioelegido.getText().toString());
                     listaproductoselegidos.get(i).setPrecioAcumulado(tvtotalelegido.getText().toString());
 
-                    /*
-                    listaproductoselegidos.get(i).setCantidad(cantidad.toString());
-                    listaproductoselegidos.get(i).setPrecio();
-                    */
-
                     Intent intent = new Intent(ActualizarRegistroPedidosActivity.this,bandejaProductosActivity.class);
                     intent.putExtra("TipoPago",tipoformapago);
                     intent.putExtra("id_pedido",id_pedido);
@@ -161,15 +154,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                 }
             }
         });
-
-        /*
-        Integer pos = Integer.valueOf(position)+1;
-
-        String trama = id_pedido + "|D|" + pos + "|" + etcantprodelegida.getText() + "|" +
-                productos.getCodigo() + "|" + tvprecioelegido.getText() + "|" + tvtotalelegido.getText().toString().trim() + "||";
-        ActualizarProducto(trama);
-
-        */
 
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
@@ -213,76 +197,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         };
 
         etcantprodelegida.addTextChangedListener(textWatcher);
-    }
-
-    public void RegistroPedido() {
-
-        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion = " +
-                "PKG_WEB_HERRAMIENTAS.SP_WS_GENERA_PEDIDO&variables=[TAI HEN]G Jueves 06.09.2018"; // Se debe de encontrar el metodo
-        //listaProducto = new ArrayList<>();
-        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        try {
-                            JSONObject jsonObject=new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
-                            if (success){
-                                for(int i=0;i<jsonArray.length();i++) {
-                                    producto = new Productos();
-                                    jsonObject = jsonArray.getJSONObject(i);
-                                    producto.setIdProducto(jsonObject.getString("IdProducto"));
-                                    producto.setCodigo(jsonObject.getString("CodigoProducto"));
-                                    producto.setMarca(jsonObject.getString("Marca"));
-                                    producto.setDescripcion(jsonObject.getString("DescripcionProducto"));
-                                    producto.setPrecio(jsonObject.getString("Precio"));
-                                    producto.setStock(jsonObject.getString("Stock"));
-                                    producto.setUnidad(jsonObject.getString("Unidad"));
-                                    producto.setFlete(jsonObject.getString("Flete"));
-                                    producto.setEstado(jsonObject.getString("Estado"));
-                                    listaProductos.add(producto);
-                                    listaProducto.add(producto.getCodigo()+ " - " + producto.getDescripcion());
-                                }
-                                Intent intent =  new Intent(ActualizarRegistroPedidosActivity.this,MainActivity.class);
-                                intent.putExtra("TipoPago",tipoformapago);
-
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                                intent.putExtras(bundle);
-                                Bundle bundle1 = new Bundle();
-                                bundle1.putSerializable("Cliente",cliente);
-                                intent.putExtras(bundle1);
-                                Bundle bundle2 = new Bundle();
-                                bundle2.putSerializable("Usuario",usuario);
-                                intent.putExtras(bundle2);
-                                startActivity(intent);
-                                finish();
-
-                            }else {
-                                listaProducto.clear();
-                                AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this);
-                                builder.setMessage("No se llegaron a encontrar Promociones")
-                                        .setNegativeButton("Aceptar",null)
-                                        .create()
-                                        .show();
-                            }
-                        } catch (JSONException e) { e.printStackTrace(); }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
     }
 
     private void VerificarCantidad(String cantidad) {

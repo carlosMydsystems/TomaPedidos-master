@@ -48,25 +48,25 @@ public class ListAdapter extends BaseAdapter {
          View row;
         final ListViewHolder listViewHolder;
         if(convertView == null)
-        {
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            row = layoutInflater.inflate(R.layout.activity_custom_listview,parent,false);
-            listViewHolder = new ListViewHolder();
-            listViewHolder.ivProduct = row.findViewById(R.id.tvdescripcion);
-            listViewHolder.tvPrice = row.findViewById(R.id.tvPrice);
-            listViewHolder.btnPlus = row.findViewById(R.id.ib_addnew);
-            listViewHolder.edTextQuantity = row.findViewById(R.id.editTextQuantity);
-            listViewHolder.btnMinus = row.findViewById(R.id.ib_remove);
-            listViewHolder.tvidpromociones = row.findViewById(R.id.tvIdPromocion);  // Identificador
-            listViewHolder.tvCodArticulo = row.findViewById(R.id.tvCodArticulo);
-            listViewHolder.tvunidadpromocion = row.findViewById(R.id.tvUnidadPromocion);
-            row.setTag(listViewHolder);
-        }
-        else
-        {
-            row=convertView;
-            listViewHolder= (ListViewHolder) row.getTag();
-        }
+            {
+                LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                row = layoutInflater.inflate(R.layout.activity_custom_listview,parent,false);
+                listViewHolder = new ListViewHolder();
+                listViewHolder.ivProduct = row.findViewById(R.id.tvdescripcion);
+                listViewHolder.tvPrice = row.findViewById(R.id.tvPrice);
+                listViewHolder.btnPlus = row.findViewById(R.id.ib_addnew);
+                listViewHolder.edTextQuantity = row.findViewById(R.id.editTextQuantity);
+                listViewHolder.btnMinus = row.findViewById(R.id.ib_remove);
+                listViewHolder.tvidpromociones = row.findViewById(R.id.tvIdPromocion);  // Identificador
+                listViewHolder.tvCodArticulo = row.findViewById(R.id.tvCodArticulo);
+                listViewHolder.tvunidadpromocion = row.findViewById(R.id.tvUnidadPromocion);
+                row.setTag(listViewHolder);
+            }
+        else{
+                row=convertView;
+                listViewHolder= (ListViewHolder) row.getTag();
+            }
+
         final Product products = getItem(position);
         listViewHolder.ivProduct.setText(products.ProductImage);
         listViewHolder.tvPrice.setText(products.ProductPrice+"");
@@ -102,11 +102,13 @@ public class ListAdapter extends BaseAdapter {
             }
         });
 
-
         for (int i = 0; i<getCount();i++){
+
+
 
             Product producto = getItem(i);
             listaPromocionesElegidas = new ArrayList<>();
+
             if (producto.CartQuantity>0){
 
                 Toast.makeText(context, "lista " + i , Toast.LENGTH_SHORT).show();
@@ -172,4 +174,19 @@ public class ListAdapter extends BaseAdapter {
         tvPrice.setText(products.ProductPrice+"");
     }
 
+    private void recorrePromocionesSelecciones(){
+
+        ArrayList<Product> listaPromociionSelectivo = new ArrayList<>();
+
+        for (int i = 0; i < getCount(); i++){
+
+            Product producto = new Product();
+            producto = getItem(i);
+            listaPromociionSelectivo.add(producto);
+
+        }
+
+
+
+    }
 }

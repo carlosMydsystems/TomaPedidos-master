@@ -209,7 +209,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
 
-                            id_pedido = response.replace("OK:","");
+                        id_pedido = response.replace("OK:","");
                         btnregresarformalistapago.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
