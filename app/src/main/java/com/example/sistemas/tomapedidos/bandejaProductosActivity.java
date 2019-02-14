@@ -25,6 +25,13 @@ import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -367,27 +374,76 @@ public class bandejaProductosActivity extends AppCompatActivity {
         });
     }
 
-    private void RegistrarPedido(String id_pedido) {
+
+
+
+      private void RegistrarPedido(String id_pedido) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"'";
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='30011659'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(bandejaProductosActivity.this, response, Toast.LENGTH_LONG).show();
-                        if (response.equals("OK:")){
-                            // insertaCampos(listaproductoselegidos,id);
+                        String Mensaje = "";
 
-                            Intent intent = new Intent(bandejaProductosActivity.this,BusquedaClienteActivity.class);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("Usuario",usuario);
-                            intent.putExtras(bundle);
-                            startActivity(intent);
-                            finish();
-                        }
+                        try {
+                            JSONObject jsonObject=new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                            Boolean condicion = false,error = false;
+
+                            if (success){
+
+                                   String Aux = response.replace("{", "|");
+                                   Aux = Aux.replace("}", "|");
+                                   Aux = Aux.replace("[", "|");
+                                   Aux = Aux.replace("]", "|");
+                                   Aux = Aux.replace("\"", "|");
+                                   Aux = Aux.replace(",", " ");
+                                   Aux = Aux.replace("|", "");
+                                   Aux = Aux.replace(":", " ");
+                                   String partes[] = Aux.split(" ");
+                                   for (String palabras : partes) {
+                                       if (condicion) {
+                                           Mensaje += palabras + " ";
+                                       }
+                                       if (palabras.equals("ERROR")) {
+                                           condicion = true;
+                                           error = true;
+                                       }
+                                   }
+                                   if (error) {
+
+                                       AlertDialog.Builder dialog = new AlertDialog.Builder(
+                                               bandejaProductosActivity.this);
+                                       dialog.setMessage(Mensaje)
+                                               .setNegativeButton("Regresar", null)
+                                               .create()
+                                               .show();
+                                   }else{
+
+                                        Intent intent = new Intent(bandejaProductosActivity.this,BusquedaClienteActivity.class);
+                                        Bundle bundle = new Bundle();
+                                        bundle.putSerializable("Usuario",usuario);
+                                        intent.putExtras(bundle);
+                                        startActivity(intent);
+                                        finish();
+
+                                   }
+
+
+                            }else {
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
+                                builder.setMessage("No se llego a encontrar el registro")
+                                        .setNegativeButton("Aceptar",null)
+                                        .create()
+                                        .show();
+                            }
+                        } catch (JSONException e) { e.printStackTrace(); }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -402,6 +458,10 @@ public class bandejaProductosActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
+
+
+
+
 
     private void EliminaPromocion(){
         for (int position1 = 0;position1 < listaproductoselegidos.size();position1++){

@@ -356,7 +356,8 @@ else if (etcantidadelegida.getText()== null){
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-            url = "%27"+almacen+"|"+usuario.
+            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables=%27"+almacen+"|"+usuario.
                     getLugar()+"|"+productos.getCodigo()+"||"+cliente.getCodCliente()+"|||"+cantidad+"%27";
 
         listaProducto = new ArrayList<>();
