@@ -72,7 +72,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
         validador = getIntent().getStringExtra("validador");
         retorno = getIntent().getStringExtra("retorno");
         Index = getIntent().getStringExtra("Index");
-        Toast.makeText(this, Index, Toast.LENGTH_SHORT).show();
         valida = Boolean.valueOf(validador);
         listabandejaproductos = new ArrayList<>();
         cantidadProductos = listabandejaproductos.size();
@@ -82,7 +81,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
 
-        Toast.makeText(this, Index, Toast.LENGTH_SHORT).show();
+        // SE llega a generar el calendario
+
         Calendar fecha = Calendar.getInstance();
         final Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
         final Integer mes = fecha.get(Calendar.MONTH) + 1;
@@ -299,8 +299,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                                     EliminaPromocion();
                                     if (listaproductoselegidos.get(position).getObservacion() == null) {
-
-                                        Toast.makeText(bandejaProductosActivity.this, listaproductoselegidos.get(position).getIndice().toString(), Toast.LENGTH_SHORT).show();
                                         final String trama1 = id_pedido + "|" + listaproductoselegidos.get(position).getIndice();
 
                                         final AlertDialog.Builder builder1 = new AlertDialog.Builder(
@@ -325,7 +323,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                                 })
                                                 .create()
                                                 .show();
-
 
                                         listaproductoselegidos.remove(position);
                                         btnterminar.setVisibility(View.VISIBLE);

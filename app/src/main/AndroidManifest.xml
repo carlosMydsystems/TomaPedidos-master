@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".IntermediaActivity"></activity>
+        <activity android:name=".FechaPactadaActivity"></activity>
+        <activity android:name=".IntermediaActivity" />
         <activity android:name=".PromocionesActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
