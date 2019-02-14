@@ -1,6 +1,5 @@
 package com.example.sistemas.tomapedidos;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -25,7 +24,6 @@ import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -38,7 +36,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
     TextView tvtitulodinamico;
     Productos productos;
-    Button btnbuscarproducto, btnterminar,btnregresarbandeja, btnvalidarpromociones;
+    Button btnbuscarproducto, btnterminar,btnregresarbandeja, btngrabarpedido;
     ListView lvbandejaproductos;
     ArrayList<String> listabandejaproductos,listabandejaproductoselegidos;
     Clientes cliente;
@@ -130,7 +128,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         btnterminar = findViewById(R.id.btnterminar);
         tvtitulodinamico  = findViewById(R.id.tvtitulodinamico);
         btnregresarbandeja = findViewById(R.id.btnRegresarBandejaPedidos);
-        btnvalidarpromociones = findViewById(R.id.btnValidarPromociones);
+        btngrabarpedido = findViewById(R.id.btnValidarPromociones);
         String cadenaTituloAux = "Productos : "+ cantidad+"   |  Monto : S/ "+formateador.format(precio)+"";
         tvtitulodinamico.setText(cadenaTituloAux);
 
@@ -140,19 +138,19 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
             salirlistview();
             btnterminar.setVisibility(View.VISIBLE);
-            btnvalidarpromociones.setVisibility(View.GONE);
+            btngrabarpedido.setVisibility(View.GONE);
 
         }
 
         if (valida){
 
             btnterminar.setVisibility(View.VISIBLE);
-            btnvalidarpromociones.setVisibility(View.GONE);
+            btngrabarpedido.setVisibility(View.GONE);
 
         }else{
 
             btnterminar.setVisibility(View.GONE);
-            btnvalidarpromociones.setVisibility(View.VISIBLE);
+            btngrabarpedido.setVisibility(View.VISIBLE);
 
         }
 
@@ -232,12 +230,12 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                 btnbuscarproducto.setVisibility(View.VISIBLE);
                 btnterminar.setVisibility(View.VISIBLE);
-                btnvalidarpromociones.setVisibility(View.GONE);
+                btngrabarpedido.setVisibility(View.GONE);
                 btnregresarbandeja.setVisibility(View.GONE);
             }
         });
 
-        btnvalidarpromociones.setOnClickListener(new View.OnClickListener() {
+        btngrabarpedido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 /*
@@ -245,8 +243,15 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText()+"|";
 */
                // ActualizarProducto(trama);
+
                 RegistrarPedido(id_pedido);
 
+                /*
+
+                Intent intent = new Intent(bandejaProductosActivity.this,FechaPactadaActivity.class);
+                startActivity(intent);
+                finish();
+                */
             }
         });
 
@@ -285,7 +290,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                     EliminaPromocion();
                                     if (listaproductoselegidos.get(position).getObservacion() == null) {
                                         btnterminar.setVisibility(View.VISIBLE);
-                                        btnvalidarpromociones.setVisibility(View.GONE);
+                                        btngrabarpedido.setVisibility(View.GONE);
                                         Editarproductoselecionado(position);
                                         valida = true;
                                         break;
@@ -326,7 +331,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                                         listaproductoselegidos.remove(position);
                                         btnterminar.setVisibility(View.VISIBLE);
-                                        btnvalidarpromociones.setVisibility(View.GONE);
+                                        btngrabarpedido.setVisibility(View.GONE);
 //                                        Alertsdialog("Borrar el producto");
                                         valida = true;
                                         break;
@@ -341,7 +346,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                     EliminaPromocion();
                                     salirlistview();
                                     btnterminar.setVisibility(View.VISIBLE);
-                                    btnvalidarpromociones.setVisibility(View.GONE);
+                                    btngrabarpedido.setVisibility(View.GONE);
                                     valida = true;
                                     break;
                             }
@@ -365,15 +370,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-               // if (listaproductoselegidos.get(position).getPrecioAcumulado()==null){
+                Double Aux = Double.valueOf(listaproductoselegidos.get(position).getPrecioAcumulado().replace(",",""));
 
-                    Double Aux = Double.valueOf(listaproductoselegidos.get(position).getPrecioAcumulado().replace(",",""));
-/*
-                }else {
-
-                    Aux = 0.0;
-                }
-*/
                 AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
                 builder.setMessage(
                         "Codigo       :   "  + listaproductoselegidos.get(position).getCodigo() + "\n" +
@@ -657,6 +655,5 @@ public class bandejaProductosActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
-
 }
 
