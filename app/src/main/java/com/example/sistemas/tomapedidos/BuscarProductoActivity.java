@@ -126,7 +126,7 @@ if (listaproductoselegidos.size() != 0) {
 
                     intent.putExtra("TipoPago", tipoPago);
                     intent.putExtra("indice", indice);
-                    intent.putExtra("id_pedido", id_Pedido);
+                    intent.putExtra("id_pedido", id_pedido);
                     intent.putExtra("Almacen", almacen);
                     intent.putExtra("Index", Index);
                     intent.putExtra("retorno", "retorno");

@@ -303,6 +303,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                     EliminaPromocion();
                                     if (listaproductoselegidos.get(position).getObservacion() == null) {
 
+                                        Toast.makeText(bandejaProductosActivity.this, listaproductoselegidos.get(position).getIndice().toString(), Toast.LENGTH_SHORT).show();
                                         String trama = id_pedido + "|" + listaproductoselegidos.get(position).getIndice();
                                         EliminarProducto(trama);
                                         listaproductoselegidos.remove(position);
