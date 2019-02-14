@@ -254,7 +254,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                         productopromocion = new Productos();
                                         productopromocion.setNumPromocion(listaPromocionesTipoT.get(i).getNumeroPromocion());
-                                        productopromocion.setCodigo(id_pedido);
+                                        productopromocion.setCodigo(listaPromocionesTipoT.get(i).getCodArticulo());
                                         productopromocion.setIdProducto(listaPromocionesTipoT.get(i).getCodArticulo());
                                         productopromocion.setDescripcion(listaPromocionesTipoT.get(i).getDescripcionPromocion());
                                         productopromocion.setUnidad(listaPromocionesTipoT.get(i).getUnidad());
