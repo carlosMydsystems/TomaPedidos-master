@@ -30,8 +30,6 @@ public class MostrarClienteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_cliente);
 
-
-
         cliente  = new Clientes();
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
@@ -45,7 +43,6 @@ public class MostrarClienteActivity extends AppCompatActivity {
         tvUsuarioUltPedido = findViewById(R.id.tvTotalElegido);
         btnregresodetallecliente = findViewById(R.id.btnRetornoDetCliente);
         spopcionesdocumento = findViewById(R.id.spTipoDocumento);
-
 
         tvcodigo.setText(cliente.getCodCliente());
         tvNombre.setText(cliente.getNombre());

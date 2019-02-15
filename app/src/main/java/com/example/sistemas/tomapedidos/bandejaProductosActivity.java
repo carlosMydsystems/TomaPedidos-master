@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
     ListView listView;
     Boolean valida;
     String Index;
+    ImageButton imgbtnregresar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         validador = getIntent().getStringExtra("validador");
         retorno = getIntent().getStringExtra("retorno");
         Index = getIntent().getStringExtra("Index");
+
         valida = Boolean.valueOf(validador);
         listabandejaproductos = new ArrayList<>();
         cantidadProductos = listabandejaproductos.size();
@@ -134,6 +137,46 @@ public class bandejaProductosActivity extends AppCompatActivity {
             tvtitulodinamico = findViewById(R.id.tvtitulodinamico);
             btnregresarbandeja = findViewById(R.id.btnRegresarBandejaPedidos);
             btngrabarpedido = findViewById(R.id.btnValidarPromociones);
+            imgbtnregresar = findViewById(R.id.imgbtnRegresaBandejaPedidos);
+
+            imgbtnregresar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                     AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this)
+                    .setMessage("Esta seguro que desea regresar, Todos los cambios se perderan")
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+
+                    });
+            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    Intent intent = new Intent(bandejaProductosActivity.this, MostrarClienteActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Cliente", cliente);
+                    intent.putExtras(bundle);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("Usuario", usuario);
+                    intent.putExtras(bundle1);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            builder.create()
+                    .show();
+
+
+
+                }
+            });
+
+
             String cadenaTituloAux = "Productos : " + cantidad + "   |  Monto : S/ " + formateador.format(precio) + "";
             tvtitulodinamico.setText(cadenaTituloAux);
 
@@ -229,6 +272,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 }
             });
 
+
+
             btnregresarbandeja.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -268,7 +313,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     intent.putExtras(bundle);
                     intent.putExtras(bundle2);
                     intent.putExtras(bundle3);
-
 
                     startActivity(intent);
                     finish();
@@ -335,7 +379,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                                         public void onClick(DialogInterface dialogInterface, int i) {
 
                                                             EliminarProducto(trama1);
-
                                                             dialogInterface.cancel();
                                                             salirlistview();
                                                         }

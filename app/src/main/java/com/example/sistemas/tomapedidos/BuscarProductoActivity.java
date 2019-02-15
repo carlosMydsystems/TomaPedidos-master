@@ -52,7 +52,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     Usuario usuario;
     String id_Pedido,fechaRegistro,precio = "0.0";
-    String indice,validador,Glosa,id_pedido,Index;
+    String indice,validador,id_pedido,Index;
 
 
     @Override
@@ -108,19 +108,6 @@ if (listaproductoselegidos.size() != 0) {
         @Override
         public void onClick(View v) {
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
-                    .setMessage("Esta seguro que desea regresar, los cambios actuales serán eliminados")
-                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-
-                    });
-            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
                     Intent intent = new Intent(BuscarProductoActivity.this, bandejaProductosActivity.class);
 
                     intent.putExtra("TipoPago", tipoPago);
@@ -141,11 +128,6 @@ if (listaproductoselegidos.size() != 0) {
                     startActivity(intent);
                     finish();
 
-                }
-            });
-
-            builder.create()
-                    .show();
         }
     });
 }else {
@@ -155,7 +137,7 @@ if (listaproductoselegidos.size() != 0) {
         public void onClick(View v) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
-                    .setMessage("Esta seguro que desea regresar, se perderan todos los pedidos ")
+                    .setMessage("Esta seguro que desea regresar, a la lisat de formas de pago ")
                     .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -208,7 +190,7 @@ if (listaproductoselegidos.size() != 0) {
                 btnregresarproducto.setVisibility(View.GONE);
                 progressDialog = new ProgressDialog(BuscarProductoActivity.this);
                 progressDialog.setMessage("Cargando...");
-                progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.show();
 
                 Boolean verficador = false;
