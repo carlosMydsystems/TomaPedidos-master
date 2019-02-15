@@ -40,18 +40,15 @@ public class DetalleProductoActivity extends AppCompatActivity {
     Productos productos;
     Button btnguardaryrevisar, btnguardaryagregar, btndverificarproducto;
     Clientes cliente;
-    ArrayList<Productos> listaproductoselegidos;
+    ArrayList<Productos> listaproductoselegidos,listaProductos;
     EditText etcantidadelegida;
-    Double preciounitario,cantidad, Aux;
-    String url,almacen,tipoPago,id_pedido;
+    Double preciounitario,cantidad, Aux,validarStock;
+    String url,almacen,tipoPago,id_pedido,Ind,Index;
     ProgressDialog progressDialog;
     Productos producto;
-    ArrayList<Productos> listaProductos;
     ArrayList<String> listaProducto;
     Usuario usuario;
-    String Ind,Index;
     BigDecimal redondeado;
-    Double validarStock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +171,7 @@ else if (etcantidadelegida.getText()== null){
                     } else {
 
                     String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                            productos.getCodigo() + "|" + tvprecio.getText() + "|" + tvtotal.getText().toString().trim() + "|";
+                            productos.getCodigo() + "|" + tvprecio.getText() + "|" + tvtotal.getText().toString().trim() + "||";
                     ActualizarProducto(trama);
                     productos.setCantidad(etcantidadelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecio.getText().toString());
@@ -264,7 +261,7 @@ else if (etcantidadelegida.getText()== null){
                     } else {
 
                 String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                        productos.getCodigo() + "|" + tvprecio.getText() + "|" + tvtotal.getText().toString().trim() + "|";
+                        productos.getCodigo() + "|" + tvprecio.getText() + "|" + tvtotal.getText().toString().trim() + "||";
 
                         ActualizarProducto(trama);
 
@@ -356,9 +353,8 @@ else if (etcantidadelegida.getText()== null){
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables=%27"+almacen+"|"+usuario.
-                    getLugar()+"|"+productos.getCodigo()+"||"+cliente.getCodCliente()+"|||"+cantidad+"%27";
+            url = "%27"+almacen+"|"+usuario.
+                    getLugar()+"|"+productos.getCodigo()+"||"+cliente.getCodCliente()+"|||"+cantidad+"|%27";
 
         listaProducto = new ArrayList<>();
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,

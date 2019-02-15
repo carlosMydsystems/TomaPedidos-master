@@ -32,7 +32,6 @@ public class MostrarClienteActivity extends AppCompatActivity {
         tvTipoCiente = findViewById(R.id.tvAlmProdElegido);
         tvDeuda = findViewById(R.id.tvStockElegido);
         tvestado = findViewById(R.id.tvPrecioElegido);
-        tvFechaUltPedido = findViewById(R.id.tvSubtotal);
         tvUsuarioUltPedido = findViewById(R.id.tvTotalElegido);
         btnregresodetallecliente = findViewById(R.id.btnRetornoDetCliente);
 
