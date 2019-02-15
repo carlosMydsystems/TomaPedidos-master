@@ -124,6 +124,7 @@
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="Glosa"
+        android:visibility="gone"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -11,4 +11,8 @@
         <item>Borrar Producto</item>
         <item>cancelar</item>
     </string-array>
+    <string-array name="opcionesDocumento">
+        <item>Boleta</item>
+        <item>Factura</item>
+    </string-array>
 </resources>

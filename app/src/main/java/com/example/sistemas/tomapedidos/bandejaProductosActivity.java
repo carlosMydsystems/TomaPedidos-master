@@ -95,296 +95,319 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
         // valores para el sumarizado de la bandeja
 
-        for (int i=0;i<listaproductoselegidos.size();i++){
-           // calcula numero de productos
-            Double Aux = 0.0;
-            if (listaproductoselegidos.get(i).getPrecioAcumulado().equals("")){
+        Toast.makeText(this, usuario.getNombre(), Toast.LENGTH_SHORT).show();
 
-                precio = 0.0;
+        if (listaproductoselegidos != null) {
 
-            }else {
+            for (int i = 0; i < listaproductoselegidos.size(); i++) {
+                // calcula numero de productos
+                Double Aux = 0.0;
+                if (listaproductoselegidos.get(i).getPrecioAcumulado().equals("")) {
 
-                precio = precio + Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",",""));
-                Aux = Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",",""));
+                    precio = 0.0;
+
+                } else {
+
+                    precio = precio + Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",", ""));
+                    Aux = Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",", ""));
+                }
+
+                if (listaproductoselegidos.get(i).getPrecio().equals("")) {
+
+                    preciolista = 0.0;
+                } else {
+
+                    preciolista = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
+                }
+
+                listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo() + " - " +
+                        listaproductoselegidos.get(i).getDescripcion() + "\nCant: " + listaproductoselegidos.
+                        get(i).getCantidad() + "                                             Unidad: " +
+                        listaproductoselegidos.get(i).getUnidad() + "\nPrecio: S/ " + formateador.format((double) preciolista) +
+                        "                  Subtotal: S/ " + formateador.format((double) Aux));
             }
 
-            if (listaproductoselegidos.get(i).getPrecio().equals("")){
+            cantidad = String.valueOf(listaproductoselegidos.size());
+            Precio = String.valueOf(precio);
+            btnbuscarproducto = findViewById(R.id.btnproducto);
+            btnterminar = findViewById(R.id.btnterminar);
+            tvtitulodinamico = findViewById(R.id.tvtitulodinamico);
+            btnregresarbandeja = findViewById(R.id.btnRegresarBandejaPedidos);
+            btngrabarpedido = findViewById(R.id.btnValidarPromociones);
+            String cadenaTituloAux = "Productos : " + cantidad + "   |  Monto : S/ " + formateador.format(precio) + "";
+            tvtitulodinamico.setText(cadenaTituloAux);
 
-                preciolista = 0.0;
-            }else {
+            if (retorno == null) {
 
-                preciolista = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
+            } else if (retorno.equals("retorno")) {
+
+                salirlistview();
+                btnterminar.setVisibility(View.VISIBLE);
+                btngrabarpedido.setVisibility(View.GONE);
+
             }
 
-            listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo()+ " - " +
-            listaproductoselegidos.get(i).getDescripcion()+"\nCant: "+listaproductoselegidos.
-            get(i).getCantidad()+ "                                             Unidad: "+
-            listaproductoselegidos.get(i).getUnidad() + "\nPrecio: S/ "+formateador.format((double)preciolista) +
-            "                  Subtotal: S/ "+formateador.format((double)Aux));
-        }
-        cantidad = String.valueOf(listaproductoselegidos.size());
-        Precio = String.valueOf(precio);
-        btnbuscarproducto =  findViewById(R.id.btnproducto);
-        btnterminar = findViewById(R.id.btnterminar);
-        tvtitulodinamico  = findViewById(R.id.tvtitulodinamico);
-        btnregresarbandeja = findViewById(R.id.btnRegresarBandejaPedidos);
-        btngrabarpedido = findViewById(R.id.btnValidarPromociones);
-        String cadenaTituloAux = "Productos : "+ cantidad+"   |  Monto : S/ "+formateador.format(precio)+"";
-        tvtitulodinamico.setText(cadenaTituloAux);
+            if (valida) {
 
-        if (retorno == null){
+                btnterminar.setVisibility(View.VISIBLE);
+                btngrabarpedido.setVisibility(View.GONE);
 
-        }else if (retorno.equals("retorno")){
+            } else {
 
-            salirlistview();
-            btnterminar.setVisibility(View.VISIBLE);
-            btngrabarpedido.setVisibility(View.GONE);
+                btnterminar.setVisibility(View.GONE);
+                btngrabarpedido.setVisibility(View.VISIBLE);
 
-        }
-
-        if (valida){
-
-            btnterminar.setVisibility(View.VISIBLE);
-            btngrabarpedido.setVisibility(View.GONE);
-
-        }else{
-
-            btnterminar.setVisibility(View.GONE);
-            btngrabarpedido.setVisibility(View.VISIBLE);
-
-        }
-
-        mview = getLayoutInflater().inflate(R.layout.listview_dialog,null);
-        btnbuscarproducto.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                Index = String.valueOf(Integer.valueOf(Index)+1);
-                EliminaPromocion();
-                Intent intent = new Intent(bandejaProductosActivity.this,BuscarProductoActivity.class);
-                intent.putExtra("TipoPago",tipoformapago);
-                intent.putExtra("indice",Ind);
-                intent.putExtra("Index",Index);
-                intent.putExtra("validador","false");
-                intent.putExtra("Almacen",almacen);
-                intent.putExtra("id_pedido",id_pedido);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Cliente",cliente);
-                intent.putExtras(bundle);
-                Bundle bundle1 = new Bundle();
-                bundle1.putSerializable("listaproductoselegidos",listaproductoselegidos);
-                intent.putExtras(bundle1);
-                Bundle bundle3 = new Bundle();
-                bundle3.putSerializable("Usuario",usuario);
-                intent.putExtras(bundle3);
-                startActivity(intent);
-                finish();
             }
-        });
 
-        // Boton terminar
+            mview = getLayoutInflater().inflate(R.layout.listview_dialog, null);
+            btnbuscarproducto.setOnClickListener(new View.OnClickListener() {
 
-        btnterminar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                @Override
+                public void onClick(View v) {
 
-                if (listaproductoselegidos.size() > 0){
+                    Index = String.valueOf(Integer.valueOf(Index) + 1);
+                    EliminaPromocion();
+                    Intent intent = new Intent(bandejaProductosActivity.this, BuscarProductoActivity.class);
+                    intent.putExtra("TipoPago", tipoformapago);
+                    intent.putExtra("indice", Ind);
+                    intent.putExtra("Index", Index);
+                    intent.putExtra("validador", "false");
+                    intent.putExtra("Almacen", almacen);
+                    intent.putExtra("id_pedido", id_pedido);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Cliente", cliente);
+                    intent.putExtras(bundle);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("listaproductoselegidos", listaproductoselegidos);
+                    intent.putExtras(bundle1);
+                    Bundle bundle3 = new Bundle();
+                    bundle3.putSerializable("Usuario", usuario);
+                    intent.putExtras(bundle3);
+                    startActivity(intent);
+                    finish();
+                }
+            });
 
-                    Intent intent = new Intent(bandejaProductosActivity.this,PromocionesActivity.class);
+            // Boton terminar
 
-                    intent.putExtra("TipoPago",tipoformapago);
-                    intent.putExtra("indice",Ind);
-                    intent.putExtra("Index",Index);
-                    intent.putExtra("cantidadlista",listaproductoselegidos.size()+"");
-                    intent.putExtra("Almacen",almacen);
-                    intent.putExtra("id_pedido",id_pedido);
-                    intent.putExtra("validador","false");
+            btnterminar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (listaproductoselegidos.size() > 0) {
+
+                        Intent intent = new Intent(bandejaProductosActivity.this, PromocionesActivity.class);
+
+                        intent.putExtra("TipoPago", tipoformapago);
+                        intent.putExtra("indice", Ind);
+                        intent.putExtra("Index", Index);
+                        intent.putExtra("cantidadlista", listaproductoselegidos.size() + "");
+                        intent.putExtra("Almacen", almacen);
+                        intent.putExtra("id_pedido", id_pedido);
+                        intent.putExtra("validador", "false");
+
+                        Bundle bundle = new Bundle();
+                        Bundle bundle2 = new Bundle();
+                        Bundle bundle3 = new Bundle();
+
+                        bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
+                        bundle2.putSerializable("Cliente", cliente);
+                        bundle3.putSerializable("Usuario", usuario);
+
+                        intent.putExtras(bundle);
+                        intent.putExtras(bundle2);
+                        intent.putExtras(bundle3);
+
+                        startActivity(intent);
+                        finish();
+
+                    } else {
+
+                        Toast.makeText(bandejaProductosActivity.this, "La canasta esta vacia", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+            });
+
+            btnregresarbandeja.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    btnbuscarproducto.setVisibility(View.VISIBLE);
+                    btnterminar.setVisibility(View.VISIBLE);
+                    btngrabarpedido.setVisibility(View.GONE);
+                    btnregresarbandeja.setVisibility(View.GONE);
+                }
+            });
+
+            btngrabarpedido.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    Intent intent = new Intent(bandejaProductosActivity.this, FechaPactadaActivity.class);
+
+                    intent.putExtra("TipoPago", tipoformapago);
+                    intent.putExtra("indice", Ind);
+                    intent.putExtra("Index", Index);
+                    intent.putExtra("Cantidad", cantidad);
+                    intent.putExtra("Precio", "" + precio);
+                    intent.putExtra("cantidadlista", listaproductoselegidos.size() + "");
+                    intent.putExtra("Almacen", almacen);
+                    intent.putExtra("id_pedido", id_pedido);
+                    intent.putExtra("validador", "false");
 
                     Bundle bundle = new Bundle();
                     Bundle bundle2 = new Bundle();
                     Bundle bundle3 = new Bundle();
 
                     bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
-                    bundle2.putSerializable("Cliente",cliente);
-                    bundle3.putSerializable("Usuario",usuario);
+                    bundle2.putSerializable("Cliente", cliente);
+                    bundle3.putSerializable("Usuario", usuario);
 
                     intent.putExtras(bundle);
                     intent.putExtras(bundle2);
                     intent.putExtras(bundle3);
 
+
                     startActivity(intent);
                     finish();
 
-                }else {
-
-                    Toast.makeText(bandejaProductosActivity.this, "La canasta esta vacia", Toast.LENGTH_SHORT).show();
-
                 }
-            }
-        });
+            });
 
-        btnregresarbandeja.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            lvbandejaproductos = findViewById(R.id.lvbandejaProductos);
+            ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
+                    CustomListAdapter(bandejaProductosActivity.this, R.layout.custom_list, listabandejaproductoselegidos);
+            lvbandejaproductos.setAdapter(listAdapter);
 
-                btnbuscarproducto.setVisibility(View.VISIBLE);
-                btnterminar.setVisibility(View.VISIBLE);
-                btngrabarpedido.setVisibility(View.GONE);
-                btnregresarbandeja.setVisibility(View.GONE);
-            }
-        });
+            // metodo para entrar en la lista con el click largo
 
-        btngrabarpedido.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-/*
-                String trama = id_pedido+"|D|"+Ind+"|"+etcantidadelegida.getText()+"|"+
-                        productos.getCodigo()+"|"+ tvprecio.getText()+"|"+ tvtotal.getText()+"|";
-*/
-               // ActualizarProducto(trama);
+            lvbandejaproductos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                RegistrarPedido(id_pedido);
+                    if (listaproductoselegidos.get(position).getObservacion() == null) {
 
-                /*
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
+                        builder.setCancelable(true);
 
-                Intent intent = new Intent(bandejaProductosActivity.this,FechaPactadaActivity.class);
-                startActivity(intent);
-                finish();
-                */
-            }
-        });
+                        listView = mview.findViewById(R.id.lvopciones);
+                        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
+                                bandejaProductosActivity.this, android.R.layout.simple_list_item_1,
+                                getResources().getStringArray(R.array.opciones));
+                        adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
 
-        lvbandejaproductos =  findViewById(R.id.lvbandejaProductos);
-        ListadoAlmacenActivity.CustomListAdapter listAdapter= new ListadoAlmacenActivity.
-                CustomListAdapter(bandejaProductosActivity.this , R.layout.custom_list ,listabandejaproductoselegidos );
-        lvbandejaproductos.setAdapter(listAdapter);
+                        listView.setAdapter(adapter);
 
-        // metodo para entrar en la lista con el click largo
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
+                                usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
 
-        lvbandejaproductos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                                switch (i) {
+                                    case 0: // Editar producto
 
-                if (listaproductoselegidos.get(position).getObservacion() == null) {
+                                        EliminaPromocion();
+                                        if (listaproductoselegidos.get(position).getObservacion() == null) {
+                                            btnterminar.setVisibility(View.VISIBLE);
+                                            btngrabarpedido.setVisibility(View.GONE);
+                                            Editarproductoselecionado(position);
+                                            valida = true;
+                                            break;
 
-                final AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
-                builder.setCancelable(true);
+                                        } else {
+                                            salirlistview();
+                                            break;
+                                        }
 
-                listView = mview.findViewById(R.id.lvopciones);
-                ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
-                        bandejaProductosActivity.this,android.R.layout.simple_list_item_1,
-                        getResources().getStringArray(R.array.opciones));
-                adapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
+                                    case 1:
 
-                listView.setAdapter(adapter);
+                                        EliminaPromocion();
+                                        if (listaproductoselegidos.get(position).getObservacion() == null) {
+                                            final String trama1 = id_pedido + "|" + listaproductoselegidos.get(position).getIndice();
 
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                            usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
+                                            final AlertDialog.Builder builder1 = new AlertDialog.Builder(
+                                                    bandejaProductosActivity.this);
+                                            builder1.setMessage("Esta seguro que desea eliminar el pedido?")
+                                                    .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialogInterface, int i) {
 
-                            switch (i) {
-                                case 0: // Editar producto
+                                                            EliminarProducto(trama1);
 
-                                    EliminaPromocion();
-                                    if (listaproductoselegidos.get(position).getObservacion() == null) {
-                                        btnterminar.setVisibility(View.VISIBLE);
-                                        btngrabarpedido.setVisibility(View.GONE);
-                                        Editarproductoselecionado(position);
-                                        valida = true;
-                                        break;
+                                                            dialogInterface.cancel();
+                                                            salirlistview();
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.cancel();
+                                                            salirlistview();
+                                                        }
+                                                    })
+                                                    .create()
+                                                    .show();
 
-                                    } else {
-                                        salirlistview();
-                                        break;
-                                    }
-
-                                case 1:
-
-                                    EliminaPromocion();
-                                    if (listaproductoselegidos.get(position).getObservacion() == null) {
-                                        final String trama1 = id_pedido + "|" + listaproductoselegidos.get(position).getIndice();
-
-                                        final AlertDialog.Builder builder1 = new AlertDialog.Builder(
-                                                bandejaProductosActivity.this);
-                                        builder1.setMessage("Esta seguro que desea eliminar el pedido?")
-                                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                                                        EliminarProducto(trama1);
-
-                                                        dialogInterface.cancel();
-                                                        salirlistview();
-                                                    }
-                                                })
-                                                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.cancel();
-                                                        salirlistview();
-                                                    }
-                                                })
-                                                .create()
-                                                .show();
-
-                                        listaproductoselegidos.remove(position);
-                                        btnterminar.setVisibility(View.VISIBLE);
-                                        btngrabarpedido.setVisibility(View.GONE);
+                                            listaproductoselegidos.remove(position);
+                                            btnterminar.setVisibility(View.VISIBLE);
+                                            btngrabarpedido.setVisibility(View.GONE);
 //                                        Alertsdialog("Borrar el producto");
+                                            valida = true;
+                                            break;
+
+                                        } else {
+                                            salirlistview();
+                                            break;
+                                        }
+
+                                    case 2:
+
+                                        EliminaPromocion();
+                                        salirlistview();
+                                        btnterminar.setVisibility(View.VISIBLE);
+                                        btngrabarpedido.setVisibility(View.GONE);
                                         valida = true;
                                         break;
-
-                                    } else {
-                                        salirlistview();
-                                        break;
-                                    }
-
-                                case 2:
-
-                                    EliminaPromocion();
-                                    salirlistview();
-                                    btnterminar.setVisibility(View.VISIBLE);
-                                    btngrabarpedido.setVisibility(View.GONE);
-                                    valida = true;
-                                    break;
+                                }
                             }
-                        }
-                    });  //
+                        });  //
 
-                    builder.setView(mview);
-                    AlertDialog dialog = builder.create();
-                    if(mview.getParent()!=null)
-                        ((ViewGroup)mview.getParent()).removeView(mview); // <- fix
-                    dialog.show();
-                    return true;
-                }else {
-                    return true;
+                        builder.setView(mview);
+                        AlertDialog dialog = builder.create();
+                        if (mview.getParent() != null)
+                            ((ViewGroup) mview.getParent()).removeView(mview); // <- fix
+                        dialog.show();
+                        return true;
+                    } else {
+                        return true;
+                    }
                 }
-            }
-        });
+            });
 
-        lvbandejaproductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            lvbandejaproductos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Double Aux = Double.valueOf(listaproductoselegidos.get(position).getPrecioAcumulado().replace(",",""));
+                    Double Aux = Double.valueOf(listaproductoselegidos.get(position).getPrecioAcumulado().replace(",", ""));
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
-                builder.setMessage(
-                        "Codigo       :   "  + listaproductoselegidos.get(position).getCodigo() + "\n" +
-                        "Nombre      :   " + listaproductoselegidos.get(position).getDescripcion()+ "\n"+
-                        "Unidad       :   " + listaproductoselegidos.get(position).getUnidad()+ "\n"+
-                        "Cantidad    :   " + listaproductoselegidos.get(position).getCantidad()+ "\n"+
-                        "Precio        : S/ " + listaproductoselegidos.get(position).getPrecio()+ "\n"+
-                        "Subtotal     : S/ " +formateador.format((double)Aux))
-                        .setNegativeButton("Aceptar",null)
-                        .create()
-                        .show();
-            }
-        });
+                    AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
+                    builder.setMessage(
+                            "Codigo       :   " + listaproductoselegidos.get(position).getCodigo() + "\n" +
+                                    "Nombre      :   " + listaproductoselegidos.get(position).getDescripcion() + "\n" +
+                                    "Unidad       :   " + listaproductoselegidos.get(position).getUnidad() + "\n" +
+                                    "Cantidad    :   " + listaproductoselegidos.get(position).getCantidad() + "\n" +
+                                    "Precio        : S/ " + listaproductoselegidos.get(position).getPrecio() + "\n" +
+                                    "Subtotal     : S/ " + formateador.format((double) Aux))
+                            .setNegativeButton("Aceptar", null)
+                            .create()
+                            .show();
+                }
+            });
+
+        }
     }
       private void RegistrarPedido(String id_pedido) {
 

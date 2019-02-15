@@ -1,13 +1,12 @@
 package com.example.sistemas.tomapedidos;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -18,13 +17,22 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Entidades.Clientes;
+import com.example.sistemas.tomapedidos.Entidades.Productos;
+import com.example.sistemas.tomapedidos.Entidades.Usuario;
+
+import java.util.ArrayList;
 
 public class FechaPactadaActivity extends AppCompatActivity {
 
     Button btnregistrafechapactada, btnregresarfechapactada;
     EditText etfechapactada;
     String trama, url;
-    FloatingActionButton fabregresar;
+    ArrayList<Productos> listaproductoselegidos;
+    Clientes cliente;
+    Usuario usuario;
+    String almacen,tipoformapago,Ind,id_pedido,validador,retorno,Index,precio,cantidad;
+    TextView tvCantidad,tvPrecio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,19 +41,67 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
         btnregistrafechapactada =  findViewById(R.id.btnRegistrarFechaPactada);
         btnregresarfechapactada = findViewById(R.id.btnRegresarFechaPactada);
-        fabregresar = findViewById(R.id.FActionButton);
         etfechapactada = findViewById(R.id.etFechaPactada);
+        tvCantidad = findViewById(R.id.tvNumeroItem);
+        tvPrecio = findViewById(R.id.tvMontoTotal);
+
+        listaproductoselegidos = (ArrayList<Productos>) getIntent()
+                .getSerializableExtra("listaproductoselegidos");   //
+        cliente = (Clientes)getIntent().getSerializableExtra("Cliente");   //
+        usuario = (Usuario)getIntent().getSerializableExtra("Usuario");    //
+        almacen =  getIntent().getStringExtra("Almacen");
+        tipoformapago =  getIntent().getStringExtra("TipoPago");
+        Ind = getIntent().getStringExtra("indice");
+        id_pedido = getIntent().getStringExtra("id_pedido");
+        validador = getIntent().getStringExtra("validador");
+        retorno = getIntent().getStringExtra("retorno");
+        Index = getIntent().getStringExtra("Index");
+        cantidad = getIntent().getStringExtra("Cantidad");
+        precio = getIntent().getStringExtra("Precio");
+
+
+        Toast.makeText(FechaPactadaActivity.this,"El tamaño del arraylist en la fecha pactada es : "+ listaproductoselegidos.size(), Toast.LENGTH_SHORT).show();
+
+        tvCantidad.setText(cantidad);
+        tvPrecio.setText(precio);
+        Toast.makeText(this, usuario.getNombre(), Toast.LENGTH_SHORT).show();
 
         btnregresarfechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent  = new Intent(FechaPactadaActivity.this,bandejaProductosActivity.class);
+                Intent intent = new Intent(FechaPactadaActivity.this,bandejaProductosActivity.class);
+
+                intent.putExtra("TipoPago",tipoformapago);
+                intent.putExtra("indice",Ind);
+                intent.putExtra("Index",Index);
+                intent.putExtra("Cantidad",cantidad);
+                intent.putExtra("Precio",precio);
+                intent.putExtra("cantidadlista",listaproductoselegidos.size()+"");
+                intent.putExtra("Almacen",almacen);
+                intent.putExtra("id_pedido",id_pedido);
+                intent.putExtra("validador","false");
+
+                Bundle bundle = new Bundle();
+                Bundle bundle2 = new Bundle();
+                Bundle bundle3 = new Bundle();
+
+                bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                bundle2.putSerializable("Cliente",cliente);
+                bundle3.putSerializable("Usuario",usuario);
+
+                intent.putExtras(bundle);
+                intent.putExtras(bundle2);
+                intent.putExtras(bundle3);
+
                 startActivity(intent);
                 finish();
 
+
             }
         });
+
+
 
         btnregistrafechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,16 +110,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 VerificaFechaPactada(trama);
             }
         });
-
-        fabregresar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Toast.makeText(FechaPactadaActivity.this, "Se ha ingresado al Floating Action button", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
 
     }
 

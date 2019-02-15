@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
@@ -49,11 +50,13 @@ public class DetalleProductoActivity extends AppCompatActivity {
     ArrayList<String> listaProducto;
     Usuario usuario;
     BigDecimal redondeado;
+    ImageButton imgbtnvolverdetalleproducto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_producto);
+
 
         etcantidadelegida =  findViewById(R.id.etCantProdElegida);
         listaproductoselegidos = new ArrayList<>();
@@ -80,8 +83,10 @@ public class DetalleProductoActivity extends AppCompatActivity {
         btndverificarproducto = findViewById(R.id.btnVerificar);
         tvprecioreal = findViewById(R.id.tvPrecioReal);
         tvunidades = findViewById(R.id.tvUnidad);
+        imgbtnvolverdetalleproducto = findViewById(R.id.ibVolverDetalleProducto);
 
 
+        Toast.makeText(this, "El Cliente tiene comprobante : "+cliente.getTipoDocumento(), Toast.LENGTH_SHORT).show();
         btndverificarproducto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +107,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
 
         tvstock  =findViewById(R.id.tvStockElegido);
         tvprecio = findViewById(R.id.tvPrecioElegido);
-        tvsubtotal = findViewById(R.id.tvSubtotal);
+        //tvsubtotal = findViewById(R.id.tvSubtotal);
         tvtotal = findViewById(R.id.tvTotalElegido);
 
 if (tvstock.getText() == null){
@@ -120,6 +125,32 @@ else if (etcantidadelegida.getText()== null){
 }
         btnguardaryrevisar = findViewById(R.id.btnGuardarrevisar);
         btnguardaryagregar = findViewById(R.id.btnGuardaryagregar);
+        imgbtnvolverdetalleproducto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
+
+                intent.putExtra("TipoPago",tipoPago);
+                intent.putExtra("indice",Ind);
+                intent.putExtra("validador","false");
+                intent.putExtra("Almacen",almacen);
+                intent.putExtra("Index",Index);
+                intent.putExtra("id_pedido",id_pedido);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Cliente",cliente);
+                intent.putExtras(bundle);
+                Bundle bundle1 = new Bundle();
+                bundle1.putSerializable("listaproductoselegidos",listaproductoselegidos);
+                intent.putExtras(bundle1);
+                Bundle bundle3 = new Bundle();
+                bundle3.putSerializable("Usuario",usuario);
+                intent.putExtras(bundle3);
+                startActivity(intent);
+                finish();
+
+            }
+        });
         btnguardaryrevisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -353,14 +384,16 @@ else if (etcantidadelegida.getText()== null){
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-            url = "%27"+almacen+"|"+usuario.
-                    getLugar()+"|"+productos.getCodigo()+"||"+cliente.getCodCliente()+"|||"+cantidad+"|%27";
+            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables=%27"+almacen+"|"+usuario.
+                    getLugar()+"|"+productos.getCodigo()+"||"+cliente.getCodCliente()+"|||"+cantidad+"%27";
 
         listaProducto = new ArrayList<>();
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+
                         progressDialog.dismiss();
                         btnguardaryagregar.setVisibility(View.VISIBLE);
                         btnguardaryrevisar.setVisibility(View.VISIBLE);

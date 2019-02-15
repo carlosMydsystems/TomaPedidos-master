@@ -53,7 +53,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
     Usuario usuario;
     String id_Pedido,fechaRegistro,precio = "0.0";
     String indice,validador,Glosa,id_pedido,Index;
-    boolean validadorBooleano;
 
 
     @Override
@@ -126,7 +125,7 @@ if (listaproductoselegidos.size() != 0) {
 
                     intent.putExtra("TipoPago", tipoPago);
                     intent.putExtra("indice", indice);
-                    intent.putExtra("id_pedido", id_pedido);
+                    intent.putExtra("id_pedido", id_Pedido);
                     intent.putExtra("Almacen", almacen);
                     intent.putExtra("Index", Index);
                     intent.putExtra("retorno", "retorno");
