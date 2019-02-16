@@ -27,7 +27,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
     Button btnregistrafechapactada, btnregresarfechapactada;
     EditText etfechapactada;
-    String trama, url;
+    String url;
     ArrayList<Productos> listaproductoselegidos;
     Clientes cliente;
     Usuario usuario;
@@ -58,13 +58,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
         Index = getIntent().getStringExtra("Index");
         cantidad = getIntent().getStringExtra("Cantidad");
         precio = getIntent().getStringExtra("Precio");
-
-
-        Toast.makeText(FechaPactadaActivity.this,"El tamaño del arraylist en la fecha pactada es : "+ listaproductoselegidos.size(), Toast.LENGTH_SHORT).show();
-
         tvCantidad.setText(cantidad);
         tvPrecio.setText(precio);
-        Toast.makeText(this, usuario.getNombre(), Toast.LENGTH_SHORT).show();
 
         btnregresarfechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,20 +92,30 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
 
-
             }
         });
-
-
 
         btnregistrafechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                VerificaFechaPactada(trama);
+                // VerificaFechaPactada(trama);
+
+                Intent intent = new Intent(FechaPactadaActivity.this,MainActivity.class);
+
+                Bundle bundle2 = new Bundle();
+                Bundle bundle3 = new Bundle();
+
+                bundle2.putSerializable("Cliente",cliente);
+                bundle3.putSerializable("Usuario",usuario);
+
+                intent.putExtras(bundle2);
+                intent.putExtras(bundle3);
+
+                startActivity(intent);
+                finish();
             }
         });
-
     }
 
     private void VerificaFechaPactada(String trama ) {

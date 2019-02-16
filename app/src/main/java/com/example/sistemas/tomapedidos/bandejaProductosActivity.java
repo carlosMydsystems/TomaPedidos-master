@@ -156,6 +156,12 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
+                    for (int i = 0 ; i<listaproductoselegidos.size();i++){
+
+                        String trama = id_pedido+"|"+listaproductoselegidos.get(i).getIndice();
+                        EliminarProducto(trama);
+                    }
+
                     Intent intent = new Intent(bandejaProductosActivity.this, MostrarClienteActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("Cliente", cliente);

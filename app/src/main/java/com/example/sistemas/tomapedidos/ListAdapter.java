@@ -80,7 +80,6 @@ public class ListAdapter extends BaseAdapter {
             {
 
                 indice = listViewHolder.tvidpromociones.getText().toString();
-                // Toast.makeText(context, Ind, Toast.LENGTH_SHORT).show();
                 updateQuantity(position,listViewHolder.edTextQuantity,1);
                 updateQuantityPrice(position,listViewHolder.tvPrice,-1, indice);
 

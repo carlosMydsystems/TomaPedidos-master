@@ -16,10 +16,13 @@ public class Clientes implements Serializable {
     private String usuarioultpedido;
     private String tipoDocumento;
     private String detalleCliente;
+    private String codFPago;
+    private String formaPago;
 
     public Clientes(String idCliente, String nombre, String codCliente, String direccion, String giro,
                     String tipoCliente, String deuda, String estado, String fechaultpedido,
-                    String usuarioultpedido, String tipoDocumento, String detalleCliente) {
+                    String usuarioultpedido, String tipoDocumento, String detalleCliente, String codFPago,
+                    String formaPago) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.codCliente = codCliente;
@@ -32,9 +35,28 @@ public class Clientes implements Serializable {
         this.usuarioultpedido = usuarioultpedido;
         this.tipoDocumento = tipoDocumento;
         this.detalleCliente = detalleCliente;
+        this.codFPago = codFPago;
+        this.formaPago = formaPago;
     }
 
     public Clientes() {
+    }
+
+
+    public String getCodFPago() {
+        return codFPago;
+    }
+
+    public void setCodFPago(String codFPago) {
+        this.codFPago = codFPago;
+    }
+
+    public String getFormaPago() {
+        return formaPago;
+    }
+
+    public void setFormaPago(String formaPago) {
+        this.formaPago = formaPago;
     }
 
     public String getTipoDocumento() {

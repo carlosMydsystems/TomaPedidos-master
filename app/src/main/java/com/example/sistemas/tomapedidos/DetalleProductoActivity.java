@@ -438,10 +438,6 @@ else if (etcantidadelegida.getText()== null){
                                         BigDecimal big = new BigDecimal(val);
                                         big = big.setScale(2, RoundingMode.HALF_UP);
 
-                                        Toast.makeText(DetalleProductoActivity.this, big+"", Toast.LENGTH_SHORT).show();
-
-                                        // String AuxiliarMatriz[] = preciototal.toString().split(".");
-
                                         tvunidades.setText(producto.getUnidad().toUpperCase());
                                         Double Aux = Double.valueOf(producto.getStock());
                                         tvstock.setText(formateador.format((double)Aux) + " ");

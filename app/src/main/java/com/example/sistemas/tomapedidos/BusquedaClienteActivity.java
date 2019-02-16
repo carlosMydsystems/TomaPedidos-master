@@ -147,7 +147,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                                     jsonObject = jsonArray.getJSONObject(i);
                                     cliente.setCodCliente(jsonObject.getString("COD_CLIENTE"));
                                     cliente.setNombre(jsonObject.getString("CLIENTE"));
-                                    //cliente.setDireccion(jsonObject.getString("Direccion"));
+                                    cliente.setDireccion(jsonObject.getString("DIRECCION"));
                                     //cliente.setGiro(jsonObject.getString("Giro"));
                                     //cliente.setTipoCliente(jsonObject.getString("TipoCliente"));
                                     //cliente.setEstado(jsonObject.getString("Estado"));

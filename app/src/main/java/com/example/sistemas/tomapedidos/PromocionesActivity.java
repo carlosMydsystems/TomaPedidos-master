@@ -54,7 +54,6 @@ public class PromocionesActivity extends AppCompatActivity {
         listAdapter = new ListAdapter(this,products);
         id_pedido = getIntent().getStringExtra("id_pedido");
         Index = getIntent().getStringExtra("Index");
-        Toast.makeText(this, id_pedido, Toast.LENGTH_SHORT).show();
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
 
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
@@ -63,7 +62,6 @@ public class PromocionesActivity extends AppCompatActivity {
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("Ind");
         cantidadlista =  getIntent().getStringExtra("cantidadlista");
-        Toast.makeText(this, cantidadlista, Toast.LENGTH_SHORT).show();
         indice = listaproductoselegidos.size();
         listaProductosPromociones = new ArrayList<>();
         btnregistrarpromociones = (Button) findViewById(R.id.btnRegistrarPromociones);
@@ -115,10 +113,7 @@ public class PromocionesActivity extends AppCompatActivity {
                 listaproductoselegidos.add(productopromocion);
 
                 String Subtrama = listAdapter.listProducts.get(i).CartQuantity+"|"+listAdapter.listProducts.get(i).UnidadProducto + "|||";
-                Toast.makeText(this, Subtrama, Toast.LENGTH_SHORT).show();
-               // listaTrama.add(Subtrama);
-                //products.CartQuantity = listAdapter.listProducts.get(i).CartQuantity;
-                //productOrders.add(products);
+
             }
         }
 
@@ -158,7 +153,6 @@ public class PromocionesActivity extends AppCompatActivity {
                     listaPromociones.get(i).getCodArticulo(),
                     listaPromociones.get(i).getUnidad()
                    ));
-            //Toast.makeText(this, "Este es el precio "+ listaPromociones.get(i).getPrecioSoles() , Toast.LENGTH_SHORT).show();
         }
     }
 
