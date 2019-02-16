@@ -224,7 +224,6 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                                 intent.putExtras(bundle2);
                                 startActivity(intent);
                                 finish();
-
                             }
                         });
 
