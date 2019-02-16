@@ -82,10 +82,10 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
     }
 
-    private void Consultartipopago() {
+    private void Consultartipopago(String COD_FPAGO_LIMITE) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_FPAGO";
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_FPAGO&variables='"+COD_FPAGO_LIMITE+"'";
         listatipopago = new ArrayList<>();
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -133,6 +133,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                             }else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(ListadoFormaPagoActivity.this);
                                 builder.setMessage("No se pudo encontrar los tipos de pago correspondientes");
+                                builder.create().show();
                             }
 
                         } catch (JSONException e) {
@@ -228,7 +229,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                             }
                         });
 
-                        Consultartipopago();
+                        Consultartipopago(cliente.getCodFPago());
                         lvtipopago = findViewById(R.id.lvtipopago);
 
                     }
@@ -245,5 +246,4 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
-
 }
