@@ -70,7 +70,6 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
         // Donde se va a colocar el nuevo id del pedido
 
-
         ObtenerId();
 
         // id segun el antiguo metodo
