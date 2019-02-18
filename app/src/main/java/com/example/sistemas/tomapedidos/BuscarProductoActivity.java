@@ -48,11 +48,10 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ArrayList<String> listaProducto;
     Clientes cliente;
     EditText etproducto,etglosa;
-    String url,Tipobusqueda = "Nombre",tipoPago,almacen,Ind= "1";
+    String url,Tipobusqueda = "Nombre",tipoPago,almacen;
     ProgressDialog progressDialog;
     Usuario usuario;
-    String id_Pedido,fechaRegistro,precio = "0.0";
-    String indice,validador,id_pedido,Index;
+    String fechaRegistro,indice,validador,id_pedido,Index;
 
 
     @Override
@@ -80,6 +79,8 @@ public class BuscarProductoActivity extends AppCompatActivity {
         etproducto  = findViewById(R.id.etPrducto);
         etglosa = findViewById(R.id.etGlosa);
 
+
+
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
@@ -103,6 +104,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(btnbuscarProducto.getWindowToken(), 0);
 
+
+
+
 if (listaproductoselegidos.size() != 0) {
     btnregresarproducto.setOnClickListener(new View.OnClickListener() {
         @Override
@@ -110,9 +114,10 @@ if (listaproductoselegidos.size() != 0) {
 
                     Intent intent = new Intent(BuscarProductoActivity.this, bandejaProductosActivity.class);
 
+            Toast.makeText(BuscarProductoActivity.this, "BuscarProductoActivity "  + id_pedido, Toast.LENGTH_SHORT).show();
                     intent.putExtra("TipoPago", tipoPago);
                     intent.putExtra("indice", indice);
-                    intent.putExtra("id_pedido", id_Pedido);
+                    intent.putExtra("id_pedido", id_pedido                                                                                                                                                                                                                                                                                          );
                     intent.putExtra("Almacen", almacen);
                     intent.putExtra("Index", Index);
                     intent.putExtra("retorno", "retorno");
@@ -173,7 +178,7 @@ if (listaproductoselegidos.size() != 0) {
         if (listaproductoselegidos.size()==0 && validador.equals("true")){
 
             String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
-                    getCodVendedor() + "|"+tipoPago+"|"+fechaRegistro+"|"+fechaRegistro +"|0.00|"+etglosa.getText().toString()+"|";
+                    getCodVendedor() + "|"+tipoPago+"|"+cliente.getTipoDocumento()+"|1|0.00|"+etglosa.getText().toString()+"|";
 
             ActualizarProducto(Trama);
 

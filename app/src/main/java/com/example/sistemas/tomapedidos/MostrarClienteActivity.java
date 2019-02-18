@@ -65,7 +65,15 @@ public class MostrarClienteActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String muestra = (String)parent.getItemAtPosition(position);
-                cliente.setTipoDocumento(muestra);
+                if (muestra.equals("Factura")){
+
+                    cliente.setTipoDocumento("FACT");
+
+                }else if ( muestra.equals("Boleta")){
+
+                    cliente.setTipoDocumento("BOL");
+
+                }
             }
 
             @Override

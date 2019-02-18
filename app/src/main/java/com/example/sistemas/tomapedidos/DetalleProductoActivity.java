@@ -258,6 +258,7 @@ else if (etcantidadelegida.getText()== null){
                 Double stockDouble = Double.valueOf(tvstock.getText().toString().replace(",",""));
                 Double cantidadElegida = Double.valueOf(etcantidadelegida.getText().toString());
 
+                Toast.makeText(DetalleProductoActivity.this, ""+id_pedido, Toast.LENGTH_SHORT).show();
                 validarStock = stockDouble - cantidadElegida;
                 
                 if (validarStock < 0) {

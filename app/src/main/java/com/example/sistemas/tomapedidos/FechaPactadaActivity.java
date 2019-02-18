@@ -222,9 +222,10 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     if (palabras.equals("ERROR")) {
                                         condicion = true;
                                         error = true;
-                                    }else if (palabras.equals("OK:")){
+                                    }else if (palabras.equals("OK")){
 
-                                        Toast.makeText(FechaPactadaActivity.this, "Entro al Ok", Toast.LENGTH_SHORT).show();
+                                        condicion = true;
+                                        error = true;
                                     }
                                 }
                                 if (error) {
@@ -237,6 +238,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                             .show();
                                 }else{
 
+                                    Toast.makeText(FechaPactadaActivity.this, "Entro al Ok", Toast.LENGTH_SHORT).show();
+                                    /*
                                     Intent intent = new Intent(FechaPactadaActivity.this,MainActivity.class);
 
                                     Bundle bundle2 = new Bundle();
@@ -250,6 +253,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
                                     startActivity(intent);
                                     finish();
+                                    */
                                 }
                             }else {
 
