@@ -86,7 +86,7 @@ public class IntermediaActivity extends AppCompatActivity {
 
             String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
                     get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getIdProducto() + "|" +
-                    precio + "|" + precio + "||";
+                    precio + "|" + precio + "||"+listaproductoselegidos.get(i).getNumPromocion();
 
             Index = indice.toString();
 

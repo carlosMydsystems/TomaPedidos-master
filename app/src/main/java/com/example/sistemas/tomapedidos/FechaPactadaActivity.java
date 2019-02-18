@@ -222,6 +222,9 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     if (palabras.equals("ERROR")) {
                                         condicion = true;
                                         error = true;
+                                    }else if (palabras.equals("OK:")){
+
+                                        Toast.makeText(FechaPactadaActivity.this, "Entro al Ok", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                                 if (error) {
