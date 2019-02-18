@@ -29,14 +29,11 @@ public class IntermediaActivity extends AppCompatActivity {
 
 
     String id;
-    Promociones promocion;
-    ArrayList<Promociones> listaPromociones,listaPromocionesTipoT;
-    String url,id_pedido,cantidadlista,almacen,tipoformapago,Ind,validador,trama,Index;
+    String url,id_pedido,cantidadlista,almacen,tipoformapago,Ind,validador,Index;
     private ListView listView;
     private ListAdapter listAdapter;
     ArrayList<Product> products = new ArrayList<>();
     Integer indice ;
-    ArrayList<String> listaTrama;
     Clientes cliente;
     Usuario usuario;
     ArrayList<Productos>listaproductoselegidos;
@@ -67,12 +64,7 @@ public class IntermediaActivity extends AppCompatActivity {
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
 
         indice = listaproductoselegidos.size();
-        //listaProductosPromociones = new ArrayList<>();
-
         validador = getIntent().getStringExtra("validador");
-        Toast.makeText(this, validador, Toast.LENGTH_SHORT).show();
-
-
         Integer valorcantidadlista = Integer.valueOf(cantidadlista);
 
         for (int i = valorcantidadlista;i<listaproductoselegidos.size();i++) {
@@ -82,7 +74,6 @@ public class IntermediaActivity extends AppCompatActivity {
             listaproductoselegidos.get(i).setIndice(indice);
             Double cantidad = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
             precio = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
-
 
             String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
                     get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getIdProducto() + "|" +

@@ -446,11 +446,9 @@ else if (etcantidadelegida.getText()== null){
 
                                         Double cant = Double.valueOf(etcantidadelegida.getText().toString());
                                         Double preciototal = cant*preciounitario; // Se hace la definicion del precio que se va ha acumular
-
                                         String preciototalredondeado = preciototal+"";
                                         BigDecimal precioTotalBig = new BigDecimal(preciototalredondeado);
                                         precioTotalBig = precioTotalBig.setScale(2,RoundingMode.HALF_UP);
-
                                         tvunidades.setText(producto.getUnidad().toUpperCase());
                                         Double Aux = Double.valueOf(producto.getStock());
                                         tvstock.setText(formateador.format((double)Aux) + " ");

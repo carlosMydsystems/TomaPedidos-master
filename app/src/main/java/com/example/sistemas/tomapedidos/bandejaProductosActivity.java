@@ -42,17 +42,15 @@ public class bandejaProductosActivity extends AppCompatActivity {
     ArrayList<String> listabandejaproductos,listabandejaproductoselegidos;
     Clientes cliente;
     String cantidad ,Precio, url, almacen, tipoformapago, fechaRegistro, documento = "Boleta",
-            validador;  // se define el documento en el caso que se use en la trama
+            validador,id,Ind,id_pedido,retorno,Index;
     View mview;
     Integer cantidadProductos=0;
     ArrayList<Productos> listaproductoselegidos;
     Usuario  usuario;
     Productos producto;
     Double preciolista, precio = 0.0;
-    String id,Ind,id_pedido,retorno;
     ListView listView;
     Boolean valida;
-    String Index;
     ImageButton imgbtnregresar;
 
     @Override
@@ -179,7 +177,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                 }
             });
-
 
             String cadenaTituloAux = "Productos : " + cantidad + "   |  Monto : S/ " + formateador.format(precio) + "";
             tvtitulodinamico.setText(cadenaTituloAux);

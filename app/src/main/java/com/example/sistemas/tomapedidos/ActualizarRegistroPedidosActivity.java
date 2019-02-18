@@ -112,12 +112,9 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
                 }else{
 
-                    Integer pos = Integer.valueOf(position)+1;
-
                     String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
                             productos.getCodigo() + "|" + tvprecioelegido.getText() + "|" + tvtotalelegido.getText().toString().trim() + "||";
                     ActualizarProducto(trama);
-
                     productos.setCantidad(etcantprodelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
                     cantidad = Double.valueOf(etcantprodelegida.getText().toString());
