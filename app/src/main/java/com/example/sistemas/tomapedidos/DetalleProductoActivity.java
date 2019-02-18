@@ -155,18 +155,25 @@ else if (etcantidadelegida.getText()== null){
             @Override
             public void onClick(View v) {
 
-                    validarStock = Double.valueOf(tvstock.getText().toString().replace(",","")) - Double.valueOf(etcantidadelegida.getText().toString());
+                Double stockDouble = Double.valueOf(tvstock.getText().toString().replace(",",""));
+                Double cantidadElegida = Double.valueOf(etcantidadelegida.getText().toString());
+
+                    validarStock = stockDouble - cantidadElegida;
 
                 if (validarStock < 0) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
-                            .setMessage("El Stock es insuficiente, desea elegir otro articulo")
-                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
+                            .setMessage("El Stock es insuficiente, desea elegir otro articulo");
+
+                    if (stockDouble >0.0){
+                    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                    }
+
                     builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -195,6 +202,9 @@ else if (etcantidadelegida.getText()== null){
 
                     builder.create()
                             .show();
+
+
+
 
                 } else {
 
@@ -241,21 +251,28 @@ else if (etcantidadelegida.getText()== null){
             }
         });
         btnguardaryagregar.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
 
-                validarStock = Double.valueOf(tvstock.getText().toString().replace(",","")) - Double.valueOf(etcantidadelegida.getText().toString());
+                Double stockDouble = Double.valueOf(tvstock.getText().toString().replace(",",""));
+                Double cantidadElegida = Double.valueOf(etcantidadelegida.getText().toString());
+
+                validarStock = stockDouble - cantidadElegida;
                 
                 if (validarStock < 0) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
-                            .setMessage("El Stock es insuficiente, desea elegir otro articulo")
-                            .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
+                            .setMessage("El Stock es insuficiente, desea elegir otro articulo");
+
+                    if (stockDouble > 0.0) {
+                        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                    }
                     builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -432,11 +449,6 @@ else if (etcantidadelegida.getText()== null){
                                         String preciototalredondeado = preciototal+"";
                                         BigDecimal precioTotalBig = new BigDecimal(preciototalredondeado);
                                         precioTotalBig = precioTotalBig.setScale(2,RoundingMode.HALF_UP);
-
-                                        double valor = 1254.005;
-                                        String val = valor+"";
-                                        BigDecimal big = new BigDecimal(val);
-                                        big = big.setScale(2, RoundingMode.HALF_UP);
 
                                         tvunidades.setText(producto.getUnidad().toUpperCase());
                                         Double Aux = Double.valueOf(producto.getStock());
