@@ -73,6 +73,8 @@ public class DetalleProductoActivity extends AppCompatActivity {
         id_pedido = getIntent().getStringExtra("id_pedido");
         Ind = getIntent().getStringExtra("indice");
         Index = getIntent().getStringExtra("Index");
+        Toast.makeText(this, "indice " + Ind, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Index" + Index, Toast.LENGTH_LONG).show();
 
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
 
@@ -203,9 +205,6 @@ else if (etcantidadelegida.getText()== null){
                     builder.create()
                             .show();
 
-
-
-
                 } else {
 
                     if (etcantidadelegida.getText().toString().equals("")) {
@@ -279,7 +278,7 @@ else if (etcantidadelegida.getText()== null){
                         public void onClick(DialogInterface dialog, int which) {
 
                             Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
-
+                            Toast.makeText(DetalleProductoActivity.this, "Detalle indice DetalleProducto : " + Ind, Toast.LENGTH_SHORT).show();
                             intent.putExtra("TipoPago",tipoPago);
                             intent.putExtra("indice",Ind);
                             intent.putExtra("validador","false");

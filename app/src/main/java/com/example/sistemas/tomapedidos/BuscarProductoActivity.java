@@ -84,6 +84,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
         btnregresarproducto = findViewById(R.id.btnRegresarProducto);
 
+
         // Calendario
 
         Calendar fecha = Calendar.getInstance();
@@ -101,7 +102,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(btnbuscarProducto.getWindowToken(), 0);
 
 
-
+        Toast.makeText(this, "indice en Buscar Producto " + indice, Toast.LENGTH_SHORT).show();
 
 if (listaproductoselegidos.size() != 0) {
     btnregresarproducto.setOnClickListener(new View.OnClickListener() {
