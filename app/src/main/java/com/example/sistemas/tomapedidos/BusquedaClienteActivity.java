@@ -57,7 +57,6 @@ public class BusquedaClienteActivity extends AppCompatActivity {
         etcliente = findViewById(R.id.etCliente);
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");  //Se pasa el parametro del usuario
 
-
         btnbuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

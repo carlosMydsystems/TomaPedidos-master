@@ -31,7 +31,6 @@ import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -52,7 +51,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     Usuario usuario;
     String fechaRegistro,indice,validador,id_pedido,Index;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +76,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
         lvProducto = findViewById(R.id.lvProducto);
         etproducto  = findViewById(R.id.etPrducto);
         etglosa = findViewById(R.id.etGlosa);
-
-
 
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
