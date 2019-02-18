@@ -177,8 +177,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
             builder.create()
                     .show();
 
-
-
                 }
             });
 

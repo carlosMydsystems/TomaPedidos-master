@@ -59,7 +59,6 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
         btnregresarformalistapago = findViewById(R.id.btnRegresarListaFormaPago);
 
-
         Calendar fecha = Calendar.getInstance();
         final Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
         final Integer mes = fecha.get(Calendar.MONTH) + 1;

@@ -1,10 +1,13 @@
 package com.example.sistemas.tomapedidos;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +24,12 @@ import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class FechaPactadaActivity extends AppCompatActivity {
 
@@ -34,6 +42,10 @@ public class FechaPactadaActivity extends AppCompatActivity {
     String almacen,tipoformapago,Ind,id_pedido,validador,retorno,Index,precio,cantidad;
     TextView tvCantidad,tvPrecio;
 
+    DatePickerDialog datePickerDialog;
+    int year,month,dayOfMonth;
+    Calendar calendar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +56,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
         etfechapactada = findViewById(R.id.etFechaPactada);
         tvCantidad = findViewById(R.id.tvNumeroItem);
         tvPrecio = findViewById(R.id.tvMontoTotal);
-
         listaproductoselegidos = (ArrayList<Productos>) getIntent()
                 .getSerializableExtra("listaproductoselegidos");   //
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");   //
@@ -95,28 +106,42 @@ public class FechaPactadaActivity extends AppCompatActivity {
             }
         });
 
+        etfechapactada.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                calendar = Calendar.getInstance();
+                year = calendar.get(Calendar.YEAR);
+                month = calendar.get(Calendar.MONTH);
+                dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                datePickerDialog = new DatePickerDialog(FechaPactadaActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+
+                                etfechapactada.setText(FormatoDiaMes(day) + "/" + FormatoDiaMes(month + 1) + "/" + year);
+                            }
+                        }, year, month, dayOfMonth);
+
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+                datePickerDialog.show();
+            }
+        });
+
         btnregistrafechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 // VerificaFechaPactada(trama);
 
-                Intent intent = new Intent(FechaPactadaActivity.this,MainActivity.class);
+                RegistrarPedido(id_pedido);
 
-                Bundle bundle2 = new Bundle();
-                Bundle bundle3 = new Bundle();
 
-                bundle2.putSerializable("Cliente",cliente);
-                bundle3.putSerializable("Usuario",usuario);
-
-                intent.putExtras(bundle2);
-                intent.putExtras(bundle3);
-
-                startActivity(intent);
-                finish();
             }
         });
     }
+
+
 
     private void VerificaFechaPactada(String trama ) {
 
@@ -149,6 +174,101 @@ public class FechaPactadaActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
 
     }
+    private String FormatoDiaMes(Integer valor) {
 
+        String ValorString;
 
+        if (valor<=9){
+            ValorString = "0"+valor.toString();
+        }else{
+            ValorString = valor.toString();
+        }
+        return ValorString;
+    }
+
+    private void RegistrarPedido(String id_pedido) {
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"'";
+
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String Mensaje = "";
+
+                        try {
+                            JSONObject jsonObject=new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                            Boolean condicion = false,error = false;
+
+                            if (success){
+
+                                String Aux = response.replace("{", "|");
+                                Aux = Aux.replace("}", "|");
+                                Aux = Aux.replace("[", "|");
+                                Aux = Aux.replace("]", "|");
+                                Aux = Aux.replace("\"", "|");
+                                Aux = Aux.replace(",", " ");
+                                Aux = Aux.replace("|", "");
+                                Aux = Aux.replace(":", " ");
+                                String partes[] = Aux.split(" ");
+                                for (String palabras : partes) {
+                                    if (condicion) {
+                                        Mensaje += palabras + " ";
+                                    }
+                                    if (palabras.equals("ERROR")) {
+                                        condicion = true;
+                                        error = true;
+                                    }
+                                }
+                                if (error) {
+
+                                    AlertDialog.Builder dialog = new AlertDialog.Builder(
+                                            FechaPactadaActivity.this);
+                                    dialog.setMessage(Mensaje)
+                                            .setNegativeButton("Regresar", null)
+                                            .create()
+                                            .show();
+                                }else{
+
+                                    Intent intent = new Intent(FechaPactadaActivity.this,MainActivity.class);
+
+                                    Bundle bundle2 = new Bundle();
+                                    Bundle bundle3 = new Bundle();
+
+                                    bundle2.putSerializable("Cliente",cliente);
+                                    bundle3.putSerializable("Usuario",usuario);
+
+                                    intent.putExtras(bundle2);
+                                    intent.putExtras(bundle3);
+
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }else {
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
+                                builder.setMessage("No se llego a encontrar el registro")
+                                        .setNegativeButton("Aceptar",null)
+                                        .create()
+                                        .show();
+                            }
+                        } catch (JSONException e) { e.printStackTrace(); }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+    }
 }
