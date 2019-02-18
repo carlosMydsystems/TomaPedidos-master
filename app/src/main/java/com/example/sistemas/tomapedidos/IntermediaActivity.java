@@ -21,6 +21,8 @@ import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Promociones;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public class IntermediaActivity extends AppCompatActivity {
@@ -38,6 +40,7 @@ public class IntermediaActivity extends AppCompatActivity {
     Clientes cliente;
     Usuario usuario;
     ArrayList<Productos>listaproductoselegidos;
+    BigDecimal precio;
 
 
 
@@ -77,10 +80,13 @@ public class IntermediaActivity extends AppCompatActivity {
             Toast.makeText(this, Index, Toast.LENGTH_SHORT).show();
             Integer indice = Integer.valueOf(Index)+1;
             listaproductoselegidos.get(i).setIndice(indice);
+            Double cantidad = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
+            precio = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
+
+
             String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
-                    get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getNumPromocion() + "|" +
-                    listaproductoselegidos.get(i).getPrecio() + "|" + listaproductoselegidos.get(i)
-                    .getPrecio() + "|";
+                    get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getIdProducto() + "|" +
+                    precio + "|" + precio + "||";
 
             Index = indice.toString();
 

@@ -9,8 +9,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MostrarClienteActivity extends AppCompatActivity {
 
@@ -21,11 +26,12 @@ public class MostrarClienteActivity extends AppCompatActivity {
     Usuario usuario;
     Spinner spopcionesdocumento;
     private final static String[] opcionesDoc = { "Boleta", "Factura" };
-
+    List<String> opdoc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_cliente);
+
 
         cliente  = new Clientes();
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
@@ -47,14 +53,19 @@ public class MostrarClienteActivity extends AppCompatActivity {
 
         ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item,opcionesDoc);
 
-        spopcionesdocumento.setAdapter(adapter);
+
+        opdoc = new ArrayList<String>();
+        opdoc.add("Factura");
+        opdoc.add("Boleta");
+        Toast.makeText(this, opdoc.get(0), Toast.LENGTH_SHORT).show();
+
+        spopcionesdocumento.setAdapter(new SpinnerAdapter(this,opdoc));
 
         spopcionesdocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String muestra = (String)parent.getItemAtPosition(position);
                 cliente.setTipoDocumento(muestra);
-
             }
 
             @Override
