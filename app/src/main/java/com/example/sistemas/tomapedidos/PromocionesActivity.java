@@ -77,7 +77,6 @@ public class PromocionesActivity extends AppCompatActivity {
 
         id = id_pedido;
 
-        //id = "30011659";
 
         CalcularPromociones(id);
     }
@@ -94,25 +93,25 @@ public class PromocionesActivity extends AppCompatActivity {
             if(listAdapter.listProducts.get(i).CartQuantity > 0)
             {
                 Product products = new Product(
-                        listAdapter.listProducts.get(i).ProductName
+                        listAdapter.listProducts.get(i).ProductName     //
                         ,listAdapter.listProducts.get(i).ProductPrice
                         ,listAdapter.listProducts.get(i).ProductImage
-                        ,listAdapter.listProducts.get(i).ProductIdArticulo
+                        ,listAdapter.listProducts.get(i).ProductIdArticulo  //
                         ,listAdapter.listProducts.get(i).UnidadProducto
                 );
 
-                productopromocion.setCodigo(listAdapter.listProducts.get(i).ProductIdArticulo);
-                productopromocion.setDescripcion(listAdapter.listProducts.get(i).ProductName);
+                productopromocion.setIdProducto(listAdapter.listProducts.get(i).ProductIdArticulo);
+                productopromocion.setDescripcion(listAdapter.listProducts.get(i).ProductImage);
                 productopromocion.setUnidad(listAdapter.listProducts.get(i).UnidadProducto);
                 productopromocion.setCantidad(String.valueOf(listAdapter.listProducts.get(i).CartQuantity));
                 productopromocion.setPrecio(listAdapter.listProducts.get(i).ProductPrice.toString());
                 productopromocion.setPrecioAcumulado("0.0");
                 productopromocion.setNumPromocion(listAdapter.listProducts.get(i).ProductName);
                 productopromocion.setObservacion("Promocion");
-
+                productopromocion.setCodigo(listAdapter.listProducts.get(i).ProductIdArticulo);
                 listaproductoselegidos.add(productopromocion);
 
-                String Subtrama = listAdapter.listProducts.get(i).CartQuantity+"|"+listAdapter.listProducts.get(i).UnidadProducto + "|||";
+                Toast.makeText(this,listAdapter.listProducts.get(i).UnidadProducto , Toast.LENGTH_SHORT).show();
 
             }
         }
@@ -151,8 +150,9 @@ public class PromocionesActivity extends AppCompatActivity {
                     valorcantidad,
                     listaPromociones.get(i).getDescripcionPromocion(),
                     listaPromociones.get(i).getCodArticulo(),
-                    listaPromociones.get(i).getUnidad()
+                    listaPromociones.get(i).getPrecioSoles()
                    ));
+            Toast.makeText(this, listaPromociones.get(i).getPrecioSoles(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -237,6 +237,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         listaPromocionesTipoT.add(promocion);
                                     }
                                 }
+
 
                                 if (listaPromocionesTipoT.size() == 0){
 

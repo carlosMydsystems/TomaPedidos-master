@@ -1,6 +1,7 @@
 package com.example.sistemas.tomapedidos;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -157,7 +158,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"'";
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='8880000358'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -192,7 +193,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     }else if (palabras.equals("OK")){
 
                                         condicion = true;
-                                        error = true;
+                                        error = false;
                                     }
                                 }
                                 if (error) {
@@ -205,22 +206,35 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                             .show();
                                 }else{
 
-                                    Toast.makeText(FechaPactadaActivity.this, "Entro al Ok", Toast.LENGTH_SHORT).show();
-                                    /*
-                                    Intent intent = new Intent(FechaPactadaActivity.this,MainActivity.class);
+                                    Toast.makeText(FechaPactadaActivity.this, Mensaje, Toast.LENGTH_SHORT).show();
 
-                                    Bundle bundle2 = new Bundle();
-                                    Bundle bundle3 = new Bundle();
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
+                                            .setMessage("Esta seguro que desea grabar el pedido? el codigo es : " + Mensaje);
 
-                                    bundle2.putSerializable("Cliente",cliente);
-                                    bundle3.putSerializable("Usuario",usuario);
+                                            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                                }
+                                            });
+                                            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                    intent.putExtras(bundle2);
-                                    intent.putExtras(bundle3);
+                                                    Intent intent = new Intent(FechaPactadaActivity.this,MainActivity.class);
+                                                    Bundle bundle2 = new Bundle();
+                                                    Bundle bundle3 = new Bundle();
+                                                    bundle2.putSerializable("Cliente",cliente);
+                                                    bundle3.putSerializable("Usuario",usuario);
+                                                    intent.putExtras(bundle2);
+                                                    intent.putExtras(bundle3);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
+                                            });
+                                            builder.create()
+                                                    .show();
 
-                                    startActivity(intent);
-                                    finish();
-                                    */
                                 }
                             }else {
 

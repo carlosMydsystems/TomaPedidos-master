@@ -247,22 +247,22 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
      rbcodigoproducto.setOnClickListener(new View.OnClickListener() {
          @Override
-         public void onClick(View v) {
+             public void onClick(View v) {
 
-             etproducto.setInputType(2);   // envia el teclado de tipo numerico
-             Tipobusqueda = "Codigo";
-             etproducto.setText("");
-         }
-     });
+                 etproducto.setInputType(2);   // envia el teclado de tipo numerico
+                 Tipobusqueda = "Codigo";
+                 etproducto.setText("");
+             }
+        });
      rbnombreproducto.setOnClickListener(new View.OnClickListener() {
          @Override
-         public void onClick(View v) {
+             public void onClick(View v) {
 
-             etproducto.setInputType(16384 );  // envia el teclado de tipo alfanumerico
-             Tipobusqueda = "Nombre";
-             etproducto.setText("");
-         }
-     });
+                 etproducto.setInputType(16384 );  // envia el teclado de tipo alfanumerico
+                 Tipobusqueda = "Nombre";
+                 etproducto.setText("");
+             }
+        });
     }
 
     private void buscarproducto(String numero, String tipoConsulta) {

@@ -255,6 +255,7 @@ else if (etcantidadelegida.getText()== null){
                 
                 if (validarStock < 0) {
 
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
                             .setMessage("El Stock es insuficiente, desea elegir otro articulo");
 
