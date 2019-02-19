@@ -1,6 +1,7 @@
 package com.example.sistemas.tomapedidos;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -107,47 +108,68 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 // Se genera un nuevo Progress dialog
+                Double validarStock;
+                Double stockDouble = Double.valueOf(tvstockelegido.getText().toString().replace(",",""));
+                Double cantidadElegida = Double.valueOf(etcantprodelegida.getText().toString());
 
-                if (etcantprodelegida.getText().toString().equals("")){
+                    validarStock = stockDouble - cantidadElegida;
 
-                }else{
+                if (validarStock < 0) {
 
-                    String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
-                            productos.getCodigo() + "|" + tvprecioelegido.getText() + "|" + tvtotalelegido.getText().toString().trim() + "||";
-                    ActualizarProducto(trama);
-                    productos.setCantidad(etcantprodelegida.getText().toString());
-                    preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
-                    cantidad = Double.valueOf(etcantprodelegida.getText().toString());
-                    redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
-                    productos.setPrecio(tvprecioelegido.getText().toString());
-                    productos.setPrecioAcumulado(tvtotalelegido.getText().toString()); // Se hace la definicion del precio que se va ha acumular
-                    productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
-                    productos.setAlmacen(almacen);
-                    Integer i = Integer.valueOf(position);
-                    listaproductoselegidos.get(i).setCantidad(redondeado.toString());
-                    listaproductoselegidos.get(i).setPrecio(tvprecioelegido.getText().toString());
-                    listaproductoselegidos.get(i).setPrecioAcumulado(tvtotalelegido.getText().toString());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this)
+                            .setMessage("El Stock es insuficiente,ingrese una cantidad menor");
+                    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create()
+                           .show();
 
-                    Intent intent = new Intent(ActualizarRegistroPedidosActivity.this,bandejaProductosActivity.class);
-                    intent.putExtra("TipoPago",tipoformapago);
-                    intent.putExtra("id_pedido",id_pedido);
-                    intent.putExtra("validador","true");
-                    intent.putExtra("Almacen",almacen);
-                    intent.putExtra("Index",Index);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                    intent.putExtras(bundle);
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putSerializable("Cliente",cliente);
-                    intent.putExtras(bundle1);
-                    Bundle bundle2 = new Bundle();
-                    bundle2.putSerializable("Usuario",usuario);
-                    intent.putExtras(bundle2);
-                    Bundle bundle3 = new Bundle();
-                    bundle3.putSerializable("Almacen",almacen);
-                    intent.putExtras(bundle3);
-                    startActivity(intent);
-                    finish();
+                }else {
+
+                    if (etcantprodelegida.getText().toString().equals("")) {
+
+                    } else {
+
+                        String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
+                                productos.getCodigo() + "|" + tvprecioelegido.getText() + "|" + tvtotalelegido.getText().toString().trim() + "||";
+                        ActualizarProducto(trama);
+                        productos.setCantidad(etcantprodelegida.getText().toString());
+                        preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
+                        cantidad = Double.valueOf(etcantprodelegida.getText().toString());
+                        redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
+                        productos.setPrecio(tvprecioelegido.getText().toString());
+                        productos.setPrecioAcumulado(tvtotalelegido.getText().toString()); // Se hace la definicion del precio que se va ha acumular
+                        productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
+                        productos.setAlmacen(almacen);
+                        Integer i = Integer.valueOf(position);
+                        listaproductoselegidos.get(i).setCantidad(redondeado.toString());
+                        listaproductoselegidos.get(i).setPrecio(tvprecioelegido.getText().toString());
+                        listaproductoselegidos.get(i).setPrecioAcumulado(tvtotalelegido.getText().toString());
+
+                        Intent intent = new Intent(ActualizarRegistroPedidosActivity.this, bandejaProductosActivity.class);
+                        intent.putExtra("TipoPago", tipoformapago);
+                        intent.putExtra("id_pedido", id_pedido);
+                        intent.putExtra("validador", "true");
+                        intent.putExtra("Almacen", almacen);
+                        intent.putExtra("Index", Index);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                        intent.putExtras(bundle);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putSerializable("Cliente", cliente);
+                        intent.putExtras(bundle1);
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putSerializable("Usuario", usuario);
+                        intent.putExtras(bundle2);
+                        Bundle bundle3 = new Bundle();
+                        bundle3.putSerializable("Almacen", almacen);
+                        intent.putExtras(bundle3);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             }
         });
@@ -243,7 +265,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                         Double cant = Double.valueOf(etcantprodelegida.getText().toString());
                                         String preciototal = String.valueOf(Math.round((cant*preciounitario*100.00))/100.00); // Se hace la definicion del precio que se va ha acumular
                                         tvunidadelegida.setText(producto.getUnidad());
-                                        tvstockelegido.setText(formateador.format((double)Double.valueOf(producto.getStock()))+" "+ producto.getUnidad());
+                                        tvstockelegido.setText(formateador.format((double)Double.valueOf(producto.getStock())));
                                         tvtotalelegido.setText(formateador.format((double)Double.valueOf(preciototal)));
                                     }
                                 }
@@ -274,9 +296,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
     private void ActualizarProducto(String trama) {
 
-
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
 
