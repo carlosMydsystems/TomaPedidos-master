@@ -481,6 +481,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         intent.putExtra("validador","true");
         intent.putExtra("id_pedido",id_pedido);
         intent.putExtra("Index",Index);
+        intent.putExtra("indice", Ind);
         intent.putExtra("TipoPago",tipoformapago);
         Bundle bundle = new Bundle();
         bundle.putSerializable("Producto", productos);

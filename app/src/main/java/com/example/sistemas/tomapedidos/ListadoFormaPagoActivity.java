@@ -112,7 +112,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
                                         Intent intent =  new Intent(ListadoFormaPagoActivity.this,BuscarProductoActivity.class);
                                         intent.putExtra("Almacen",almacen);
-                                        //intent.putExtra("indice",indice);
+                                        intent.putExtra("indice",indice);
                                         intent.putExtra("Index","1");
                                         intent.putExtra("validador",validador);
                                         intent.putExtra("id_pedido",id_pedido);
