@@ -62,7 +62,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
         tipoPago = getIntent().getStringExtra("TipoPago");
         almacen = getIntent().getStringExtra("Almacen");
-        indice = getIntent().getStringExtra("indice");
+        //indice = getIntent().getStringExtra("indice");
         validador = getIntent().getStringExtra("validador");
         id_pedido = getIntent().getStringExtra("id_pedido");
         Index = getIntent().getStringExtra("Index");
@@ -76,6 +76,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
         lvProducto = findViewById(R.id.lvProducto);
         etproducto  = findViewById(R.id.etPrducto);
         etglosa = findViewById(R.id.etGlosa);
+
+        Toast.makeText(BuscarProductoActivity.this, "BuscarProductoActivity Inicio indice : "  + indice, Toast.LENGTH_SHORT).show();
+
 
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
@@ -111,7 +114,8 @@ if (listaproductoselegidos.size() != 0) {
 
                     Intent intent = new Intent(BuscarProductoActivity.this, bandejaProductosActivity.class);
 
-            Toast.makeText(BuscarProductoActivity.this, "BuscarProductoActivity "  + id_pedido, Toast.LENGTH_SHORT).show();
+            Toast.makeText(BuscarProductoActivity.this, "BuscarProductoActivity indice : "  + indice, Toast.LENGTH_SHORT).show();
+            Toast.makeText(BuscarProductoActivity.this, "BuscarProductoActivity Index : " + Index, Toast.LENGTH_SHORT).show();
                     intent.putExtra("TipoPago", tipoPago);
                     intent.putExtra("indice", indice);
                     intent.putExtra("id_pedido", id_pedido                                                                                                                                                                                                                                                                                          );

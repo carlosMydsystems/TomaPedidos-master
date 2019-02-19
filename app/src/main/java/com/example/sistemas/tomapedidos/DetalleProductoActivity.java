@@ -109,7 +109,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
 
         tvstock  =findViewById(R.id.tvStockElegido);
         tvprecio = findViewById(R.id.tvPrecioElegido);
-        //tvsubtotal = findViewById(R.id.tvSubtotal);
         tvtotal = findViewById(R.id.tvTotalElegido);
 
 if (tvstock.getText() == null){
@@ -127,6 +126,7 @@ else if (etcantidadelegida.getText()== null){
 }
         btnguardaryrevisar = findViewById(R.id.btnGuardarrevisar);
         btnguardaryagregar = findViewById(R.id.btnGuardaryagregar);
+
         imgbtnvolverdetalleproducto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,6 +153,7 @@ else if (etcantidadelegida.getText()== null){
 
             }
         });
+
         btnguardaryrevisar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -317,6 +318,7 @@ else if (etcantidadelegida.getText()== null){
                         preciounitario = Double.valueOf(tvprecio.getText().toString());
                         cantidad = Double.valueOf(etcantidadelegida.getText().toString());
                         productos.setPrecio(tvprecio.getText().toString());
+                        productos.setIndice(Integer.valueOf(Index));
                         productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
                         productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
                         // productos.setAlmacen(almacen);
