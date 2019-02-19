@@ -526,7 +526,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         if (response.equals("OK")){
-                           // insertaCampos(listaproductoselegidos,id);
                         }
                     }
                 }, new Response.ErrorListener() {
