@@ -1,7 +1,5 @@
 package com.example.sistemas.tomapedidos;
 
-
-
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;

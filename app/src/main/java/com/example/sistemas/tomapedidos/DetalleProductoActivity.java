@@ -57,7 +57,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_producto);
 
-
         etcantidadelegida =  findViewById(R.id.etCantProdElegida);
         listaproductoselegidos = new ArrayList<>();
         productos  = new Productos();
@@ -73,9 +72,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         id_pedido = getIntent().getStringExtra("id_pedido");
         Ind = getIntent().getStringExtra("indice");
         Index = getIntent().getStringExtra("Index");
-        Toast.makeText(this, "indice " + Ind, Toast.LENGTH_LONG).show();
-        Toast.makeText(this, "Index" + Index, Toast.LENGTH_LONG).show();
-
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
 
         // Se referencia a todas las partes del XML asociado al Activity
@@ -122,11 +118,9 @@ else if (etcantidadelegida.getText()== null){
 
 }else {
 
-
 }
         btnguardaryrevisar = findViewById(R.id.btnGuardarrevisar);
         btnguardaryagregar = findViewById(R.id.btnGuardaryagregar);
-
         imgbtnvolverdetalleproducto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,8 +212,6 @@ else if (etcantidadelegida.getText()== null){
                     preciounitario = Double.valueOf(tvprecio.getText().toString());
                     cantidad = Double.valueOf(etcantidadelegida.getText().toString());
                     redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
-
-                    //cantidad = Math.ceil(Double.valueOf(etcantidadelegida.getText().toString()));
                     productos.setPrecio(tvprecio.getText().toString());
                     productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
                     productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tene

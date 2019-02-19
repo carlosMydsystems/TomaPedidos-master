@@ -152,15 +152,9 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
             }
         });
 
-        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
-        simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
-        simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
-        final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
-
         tvcodprodelegido.setText(productos.getCodigo());
         tvnomprodelegido.setText(productos.getDescripcion());
         tvalmprodelegido.setText(productos.getAlmacen());
-
         tvalmprodelegido.setText(almacen);
 
         final TextWatcher textWatcher = new TextWatcher() {
@@ -221,6 +215,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                             JSONObject jsonObject=new JSONObject(response);
                             boolean success = jsonObject.getBoolean("success");
                             JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+
                             if (success){
 
                                 for(int i=0;i<jsonArray.length();i++) {
@@ -237,14 +232,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                     tvprecioelegido.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
 
                                     preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
-
-
-                                    /*
-                                    preciounitario = Double.valueOf(producto.getPrecio());
-                                    */
-
-
-
 
                                     if (etcantprodelegida.getText().toString().equals("")){
 

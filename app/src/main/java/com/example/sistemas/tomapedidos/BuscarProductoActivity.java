@@ -50,7 +50,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
     String url,Tipobusqueda = "Nombre",tipoPago,almacen;
     ProgressDialog progressDialog;
     Usuario usuario;
-    String fechaRegistro,indice,validador,id_pedido,Index;
+    String indice,validador,id_pedido,Index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +62,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
         tipoPago = getIntent().getStringExtra("TipoPago");
         almacen = getIntent().getStringExtra("Almacen");
-        //indice = getIntent().getStringExtra("indice");
         validador = getIntent().getStringExtra("validador");
         id_pedido = getIntent().getStringExtra("id_pedido");
         Index = getIntent().getStringExtra("Index");
@@ -77,110 +76,84 @@ public class BuscarProductoActivity extends AppCompatActivity {
         etproducto  = findViewById(R.id.etPrducto);
         etglosa = findViewById(R.id.etGlosa);
 
-        Toast.makeText(BuscarProductoActivity.this, "BuscarProductoActivity Inicio indice : "  + indice, Toast.LENGTH_SHORT).show();
-
-
+        /*
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
-
+        */
         btnregresarproducto = findViewById(R.id.btnRegresarProducto);
-
-
-        // Calendario
-
-        Calendar fecha = Calendar.getInstance();
-        final Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
-        final Integer mes = fecha.get(Calendar.MONTH) + 1;
-        Integer year = fecha.get(Calendar.YEAR);
-        final Integer hora =  fecha.get(Calendar.HOUR_OF_DAY);
-        final Integer minuto = fecha.get(Calendar.MINUTE);
-        final Integer segundo = fecha.get(Calendar.SECOND);
-
-        fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
-                "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
 
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(btnbuscarProducto.getWindowToken(), 0);
 
+    if (listaproductoselegidos.size() != 0) {
+        btnregresarproducto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-        Toast.makeText(this, "indice en Buscar Producto " + indice, Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(BuscarProductoActivity.this, bandejaProductosActivity.class);
+                        intent.putExtra("TipoPago", tipoPago);
+                        intent.putExtra("indice", indice);
+                        intent.putExtra("id_pedido", id_pedido                                                                                                                                                                                                                                                                                          );
+                        intent.putExtra("Almacen", almacen);
+                        intent.putExtra("Index", Index);
+                        intent.putExtra("retorno", "retorno");
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Cliente", cliente);
+                        intent.putExtras(bundle);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putSerializable("Usuario", usuario);
+                        intent.putExtras(bundle1);
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                        intent.putExtras(bundle2);
+                        startActivity(intent);
+                        finish();
 
-if (listaproductoselegidos.size() != 0) {
-    btnregresarproducto.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+            }
+        });
+        }else {
 
-                    Intent intent = new Intent(BuscarProductoActivity.this, bandejaProductosActivity.class);
+        btnregresarproducto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            Toast.makeText(BuscarProductoActivity.this, "BuscarProductoActivity indice : "  + indice, Toast.LENGTH_SHORT).show();
-            Toast.makeText(BuscarProductoActivity.this, "BuscarProductoActivity Index : " + Index, Toast.LENGTH_SHORT).show();
-                    intent.putExtra("TipoPago", tipoPago);
-                    intent.putExtra("indice", indice);
-                    intent.putExtra("id_pedido", id_pedido                                                                                                                                                                                                                                                                                          );
-                    intent.putExtra("Almacen", almacen);
-                    intent.putExtra("Index", Index);
-                    intent.putExtra("retorno", "retorno");
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("Cliente", cliente);
-                    intent.putExtras(bundle);
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putSerializable("Usuario", usuario);
-                    intent.putExtras(bundle1);
-                    Bundle bundle2 = new Bundle();
-                    bundle2.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                    intent.putExtras(bundle2);
-                    startActivity(intent);
-                    finish();
+                AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
+                        .setMessage("Esta seguro que desea regresar, a la lisat de formas de pago ")
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
 
-        }
-    });
-}else {
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-    btnregresarproducto.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
-                    .setMessage("Esta seguro que desea regresar, a la lisat de formas de pago ")
-                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-
-                    });
-            builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    Intent intent =  new Intent(BuscarProductoActivity.this,ListadoFormaPagoActivity.class);
-                    intent.putExtra("Almacen",almacen);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("Cliente",cliente);
-                    intent.putExtras(bundle);
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putSerializable("Usuario",usuario);
-                    intent.putExtras(bundle1);
-                    startActivity(intent);
-                    finish();
-
-                }
-            });
-
-            builder.create()
-                    .show();
-        }
-    });
-}
-
+                        Intent intent =  new Intent(BuscarProductoActivity.this,ListadoFormaPagoActivity.class);
+                        intent.putExtra("Almacen",almacen);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Cliente",cliente);
+                        intent.putExtras(bundle);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putSerializable("Usuario",usuario);
+                        intent.putExtras(bundle1);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                builder.create()
+                        .show();
+            }
+        });
+    }
 
         if (listaproductoselegidos.size()==0 && validador.equals("true")){
 
             String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
                     getCodVendedor() + "|"+tipoPago+"|"+cliente.getTipoDocumento()+"|1|0.00|"+etglosa.getText().toString()+"|";
-
             ActualizarProducto(Trama);
 
         }
@@ -295,11 +268,8 @@ if (listaproductoselegidos.size() != 0) {
     private void buscarproducto(String numero, String tipoConsulta) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
-        // Este reemplazo se da debido al simbolo % la cual cuando no esta asociado a un caracter se vuelve una llamada ilegal
-        numero = numero.replace("%","%25");  
-        numero = numero.toUpperCase(); // se convierten los caracteres a Mayusucla
-        // se llega a definir la forma en la que se va a acceder a cada uno de los metodos
+            numero = numero.replace("%","%25");
+            numero = numero.toUpperCase(); // se convierten los caracteres a Mayusucla
         if (tipoConsulta.equals("Nombre")) {
 
             url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
@@ -405,15 +375,6 @@ if (listaproductoselegidos.size() != 0) {
         requestQueue.add(stringRequest);
     }
 
-    private String formatonumerico (Integer numero){
-
-        String numeroString = numero.toString();
-        if (numero <= 9){
-            numeroString = "0"+ numero.toString();
-        }
-        return  numeroString;
-    }
-
     private void ActualizarProducto(String trama) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
@@ -442,5 +403,4 @@ if (listaproductoselegidos.size() != 0) {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
-
 }

@@ -92,11 +92,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
 
-        // separador(listaproductoselegidos);
-
         // valores para el sumarizado de la bandeja
-
-        Toast.makeText(this, usuario.getNombre(), Toast.LENGTH_SHORT).show();
 
         if (listaproductoselegidos != null) {
 
@@ -184,23 +180,17 @@ public class bandejaProductosActivity extends AppCompatActivity {
             if (retorno == null) {
 
             } else if (retorno.equals("retorno")) {
-
                 salirlistview();
                 btnterminar.setVisibility(View.VISIBLE);
                 btngrabarpedido.setVisibility(View.GONE);
-
             }
 
             if (valida) {
-
                 btnterminar.setVisibility(View.VISIBLE);
                 btngrabarpedido.setVisibility(View.GONE);
-
             } else {
-
                 btnterminar.setVisibility(View.GONE);
                 btngrabarpedido.setVisibility(View.VISIBLE);
-
             }
 
             mview = getLayoutInflater().inflate(R.layout.listview_dialog, null);

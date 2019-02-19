@@ -57,9 +57,9 @@ public class FechaPactadaActivity extends AppCompatActivity {
         tvCantidad = findViewById(R.id.tvNumeroItem);
         tvPrecio = findViewById(R.id.tvMontoTotal);
         listaproductoselegidos = (ArrayList<Productos>) getIntent()
-                .getSerializableExtra("listaproductoselegidos");   //
-        cliente = (Clientes)getIntent().getSerializableExtra("Cliente");   //
-        usuario = (Usuario)getIntent().getSerializableExtra("Usuario");    //
+                .getSerializableExtra("listaproductoselegidos");
+        cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
+        usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("indice");
@@ -141,39 +141,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
         });
     }
 
-
-
-    private void VerificaFechaPactada(String trama ) {
-
-        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
-        // Se hace el ingreso de la URL para la verificacion de la fecha que se ha pactado por medio del peso (El factor limitante)
-
-        //url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
-
-        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        if (response.equals("OK")){
-                            Toast.makeText(FechaPactadaActivity.this, "Se hizo el registro", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
-
-    }
     private String FormatoDiaMes(Integer valor) {
 
         String ValorString;
