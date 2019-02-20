@@ -29,6 +29,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -42,6 +44,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
     Usuario usuario;
     String almacen,tipoformapago,Ind,id_pedido,validador,retorno,Index,precio,cantidad;
     TextView tvCantidad,tvPrecio;
+    BigDecimal redondeado;
 
     DatePickerDialog datePickerDialog;
     int year,month,dayOfMonth;
@@ -71,7 +74,10 @@ public class FechaPactadaActivity extends AppCompatActivity {
         cantidad = getIntent().getStringExtra("Cantidad");
         precio = getIntent().getStringExtra("Precio");
         tvCantidad.setText(cantidad);
-        tvPrecio.setText(precio);
+
+        redondeado = new BigDecimal(precio).setScale(2, RoundingMode.HALF_EVEN);
+
+        tvPrecio.setText(""+redondeado);
 
         btnregresarfechapactada.setOnClickListener(new View.OnClickListener() {
             @Override

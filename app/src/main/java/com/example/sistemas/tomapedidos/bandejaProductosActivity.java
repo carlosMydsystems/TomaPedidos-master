@@ -132,7 +132,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
             btnregresarbandeja = findViewById(R.id.btnRegresarBandejaPedidos);
             btngrabarpedido = findViewById(R.id.btnValidarPromociones);
             imgbtnregresar = findViewById(R.id.imgbtnRegresaBandejaPedidos);
-
             imgbtnregresar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -575,34 +574,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
             numeroString = "0"+ numero.toString();
         }
         return  numeroString;
-    }
-
-    private void separador(ArrayList<Productos> listaPromocioneselegidas){
-
-        ArrayList<Productos> listaaenviar = new ArrayList<>();
-        Productos productopromocionenviar;
-        String trama;
-
-
-        for (int i =listaproductoselegidos.size()+1; i<listaPromocioneselegidas.size();i++){
-
-            productopromocionenviar = new Productos();
-            if (listaPromocioneselegidas.get(i).getObservacion() != null) {
-
-                if (listaPromocioneselegidas.get(i).getObservacion().equals("Promocion")){
-
-                    productopromocionenviar.setCodigo(listaPromocioneselegidas.get(i).getCodigo());
-                    productopromocionenviar.setDescripcion(listaPromocioneselegidas.get(i).getDescripcion());
-                    productopromocionenviar.setCantidad(listaPromocioneselegidas.get(i).getCantidad());
-                    productopromocionenviar.setPrecio("0.0");
-                    productopromocionenviar.setPrecioAcumulado("0.0");
-                    listaaenviar.add(productopromocionenviar);
-                    trama = listaPromocioneselegidas.get(i).getCodigo()+"|D|"+Ind+"|"+listaPromocioneselegidas.get(i).getCantidad()+"|0.0|0.0";
-                    ActualizarProducto(trama);
-
-                }
-            }
-        }
     }
 
     private void EliminarProducto(String trama) {

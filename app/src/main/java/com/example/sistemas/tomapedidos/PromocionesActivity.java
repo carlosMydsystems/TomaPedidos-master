@@ -238,7 +238,6 @@ public class PromocionesActivity extends AppCompatActivity {
                                     }
                                 }
 
-
                                 if (listaPromocionesTipoT.size() == 0){
 
                                     Toast.makeText(PromocionesActivity.this, "No existe promociones T", Toast.LENGTH_SHORT).show();
