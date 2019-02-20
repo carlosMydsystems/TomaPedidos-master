@@ -31,10 +31,7 @@ import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class BuscarProductoActivity extends AppCompatActivity {
 
@@ -76,12 +73,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
         etproducto  = findViewById(R.id.etPrducto);
         etglosa = findViewById(R.id.etGlosa);
 
-        /*
-        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
-        simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
-        simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
-        final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
-        */
         btnregresarproducto = findViewById(R.id.btnRegresarProducto);
 
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -154,6 +145,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
             String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
                     getCodVendedor() + "|"+tipoPago+"|"+cliente.getTipoDocumento()+"|1|0.00|"+etglosa.getText().toString()+"|";
+
             ActualizarProducto(Trama);
 
         }
@@ -283,7 +275,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
         listaProducto = new ArrayList<>();
 
-        // se usa un metodo de acceso por medio del GET
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
                     @Override
@@ -299,7 +290,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
                             JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
                             Boolean condicion = false,error = false;
                             if (success) {
-
                                     String Aux = response.replace("{", "|");
                                     Aux = Aux.replace("}", "|");
                                     Aux = Aux.replace("[", "|");
