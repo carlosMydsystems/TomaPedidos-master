@@ -117,7 +117,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                 if (validarStock < 0) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this)
-                            .setMessage("El Stock es insuficiente,ingrese una cantidad menor");
+                            .setMessage("El Stock es insuficiente, por favor ingrese una cantidad menor");
                     builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {

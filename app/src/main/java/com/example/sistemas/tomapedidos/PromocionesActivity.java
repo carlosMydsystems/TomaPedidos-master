@@ -337,6 +337,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                         .create()
                                         .show();
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
