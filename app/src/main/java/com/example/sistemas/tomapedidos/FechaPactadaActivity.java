@@ -38,14 +38,12 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
     Button btnregistrafechapactada, btnregresarfechapactada;
     EditText etfechapactada;
-    String url;
     ArrayList<Productos> listaproductoselegidos;
     Clientes cliente;
     Usuario usuario;
-    String almacen,tipoformapago,Ind,id_pedido,validador,retorno,Index,precio,cantidad;
+    String almacen,tipoformapago,Ind,id_pedido,validador,retorno,Index,precio,cantidad,url;
     TextView tvCantidad,tvPrecio;
     BigDecimal redondeado;
-
     DatePickerDialog datePickerDialog;
     int year,month,dayOfMonth;
     Calendar calendar;
@@ -84,7 +82,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(FechaPactadaActivity.this,bandejaProductosActivity.class);
-
                 intent.putExtra("TipoPago",tipoformapago);
                 intent.putExtra("indice",Ind);
                 intent.putExtra("Index",Index);
@@ -106,7 +103,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 intent.putExtras(bundle);
                 intent.putExtras(bundle2);
                 intent.putExtras(bundle3);
-
                 startActivity(intent);
                 finish();
 
@@ -139,9 +135,30 @@ public class FechaPactadaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // VerificaFechaPactada(trama);
+                AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
+                        .setTitle("Fin del Pedido")
+                        .setMessage("Codigo  : " + cliente.getCodCliente() + "\n" +
+                                    "Nombre : " + cliente.getNombre() + "\n" +
+                                    "Almacen : "+ almacen + "\n" +
+                                    "Importe : "+"111.11" + "\n" +
+                                    "Items  : "+ "3");
 
-                RegistrarPedido(id_pedido);
+                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        RegistrarPedido(id_pedido);
+                    }
+                });
+                builder.create()
+                        .show();
+
 
 
             }
@@ -164,7 +181,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='8880000358'";
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -215,19 +232,13 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     Toast.makeText(FechaPactadaActivity.this, Mensaje, Toast.LENGTH_SHORT).show();
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
-                                            .setMessage("Esta seguro que desea grabar el pedido? el codigo es : " + Mensaje);
+                                            .setMessage("Se ha generado de forma correcta el pedido N° " + Mensaje);
 
-                                            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                                }
-                                            });
                                             builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
 
-                                                    Intent intent = new Intent(FechaPactadaActivity.this,MainActivity.class);
+                                                    Intent intent = new Intent(FechaPactadaActivity.this,MostrarClienteActivity.class);
                                                     Bundle bundle2 = new Bundle();
                                                     Bundle bundle3 = new Bundle();
                                                     bundle2.putSerializable("Cliente",cliente);

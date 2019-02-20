@@ -67,7 +67,7 @@ public class MostrarClienteActivity extends AppCompatActivity {
                 String muestra = (String)parent.getItemAtPosition(position);
                 if (muestra.equals("Factura")){
 
-                    cliente.setTipoDocumento("FACT");
+                    cliente.setTipoDocumento("FAC");
 
                 }else if ( muestra.equals("Boleta")){
 
