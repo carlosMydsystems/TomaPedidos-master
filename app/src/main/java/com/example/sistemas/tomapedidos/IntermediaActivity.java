@@ -3,11 +3,7 @@ package com.example.sistemas.tomapedidos;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,15 +14,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
-import com.example.sistemas.tomapedidos.Entidades.Promociones;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
 public class IntermediaActivity extends AppCompatActivity {
-
 
     String id;
     String url,id_pedido,cantidadlista,almacen,tipoformapago,Ind,validador,Index;
@@ -39,15 +32,10 @@ public class IntermediaActivity extends AppCompatActivity {
     ArrayList<Productos>listaproductoselegidos;
     BigDecimal precio;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intermedia);
-
-        Toast.makeText(this, "Ingreso a Actividad intermedia", Toast.LENGTH_SHORT).show();
-
         listView = (ListView) findViewById(R.id.customListView);
         listAdapter = new ListAdapter(this,products);
         id_pedido = getIntent().getStringExtra("id_pedido");
@@ -69,18 +57,14 @@ public class IntermediaActivity extends AppCompatActivity {
 
         for (int i = valorcantidadlista;i<listaproductoselegidos.size();i++) {
 
-            Toast.makeText(this, Index, Toast.LENGTH_SHORT).show();
             Integer indice = Integer.valueOf(Index)+1;
             listaproductoselegidos.get(i).setIndice(indice);
             Double cantidad = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
             precio = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
-
             String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
                     get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getIdProducto() + "|" +
                     precio + "|" + precio + "||"+listaproductoselegidos.get(i).getNumPromocion();
-
             Index = indice.toString();
-
             ActualizarProducto(trama);
         }
 
@@ -126,7 +110,6 @@ public class IntermediaActivity extends AppCompatActivity {
                         if (response.equals("OK")){
 
                             // insertaCampos(listaproductoselegidos,id);
-
                         }
                     }
 

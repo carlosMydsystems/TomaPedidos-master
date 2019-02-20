@@ -52,13 +52,9 @@ public class MostrarClienteActivity extends AppCompatActivity {
         tvDireccion.setText(cliente.getDireccion());
 
         ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item,opcionesDoc);
-
-
         opdoc = new ArrayList<String>();
         opdoc.add("Factura");
         opdoc.add("Boleta");
-        Toast.makeText(this, opdoc.get(0), Toast.LENGTH_SHORT).show();
-
         spopcionesdocumento.setAdapter(new SpinnerAdapter(this,opdoc));
 
         spopcionesdocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -66,13 +62,9 @@ public class MostrarClienteActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String muestra = (String)parent.getItemAtPosition(position);
                 if (muestra.equals("Factura")){
-
                     cliente.setTipoDocumento("FAC");
-
                 }else if ( muestra.equals("Boleta")){
-
                     cliente.setTipoDocumento("BOL");
-
                 }
             }
 

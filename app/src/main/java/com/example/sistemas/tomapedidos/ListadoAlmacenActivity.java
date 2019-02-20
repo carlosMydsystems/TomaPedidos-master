@@ -60,24 +60,6 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
         lvAlmacenes = findViewById(R.id.lvAlmacenes);
         btnretornolistadoalmacen = findViewById(R.id.btnRetornoListadoAlmacen);
 
-        /*
-
-        // se hace la insercion de las formas de pago de forma dnamica
-
-        for (int i=0 ; i<listaFormasPago.size(); i++){
-
-            listaalmacen.add(listaFormasPago.get(i).getCodFormaPago() + " - " + listaFormasPago.get(i).getDescripcionFormaPago());
-
-        }
-        */
-
-        /*
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item,listaalmacen);
-        lvAlmacenes.setAdapter(adapter);
-
-        */
-
-
         btnretornolistadoalmacen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

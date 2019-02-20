@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.example.sistemas.tomapedidos.Entidades.Promociones;
 import java.util.ArrayList;
 
@@ -103,14 +102,10 @@ public class ListAdapter extends BaseAdapter {
 
         for (int i = 0; i<getCount();i++){
 
-
-
             Product producto = getItem(i);
             listaPromocionesElegidas = new ArrayList<>();
 
             if (producto.CartQuantity>0){
-
-                Toast.makeText(context, "lista " + i , Toast.LENGTH_SHORT).show();
 
             }
         }

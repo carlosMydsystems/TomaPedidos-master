@@ -82,9 +82,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvprecioreal = findViewById(R.id.tvPrecioReal);
         tvunidades = findViewById(R.id.tvUnidad);
         imgbtnvolverdetalleproducto = findViewById(R.id.ibVolverDetalleProducto);
-
-
-        Toast.makeText(this, "El Cliente tiene comprobante : "+cliente.getTipoDocumento(), Toast.LENGTH_SHORT).show();
         btndverificarproducto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,8 +246,6 @@ else if (etcantidadelegida.getText()== null){
 
                 Double stockDouble = Double.valueOf(tvstock.getText().toString().replace(",",""));
                 Double cantidadElegida = Double.valueOf(etcantidadelegida.getText().toString());
-
-                Toast.makeText(DetalleProductoActivity.this, ""+id_pedido, Toast.LENGTH_SHORT).show();
                 validarStock = stockDouble - cantidadElegida;
                 
                 if (validarStock < 0) {
@@ -272,7 +267,6 @@ else if (etcantidadelegida.getText()== null){
                         public void onClick(DialogInterface dialog, int which) {
 
                             Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
-                            Toast.makeText(DetalleProductoActivity.this, "Detalle indice DetalleProducto : " + Ind, Toast.LENGTH_SHORT).show();
                             intent.putExtra("TipoPago",tipoPago);
                             intent.putExtra("indice",Ind);
                             intent.putExtra("validador","false");

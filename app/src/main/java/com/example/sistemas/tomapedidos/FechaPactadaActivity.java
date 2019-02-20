@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -105,7 +103,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 intent.putExtras(bundle3);
                 startActivity(intent);
                 finish();
-
             }
         });
 
@@ -139,9 +136,9 @@ public class FechaPactadaActivity extends AppCompatActivity {
                         .setTitle("Fin del Pedido")
                         .setMessage("Codigo  : " + cliente.getCodCliente() + "\n" +
                                     "Nombre : " + cliente.getNombre() + "\n" +
-                                    "Almacen : "+ almacen + "\n" +
-                                    "Importe : "+"111.11" + "\n" +
-                                    "Items  : "+ "3");
+                                    "Almacen : " + almacen + "\n" +
+                                    "Importe : " + redondeado + "\n" +
+                                    "Items  : " + cantidad);
 
                 builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
@@ -158,8 +155,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 });
                 builder.create()
                         .show();
-
-
 
             }
         });
@@ -214,7 +209,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                         condicion = true;
                                         error = true;
                                     }else if (palabras.equals("OK")){
-
                                         condicion = true;
                                         error = false;
                                     }
@@ -228,8 +222,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                             .create()
                                             .show();
                                 }else{
-
-                                    Toast.makeText(FechaPactadaActivity.this, Mensaje, Toast.LENGTH_SHORT).show();
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
                                             .setMessage("Se ha generado de forma correcta el pedido N° " + Mensaje);
