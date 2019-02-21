@@ -33,7 +33,7 @@ import java.util.Calendar;
 public class bandejaProductosActivity extends AppCompatActivity {
 
     TextView tvtitulodinamico;
-    Productos productos;
+    Productos productos,producto;
     Button btnbuscarproducto, btnterminar,btnregresarbandeja, btngrabarpedido;
     ListView lvbandejaproductos;
     ArrayList<String> listabandejaproductos,listabandejaproductoselegidos;
@@ -44,7 +44,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
     Integer cantidadProductos=0;
     ArrayList<Productos> listaproductoselegidos;
     Usuario  usuario;
-    Productos producto;
     Double preciolista, precio = 0.0;
     ListView listView;
     Boolean valida;

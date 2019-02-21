@@ -44,10 +44,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ArrayList<String> listaProducto;
     Clientes cliente;
     EditText etproducto,etglosa;
-    String url,Tipobusqueda = "Nombre",tipoPago,almacen;
+    String url,Tipobusqueda = "Nombre",tipoPago,almacen,indice,validador,id_pedido,Index;
     ProgressDialog progressDialog;
     Usuario usuario;
-    String indice,validador,id_pedido,Index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
