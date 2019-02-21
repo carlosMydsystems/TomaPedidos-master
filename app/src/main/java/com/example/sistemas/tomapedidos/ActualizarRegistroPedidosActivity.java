@@ -40,13 +40,12 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
     Productos productos;
     Button   btndverificarproductoelegido,btnactualizarproductoelegido;
     Clientes cliente;
-    ArrayList<Productos> listaproductoselegidos;
+    ArrayList<Productos> listaproductoselegidos,listaProductos;
     EditText etcantprodelegida;
     Double preciounitario,cantidad, Aux;
     String url,almacen,position,tipoformapago,id_pedido,Index;
     ProgressDialog progressDialog;
     Productos producto;
-    ArrayList<Productos> listaProductos;
     ArrayList<String> listaProducto;
     Usuario usuario;
     BigDecimal redondeado;
