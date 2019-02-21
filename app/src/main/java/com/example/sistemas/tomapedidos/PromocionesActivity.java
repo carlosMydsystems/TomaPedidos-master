@@ -111,8 +111,6 @@ public class PromocionesActivity extends AppCompatActivity {
                 productopromocion.setCodigo(listAdapter.listProducts.get(i).ProductIdArticulo);
                 listaproductoselegidos.add(productopromocion);
 
-                Toast.makeText(this,listAdapter.listProducts.get(i).UnidadProducto , Toast.LENGTH_SHORT).show();
-
             }
         }
 
@@ -152,7 +150,6 @@ public class PromocionesActivity extends AppCompatActivity {
                     listaPromociones.get(i).getCodArticulo(),
                     listaPromociones.get(i).getPrecioSoles()
                    ));
-            Toast.makeText(this, listaPromociones.get(i).getPrecioSoles(), Toast.LENGTH_SHORT).show();
         }
     }
 

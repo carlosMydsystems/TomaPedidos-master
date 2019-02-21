@@ -98,7 +98,7 @@
     <Button
         android:id="@+id/btnGuardarrevisar"
         android:layout_width="150dp"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:background="#014284"

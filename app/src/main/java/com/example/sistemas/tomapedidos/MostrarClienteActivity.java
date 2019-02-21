@@ -9,8 +9,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 

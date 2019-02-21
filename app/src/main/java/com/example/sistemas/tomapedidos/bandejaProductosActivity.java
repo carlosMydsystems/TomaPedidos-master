@@ -111,7 +111,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     preciolista = 0.0;
                 } else {
 
-                    preciolista = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
+                    preciolista = Double.valueOf(listaproductoselegidos.get(i).getPrecio().replace(",",""));
                 }
 
                 listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo() + " - " +
@@ -425,12 +425,12 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
                     builder.setMessage(
-                            "Codigo       :   " + listaproductoselegidos.get(position).getCodigo() + "\n" +
-                                    "Nombre      :   " + listaproductoselegidos.get(position).getDescripcion() + "\n" +
-                                    "Unidad       :   " + listaproductoselegidos.get(position).getUnidad() + "\n" +
-                                    "Cantidad    :   " + listaproductoselegidos.get(position).getCantidad() + "\n" +
-                                    "Precio        : S/ " + listaproductoselegidos.get(position).getPrecio() + "\n" +
-                                    "Subtotal     : S/ " + formateador.format((double) Aux))
+                            "Codigo\t\t\t:\t\t" + listaproductoselegidos.get(position).getCodigo() + "\n" +
+                                    "Nombre\t\t\t:\t\t" + listaproductoselegidos.get(position).getDescripcion() + "\n" +
+                                    "Unidad\t\t\t:\t\t" + listaproductoselegidos.get(position).getUnidad() + "\n" +
+                                    "Cantidad\t\t:\t\t" + listaproductoselegidos.get(position).getCantidad() + "\n" +
+                                    "Precio\t\t\t\t:\t\tS/ " + listaproductoselegidos.get(position).getPrecio() + "\n" +
+                                    "Subtotal\t\t\t:\t\tS/ " + formateador.format((double) Aux))
                             .setNegativeButton("Aceptar", null)
                             .create()
                             .show();

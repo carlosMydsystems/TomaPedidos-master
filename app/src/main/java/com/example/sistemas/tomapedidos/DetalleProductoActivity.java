@@ -36,7 +36,7 @@ import java.util.ArrayList;
 
 public class DetalleProductoActivity extends AppCompatActivity {
 
-    TextView tvcodigoproducto,tvnombreproducto,tvalmacenproducto,tvstock,tvprecio,tvsubtotal,
+    TextView tvcodigoproducto,tvnombreproducto,tvalmacenproducto,tvstock,tvprecio,
             tvtotal,tvprecioreal,tvunidades;
     Productos productos;
     Button btnguardaryrevisar, btnguardaryagregar, btndverificarproducto;
@@ -203,11 +203,11 @@ else if (etcantidadelegida.getText()== null){
                     } else {
 
                     String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                            productos.getCodigo() + "|" + tvprecio.getText() + "|" + tvtotal.getText().toString().trim() + "||";
+                            productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") + "|" + tvtotal.getText().toString().trim().replace(",","") + "||";
                     ActualizarProducto(trama);
                     productos.setCantidad(etcantidadelegida.getText().toString());
-                    preciounitario = Double.valueOf(tvprecio.getText().toString());
-                    cantidad = Double.valueOf(etcantidadelegida.getText().toString());
+                    preciounitario = Double.valueOf(tvprecio.getText().toString().replace(",",""));
+                    cantidad = Double.valueOf(etcantidadelegida.getText().toString());   // Cambio
                     redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
                     productos.setPrecio(tvprecio.getText().toString());
                     productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
@@ -297,7 +297,7 @@ else if (etcantidadelegida.getText()== null){
                     } else {
 
                 String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                        productos.getCodigo() + "|" + tvprecio.getText() + "|" + tvtotal.getText().toString().trim() + "||";
+                        productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") + "|" + tvtotal.getText().toString().trim().replace(",","") + "||";
 
                         ActualizarProducto(trama);
 
@@ -424,7 +424,7 @@ else if (etcantidadelegida.getText()== null){
                                     listaProductos.add(producto);
                                     tvprecio.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
                                     //preciounitario = Double.valueOf(producto.getPrecio());
-                                    preciounitario = Double.valueOf(formateador.format((double)Double.valueOf(producto.getPrecio())));
+                                    preciounitario = Double.valueOf(producto.getPrecio());
 
                                     if (etcantidadelegida.getText().toString().equals("")){
 

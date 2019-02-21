@@ -134,10 +134,10 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                     } else {
 
                         String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
-                                productos.getCodigo() + "|" + tvprecioelegido.getText() + "|" + tvtotalelegido.getText().toString().trim() + "||";
+                                productos.getCodigo() + "|" + tvprecioelegido.getText().toString().replace(",","") + "|" + tvtotalelegido.getText().toString().trim().replace(",","") + "||";
                         ActualizarProducto(trama);
                         productos.setCantidad(etcantprodelegida.getText().toString());
-                        preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
+                        preciounitario = Double.valueOf(tvprecioelegido.getText().toString().replace(",",""));
                         cantidad = Double.valueOf(etcantprodelegida.getText().toString());
                         redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
                         productos.setPrecio(tvprecioelegido.getText().toString());
@@ -253,7 +253,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                     listaProductos.add(producto);
                                     tvprecioelegido.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
 
-                                    preciounitario = Double.valueOf(tvprecioelegido.getText().toString());
+                                    preciounitario = Double.valueOf(producto.getPrecio());
 
                                     if (etcantprodelegida.getText().toString().equals("")){
 

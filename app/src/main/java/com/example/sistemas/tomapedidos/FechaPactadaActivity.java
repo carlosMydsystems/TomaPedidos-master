@@ -29,6 +29,8 @@ import org.json.JSONObject;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -50,6 +52,12 @@ public class FechaPactadaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fecha_pactada);
+
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
+        simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
+        final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
+
 
         btnregistrafechapactada =  findViewById(R.id.btnRegistrarFechaPactada);
         btnregresarfechapactada = findViewById(R.id.btnRegresarFechaPactada);
@@ -73,7 +81,10 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
         redondeado = new BigDecimal(precio).setScale(2, RoundingMode.HALF_EVEN);
 
-        tvPrecio.setText(""+redondeado);
+        tvPrecio.setText("S/ "+formateador.format(redondeado));
+
+
+
 
         btnregresarfechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,11 +145,11 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
                         .setTitle("Fin del Pedido")
-                        .setMessage("Codigo  : " + cliente.getCodCliente() + "\n" +
-                                    "Nombre : " + cliente.getNombre() + "\n" +
-                                    "Almacen : " + almacen + "\n" +
-                                    "Importe : " + redondeado + "\n" +
-                                    "Items  : " + cantidad);
+                        .setMessage("Codigo \t\t: " + cliente.getCodCliente() + "\n" +
+                                    "Nombre \t: " + cliente.getNombre() + "\n" +
+                                    "Almacen \t: " + almacen + "\n" +
+                                    "Importe \t: " + redondeado + "\n" +
+                                    "Items  \t\t\t: " + cantidad);
 
                 builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
