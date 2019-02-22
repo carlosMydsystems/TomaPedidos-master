@@ -103,6 +103,9 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvstock  =findViewById(R.id.tvStockElegido);
         tvprecio = findViewById(R.id.tvPrecioElegido);
         tvtotal = findViewById(R.id.tvTotalElegido);
+        tvstock.setText(productos.getStock());
+        tvunidades.setText(productos.getUnidad());
+        Toast.makeText(this, productos.getStock(), Toast.LENGTH_SHORT).show();
 
 if (tvstock.getText() == null){
 
@@ -208,8 +211,9 @@ else if (etcantidadelegida.getText()== null){
                     productos.setCantidad(etcantidadelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecio.getText().toString().replace(",",""));
                     cantidad = Double.valueOf(etcantidadelegida.getText().toString());   // Cambio
-                    redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
-                    productos.setPrecio(tvprecio.getText().toString());
+                    redondeado = new BigDecimal(preciounitario).setScale(2, RoundingMode.HALF_EVEN);
+                        Toast.makeText(DetalleProductoActivity.this, ""+redondeado, Toast.LENGTH_SHORT).show();
+                    productos.setPrecio(""+redondeado);
                     productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
                     productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tene
                     productos.setIndice(Integer.valueOf(Index));
@@ -302,7 +306,7 @@ else if (etcantidadelegida.getText()== null){
                         ActualizarProducto(trama);
 
                         productos.setCantidad(etcantidadelegida.getText().toString());
-                        preciounitario = Double.valueOf(tvprecio.getText().toString());
+                        preciounitario = Double.valueOf(producto.getPrecio());
                         cantidad = Double.valueOf(etcantidadelegida.getText().toString());
                         productos.setPrecio(tvprecio.getText().toString());
                         productos.setIndice(Integer.valueOf(Index));
@@ -416,7 +420,11 @@ else if (etcantidadelegida.getText()== null){
                                     producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
                                     producto.setMarca(jsonObject.getString("MARCA"));
                                     producto.setDescripcion(jsonObject.getString("DESCRIPCION")); //
-                                    producto.setPrecio(jsonObject.getString("PRECIO"));
+
+                                    BigDecimal precioBig = new BigDecimal(jsonObject.getString("PRECIO"));
+                                    precioBig = precioBig.setScale(2,RoundingMode.HALF_UP);
+
+                                    producto.setPrecio(precioBig+"");
                                     producto.setStock(jsonObject.getString("STOCK"));
                                     producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
                                     producto.setAlmacen(almacen);

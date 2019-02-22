@@ -245,14 +245,17 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                     producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
                                     producto.setMarca(jsonObject.getString("MARCA"));
                                     producto.setDescripcion(jsonObject.getString("DESCRIPCION")); //
-                                    producto.setPrecio(jsonObject.getString("PRECIO"));
+
+                                    BigDecimal preciobig = new BigDecimal(jsonObject.getString("PRECIO")).setScale(2, RoundingMode.HALF_EVEN);
+
+                                    producto.setPrecio(""+preciobig);
                                     producto.setStock(jsonObject.getString("STOCK"));
                                     producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
                                     producto.setAlmacen(almacen);
                                     listaProductos.add(producto);
                                     tvprecioelegido.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
 
-                                    preciounitario = Double.valueOf(producto.getPrecio());
+                                    preciounitario = Double.valueOf(tvprecioelegido.getText().toString().replace(",",""));
 
                                     if (etcantprodelegida.getText().toString().equals("")){
 

@@ -196,6 +196,7 @@
         android:layout_marginTop="10dp"
         android:text="Cantidad : "
         android:textColor="#050505"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
@@ -243,6 +244,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="7dp"
         android:text="Unidad : "
+        android:textSize="15sp"
         android:textColor="#050505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
@@ -265,6 +267,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_media_rew" />
-
 
 </android.support.constraint.ConstraintLayout>
