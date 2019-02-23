@@ -37,7 +37,6 @@ public class PromocionesActivity extends AppCompatActivity {
     ArrayList<Product> products = new ArrayList<>();
     Button btnregistrarpromociones;
     ArrayList<Product> productOrders = new ArrayList<>();
-    Integer indice ;
     ArrayList<String> listaTrama;
     Productos productopromocion;
     Clientes cliente;
@@ -62,7 +61,6 @@ public class PromocionesActivity extends AppCompatActivity {
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("Ind");
         cantidadlista =  getIntent().getStringExtra("cantidadlista");
-        indice = listaproductoselegidos.size();
         listaProductosPromociones = new ArrayList<>();
         btnregistrarpromociones = (Button) findViewById(R.id.btnRegistrarPromociones);
         btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +109,8 @@ public class PromocionesActivity extends AppCompatActivity {
                 productopromocion.setCodigo(listAdapter.listProducts.get(i).ProductIdArticulo);
                 listaproductoselegidos.add(productopromocion);
 
+                Toast.makeText(this,listAdapter.listProducts.get(i).UnidadProducto , Toast.LENGTH_SHORT).show();
+
             }
         }
 
@@ -150,6 +150,7 @@ public class PromocionesActivity extends AppCompatActivity {
                     listaPromociones.get(i).getCodArticulo(),
                     listaPromociones.get(i).getPrecioSoles()
                    ));
+            Toast.makeText(this, listaPromociones.get(i).getPrecioSoles(), Toast.LENGTH_SHORT).show();
         }
     }
 

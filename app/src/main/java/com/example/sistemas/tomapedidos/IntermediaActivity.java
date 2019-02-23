@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class IntermediaActivity extends AppCompatActivity {
 
     String id;
-    String url,id_pedido,cantidadlista,almacen,tipoformapago,Ind,validador,Index;
+    String url,id_pedido,cantidadlista,almacen,tipoformapago,validador,Index;
     private ListView listView;
     private ListAdapter listAdapter;
     ArrayList<Product> products = new ArrayList<>();
@@ -41,7 +41,6 @@ public class IntermediaActivity extends AppCompatActivity {
         id_pedido = getIntent().getStringExtra("id_pedido");
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
-        Ind = getIntent().getStringExtra("indice");
         cantidadlista =  getIntent().getStringExtra("cantidadlista");
         Index = getIntent().getStringExtra("Index");
 
@@ -73,7 +72,6 @@ public class IntermediaActivity extends AppCompatActivity {
         intent.putExtra("id_pedido",id_pedido);
         intent.putExtra("Almacen",almacen);
         intent.putExtra("TipoPago",tipoformapago);
-        intent.putExtra("indice",Ind);
         intent.putExtra("cantidadlista",cantidadlista);
         intent.putExtra("validador","false");
         intent.putExtra("Index",Index);
@@ -98,8 +96,6 @@ public class IntermediaActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
-
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
@@ -108,8 +104,6 @@ public class IntermediaActivity extends AppCompatActivity {
                     public void onResponse(String response) {
 
                         if (response.equals("OK")){
-
-                            // insertaCampos(listaproductoselegidos,id);
                         }
                     }
 

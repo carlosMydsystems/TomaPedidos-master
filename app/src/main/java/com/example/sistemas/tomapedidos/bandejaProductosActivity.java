@@ -36,12 +36,10 @@ public class bandejaProductosActivity extends AppCompatActivity {
     Productos productos,producto;
     Button btnbuscarproducto, btnterminar,btnregresarbandeja, btngrabarpedido;
     ListView lvbandejaproductos;
-    ArrayList<String> listabandejaproductos,listabandejaproductoselegidos;
+    ArrayList<String> listabandejaproductoselegidos;
     Clientes cliente;
-    String cantidad ,Precio, url, almacen, tipoformapago, fechaRegistro, documento = "Boleta",
-            validador,id,Ind,id_pedido,retorno,Index;
+    String cantidad ,Precio, url, almacen, tipoformapago, fechaRegistro, validador,id,id_pedido,retorno,Index;
     View mview;
-    Integer cantidadProductos=0;
     ArrayList<Productos> listaproductoselegidos;
     Usuario  usuario;
     Double preciolista, precio = 0.0;
@@ -61,15 +59,12 @@ public class bandejaProductosActivity extends AppCompatActivity {
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");    //
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
-        Ind = getIntent().getStringExtra("indice");
         id_pedido = getIntent().getStringExtra("id_pedido");
         validador = getIntent().getStringExtra("validador");
         retorno = getIntent().getStringExtra("retorno");
         Index = getIntent().getStringExtra("Index");
 
         valida = Boolean.valueOf(validador);
-        listabandejaproductos = new ArrayList<>();
-        cantidadProductos = listabandejaproductos.size();
         listabandejaproductoselegidos = new ArrayList<>();
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
@@ -100,6 +95,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     precio = 0.0;
 
                 } else {
+
 
                     precio = precio + Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",", ""));
                     Aux = Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",", ""));
@@ -198,7 +194,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     EliminaPromocion();
                     Intent intent = new Intent(bandejaProductosActivity.this, BuscarProductoActivity.class);
                     intent.putExtra("TipoPago", tipoformapago);
-                    intent.putExtra("indice", Ind);
                     intent.putExtra("Index", Index);
                     intent.putExtra("validador", "false");
                     intent.putExtra("Almacen", almacen);
@@ -228,7 +223,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         Intent intent = new Intent(bandejaProductosActivity.this, PromocionesActivity.class);
 
                         intent.putExtra("TipoPago", tipoformapago);
-                        intent.putExtra("indice", Ind);
                         intent.putExtra("Index", Index);
                         intent.putExtra("cantidadlista", listaproductoselegidos.size() + "");
                         intent.putExtra("Almacen", almacen);
@@ -279,7 +273,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     Intent intent = new Intent(bandejaProductosActivity.this, FechaPactadaActivity.class);
 
                     intent.putExtra("TipoPago", tipoformapago);
-                    intent.putExtra("indice", Ind);
                     intent.putExtra("Index", Index);
                     intent.putExtra("Cantidad", cantidad);
                     intent.putExtra("Precio", "" + precio);
@@ -466,7 +459,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
         intent.putExtra("validador","true");
         intent.putExtra("id_pedido",id_pedido);
         intent.putExtra("Index",Index);
-        intent.putExtra("indice", Ind);
         intent.putExtra("TipoPago",tipoformapago);
         Bundle bundle = new Bundle();
         bundle.putSerializable("Producto", productos);
@@ -508,35 +500,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void ActualizarProducto(String trama) {
-
-        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
-       // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
-
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
-
-        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response.equals("OK")){
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
-    }
-
     private void Editarproductoselecionado(Integer position) {
 
         producto = listaproductoselegidos.get(position);
@@ -575,8 +538,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
     private void EliminarProducto(String trama) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
-        // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_TRAMA_MOVIL&variables='"+trama+"'";
 

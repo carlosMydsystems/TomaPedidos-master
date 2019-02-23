@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -84,7 +83,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
                         Intent intent = new Intent(BuscarProductoActivity.this, bandejaProductosActivity.class);
                         intent.putExtra("TipoPago", tipoPago);
-                        intent.putExtra("indice", indice);
                         intent.putExtra("id_pedido", id_pedido                                                                                                                                                                                                                                                                                          );
                         intent.putExtra("Almacen", almacen);
                         intent.putExtra("Index", Index);
@@ -216,8 +214,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
                 intent.putExtra("id_pedido",id_pedido);
                 intent.putExtra("Index",Index);
 
-                Integer  aux = listaproductoselegidos.size() + 1;
-                intent.putExtra("indice",aux.toString());
                 Bundle bundle = new Bundle();
                 producto =  listaProductos.get(position);
                 bundle.putSerializable("Producto",producto);
@@ -376,7 +372,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
                     public void onResponse(String response) {
 
                         if (response.equals("OK")){
-                            Toast.makeText(BuscarProductoActivity.this, "Se hizo el registro", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener() {

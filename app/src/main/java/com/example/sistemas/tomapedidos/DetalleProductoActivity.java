@@ -70,7 +70,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         almacen =  getIntent().getStringExtra("Almacen");
         tipoPago = getIntent().getStringExtra("TipoPago");
         id_pedido = getIntent().getStringExtra("id_pedido");
-        Ind = getIntent().getStringExtra("indice");
         Index = getIntent().getStringExtra("Index");
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
 
@@ -128,7 +127,7 @@ else if (etcantidadelegida.getText()== null){
                 Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
 
                 intent.putExtra("TipoPago",tipoPago);
-                intent.putExtra("indice",Ind);
+                //intent.putExtra("indice",Ind);
                 intent.putExtra("validador","false");
                 intent.putExtra("Almacen",almacen);
                 intent.putExtra("Index",Index);
@@ -178,7 +177,7 @@ else if (etcantidadelegida.getText()== null){
                             Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
 
                             intent.putExtra("TipoPago",tipoPago);
-                            intent.putExtra("indice",Ind);
+                            //intent.putExtra("indice",Ind);
                             intent.putExtra("validador","false");
                             intent.putExtra("Almacen",almacen);
                             intent.putExtra("Index",Index);
@@ -221,7 +220,6 @@ else if (etcantidadelegida.getText()== null){
 
                     Intent intent = new Intent(DetalleProductoActivity.this, bandejaProductosActivity.class);
                     intent.putExtra("TipoPago", tipoPago);
-                    intent.putExtra("indice", listaproductoselegidos.size());
                     intent.putExtra("validador", "true");
                     intent.putExtra("Index", Index);
                     intent.putExtra("id_pedido", id_pedido);
@@ -272,7 +270,7 @@ else if (etcantidadelegida.getText()== null){
 
                             Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
                             intent.putExtra("TipoPago",tipoPago);
-                            intent.putExtra("indice",Ind);
+                            //intent.putExtra("indice",Ind);
                             intent.putExtra("validador","false");
                             intent.putExtra("Almacen",almacen);
                             intent.putExtra("Index",Index);
@@ -312,13 +310,11 @@ else if (etcantidadelegida.getText()== null){
                         productos.setIndice(Integer.valueOf(Index));
                         productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
                         productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
-                        // productos.setAlmacen(almacen);
                         listaproductoselegidos.add(productos);
                         Index = String.valueOf(Integer.valueOf(Index)+1);
                         Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
 
                         intent.putExtra("TipoPago", tipoPago);
-                        intent.putExtra("indice", Ind);
                         intent.putExtra("validador", "true");
                         intent.putExtra("Index",Index);
                         intent.putExtra("id_pedido",id_pedido);
@@ -340,11 +336,6 @@ else if (etcantidadelegida.getText()== null){
                 }
             }
         });
-
-        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
-        simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
-        simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
-        final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
 
          tvcodigoproducto.setText(productos.getCodigo());
          tvnombreproducto.setText(productos.getDescripcion());
