@@ -41,7 +41,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
     Productos productos;
     Button btnguardaryrevisar, btnguardaryagregar, btndverificarproducto;
     Clientes cliente;
-    ArrayList<Productos> listaproductoselegidos,listaProductos;
+    ArrayList<Productos> listaproductoselegidos;
     EditText etcantidadelegida;
     Double preciounitario,cantidad, Aux,validarStock;
     String url,almacen,tipoPago,id_pedido,Ind,Index;
@@ -60,7 +60,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         etcantidadelegida =  findViewById(R.id.etCantProdElegida);
         listaproductoselegidos = new ArrayList<>();
         productos  = new Productos();
-        listaProductos=new ArrayList<>();
 
         // se recibe los datos de los productos y del que se han encontrado en el otro intent
 
@@ -127,7 +126,6 @@ else if (etcantidadelegida.getText()== null){
                 Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
 
                 intent.putExtra("TipoPago",tipoPago);
-                //intent.putExtra("indice",Ind);
                 intent.putExtra("validador","false");
                 intent.putExtra("Almacen",almacen);
                 intent.putExtra("Index",Index);
@@ -177,7 +175,6 @@ else if (etcantidadelegida.getText()== null){
                             Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
 
                             intent.putExtra("TipoPago",tipoPago);
-                            //intent.putExtra("indice",Ind);
                             intent.putExtra("validador","false");
                             intent.putExtra("Almacen",almacen);
                             intent.putExtra("Index",Index);
@@ -270,7 +267,6 @@ else if (etcantidadelegida.getText()== null){
 
                             Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
                             intent.putExtra("TipoPago",tipoPago);
-                            //intent.putExtra("indice",Ind);
                             intent.putExtra("validador","false");
                             intent.putExtra("Almacen",almacen);
                             intent.putExtra("Index",Index);
@@ -420,9 +416,7 @@ else if (etcantidadelegida.getText()== null){
                                     producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
                                     producto.setAlmacen(almacen);
 
-                                    listaProductos.add(producto);
                                     tvprecio.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
-                                    //preciounitario = Double.valueOf(producto.getPrecio());
                                     preciounitario = Double.valueOf(producto.getPrecio());
 
                                     if (etcantidadelegida.getText().toString().equals("")){
