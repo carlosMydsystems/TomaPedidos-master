@@ -375,7 +375,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                             listaproductoselegidos.remove(position);
                                             btnterminar.setVisibility(View.VISIBLE);
                                             btngrabarpedido.setVisibility(View.GONE);
-//                                        Alertsdialog("Borrar el producto");
                                             valida = true;
                                             break;
 
@@ -477,28 +476,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         finish();
 
     }
-    private void Alertsdialog(String msg){
 
-        final AlertDialog.Builder builder1 = new AlertDialog.Builder(
-                bandejaProductosActivity.this);
-        builder1.setMessage("Esta seguro que desea " + msg + "?")
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                        salirlistview();
-                    }
-                })
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                        salirlistview();
-                    }
-                })
-                .create()
-                .show();
-    }
 
     private void Editarproductoselecionado(Integer position) {
 
