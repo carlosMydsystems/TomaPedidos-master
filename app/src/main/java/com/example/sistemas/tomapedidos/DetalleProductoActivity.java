@@ -204,9 +204,10 @@ else if (etcantidadelegida.getText()== null){
 
                         String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
                                 productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
-                                "|" + tvtasa.getText().toString().trim() + "|"+productos.getNumPromocion()+
-                                "|"+productos.getPresentacion()+"|"+productos.getEquivalencia();
+                                "|" + tvtasa.getText().toString().trim() + "|N|"+productos.getPresentacion()+
+                                "|"+productos.getEquivalencia();  // Tasas
                     ActualizarProducto(trama);
+
                     productos.setCantidad(etcantidadelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecio.getText().toString().replace(",",""));
                     cantidad = Double.valueOf(etcantidadelegida.getText().toString());   // Cambio
@@ -299,8 +300,8 @@ else if (etcantidadelegida.getText()== null){
 
                 String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
                         productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
-                        "|" + tvtasa.getText().toString().trim() + "|"+productos.getNumPromocion()+
-                        "|"+productos.getPresentacion()+"|"+productos.getEquivalencia();  // Tasas
+                        "|" + tvtasa.getText().toString().trim() + "|N|"+productos.getPresentacion()+
+                        "|"+productos.getEquivalencia();  // Tasas
 
                         ActualizarProducto(trama);
 
@@ -415,7 +416,6 @@ else if (etcantidadelegida.getText()== null){
 
                                     BigDecimal precioBig = new BigDecimal(jsonObject.getString("PRECIO_SOLES"));
                                     precioBig = precioBig.setScale(2,RoundingMode.HALF_UP);
-
                                     producto.setPrecio(precioBig+"");
                                     producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
                                     producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
