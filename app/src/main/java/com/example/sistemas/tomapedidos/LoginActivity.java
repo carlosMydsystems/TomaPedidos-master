@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario+"|"+Contraseña_usuario+"|TH001'"; // se debe actalizar la URL
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario+"|"+Contraseña_usuario+"'"; // se debe actalizar la URL
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -79,6 +79,7 @@ public class LoginActivity extends AppCompatActivity {
                                     usuario.setFechaActual(jsonObject.getString("FECHA_ACTUAL"));
                                     usuario.setTipoCambio(jsonObject.getString("TIPO_CAMBIO"));
                                     usuario.setLugar("LIMA"); // Se usa en la busqueda de producto
+                                    usuario.setUser(etusuario.getText().toString());
                                 }
                                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                                 Bundle bundle = new Bundle();

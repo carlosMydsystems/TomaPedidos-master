@@ -141,7 +141,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
         if (listaproductoselegidos.size()==0 && validador.equals("true")){
 
             String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
-                    getCodVendedor() + "|"+tipoPago+"|"+cliente.getTipoDocumento()+"|1|0.00|"+etglosa.getText().toString()+"|";
+                    getCodVendedor() + "|"+tipoPago+"|"+cliente.getTipoDocumento()+"|"+usuario.getMoneda()+"|"+usuario.getUser().trim()+"|"+usuario.getCodTienda();
 
             ActualizarProducto(Trama);
 
@@ -313,15 +313,21 @@ public class BuscarProductoActivity extends AppCompatActivity {
                                                 .show();
                                     } else {
 
-                                    for (int i = 0; i < jsonArray.length(); i++) {
                                         producto = new Productos();
+                                        listaProducto.clear();
+                                        listaProductos.clear();
+                                    for (int i = 0; i < jsonArray.length(); i++) {
                                         jsonObject = jsonArray.getJSONObject(i);
                                         producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
-                                        producto.setMarca(jsonObject.getString("MARCA"));
-                                        producto.setDescripcion(jsonObject.getString("DESCRIPCION")); //
-                                        producto.setPrecio(jsonObject.getString("PRECIO"));
-                                        producto.setStock(jsonObject.getString("STOCK"));
+                                        producto.setMarca(jsonObject.getString("DES_MARCA"));
+                                        producto.setDescripcion(jsonObject.getString("DES_ARTICULO")); //
+                                        producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
+                                        producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
                                         producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
+                                        producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
+                                        producto.setNumPromocion(jsonObject.getString("NRO_PROMOCION"));
+                                        producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
+                                        producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
                                         producto.setAlmacen(almacen);
                                         listaProductos.add(producto);
                                         listaProducto.add(producto.getCodigo() + " - " + producto.getDescripcion());

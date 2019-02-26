@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity
 
         //recibe el bundle con los datos del usuario
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
-        String cadenaAux = usuario.getCodVendedor()+ " - "+ usuario.getNombre()+" "+ usuario.getNombre();
+        String cadenaAux = usuario.getCodVendedor()+ " - "+ usuario.getNombre();
         tvusuario.setText(cadenaAux);
 
 

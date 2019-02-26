@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -44,7 +45,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
     ArrayList<Productos> listaproductoselegidos;
     EditText etcantidadelegida;
     Double preciounitario,cantidad, Aux,validarStock;
-    String url,almacen,tipoPago,id_pedido,Ind,Index;
+    String url,almacen,tipoPago,id_pedido,Index;
     ProgressDialog progressDialog;
     Productos producto;
     ArrayList<String> listaProducto;
@@ -80,6 +81,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvprecioreal = findViewById(R.id.tvPrecioReal);
         tvunidades = findViewById(R.id.tvUnidad);
         imgbtnvolverdetalleproducto = findViewById(R.id.ibVolverDetalleProducto);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         btndverificarproducto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,8 +115,6 @@ if (tvstock.getText() == null){
 else if (etcantidadelegida.getText()== null){
 
     etcantidadelegida.setText("0.0");
-
-}else {
 
 }
         btnguardaryrevisar = findViewById(R.id.btnGuardarrevisar);
@@ -201,8 +201,10 @@ else if (etcantidadelegida.getText()== null){
                     if (etcantidadelegida.getText().toString().equals("")) {
                     } else {
 
-                    String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                            productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") + "|" + tvtotal.getText().toString().trim().replace(",","") + "||";
+                        String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
+                                productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
+                                "|" + productos.getTasaDescuento().trim() + "|"+productos.getNumPromocion()+
+                                "|"+productos.getPresentacion()+"|"+productos.getEquivalencia();
                     ActualizarProducto(trama);
                     productos.setCantidad(etcantidadelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecio.getText().toString().replace(",",""));
@@ -295,7 +297,9 @@ else if (etcantidadelegida.getText()== null){
                     } else {
 
                 String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                        productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") + "|" + tvtotal.getText().toString().trim().replace(",","") + "||";
+                        productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
+                        "|" + productos.getTasaDescuento().trim() + "|"+productos.getNumPromocion()+
+                        "|"+productos.getPresentacion()+"|"+productos.getEquivalencia();  // Tasas
 
                         ActualizarProducto(trama);
 
@@ -405,15 +409,19 @@ else if (etcantidadelegida.getText()== null){
                                     producto = new Productos();
                                     jsonObject = jsonArray.getJSONObject(i);
                                     producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
-                                    producto.setMarca(jsonObject.getString("MARCA"));
-                                    producto.setDescripcion(jsonObject.getString("DESCRIPCION")); //
+                                    producto.setMarca(jsonObject.getString("DES_MARCA"));
+                                    producto.setDescripcion(jsonObject.getString("DES_ARTICULO")); //
 
-                                    BigDecimal precioBig = new BigDecimal(jsonObject.getString("PRECIO"));
+                                    BigDecimal precioBig = new BigDecimal(jsonObject.getString("PRECIO_SOLES"));
                                     precioBig = precioBig.setScale(2,RoundingMode.HALF_UP);
 
                                     producto.setPrecio(precioBig+"");
-                                    producto.setStock(jsonObject.getString("STOCK"));
+                                    producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
                                     producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
+                                    producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
+                                    producto.setNumPromocion(jsonObject.getString("NRO_PROMOCION"));
+                                    producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
+                                    producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
                                     producto.setAlmacen(almacen);
 
                                     tvprecio.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
@@ -462,10 +470,7 @@ else if (etcantidadelegida.getText()== null){
 
     private void ActualizarProducto(String trama) {
 
-
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
-        // http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=pkg_web_herramientas.fn_ws_registra_trama_movil&variables=
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
 

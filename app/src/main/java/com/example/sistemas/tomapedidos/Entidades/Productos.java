@@ -10,7 +10,7 @@ public class Productos implements Serializable {
     private String stock;
     private String precio;
     private String cantidad;
-    private String flete;
+    private String tasaDescuento;
     private String idProducto;
     private String marca;
     private String unidad;
@@ -21,19 +21,18 @@ public class Productos implements Serializable {
     private String distrito;
     private String numPromocion;
     private Integer indice;
+    private String presentacion;
+    private String equivalencia;
 
 
-    public Productos(String descripcion, String nombre, String codigo, String stock, String precio,
-                     String cantidad, String flete, String idProducto, String marca, String unidad,
-                     String estado, String precioAcumulado, String almacen, String observacion,
-                     String distrito, String numPromocion, Integer indice) {
+    public Productos(String descripcion, String nombre, String codigo, String stock, String precio, String cantidad, String tasaDescuento, String idProducto, String marca, String unidad, String estado, String precioAcumulado, String almacen, String observacion, String distrito, String numPromocion, Integer indice, String presentacion, String equivalencia) {
         this.descripcion = descripcion;
         this.nombre = nombre;
         this.codigo = codigo;
         this.stock = stock;
         this.precio = precio;
         this.cantidad = cantidad;
-        this.flete = flete;
+        this.tasaDescuento = tasaDescuento;
         this.idProducto = idProducto;
         this.marca = marca;
         this.unidad = unidad;
@@ -44,9 +43,28 @@ public class Productos implements Serializable {
         this.distrito = distrito;
         this.numPromocion = numPromocion;
         this.indice = indice;
+        this.presentacion = presentacion;
+        this.equivalencia = equivalencia;
     }
 
     public Productos() {
+    }
+
+
+    public String getEquivalencia() {
+        return equivalencia;
+    }
+
+    public void setEquivalencia(String equivalencia) {
+        this.equivalencia = equivalencia;
+    }
+
+    public String getPresentacion() {
+        return presentacion;
+    }
+
+    public void setPresentacion(String presentacion) {
+        this.presentacion = presentacion;
     }
 
     public Integer getIndice() {
@@ -127,12 +145,12 @@ public class Productos implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public String getFlete() {
-        return flete;
+    public String getTasaDescuento() {
+        return tasaDescuento;
     }
 
-    public void setFlete(String flete) {
-        this.flete = flete;
+    public void setTasaDescuento(String tasaDescuento) {
+        this.tasaDescuento = tasaDescuento;
     }
 
     public String getCantidad() {

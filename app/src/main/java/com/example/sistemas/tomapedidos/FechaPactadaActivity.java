@@ -58,7 +58,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
 
-
         btnregistrafechapactada =  findViewById(R.id.btnRegistrarFechaPactada);
         btnregresarfechapactada = findViewById(R.id.btnRegresarFechaPactada);
         etfechapactada = findViewById(R.id.etFechaPactada);
@@ -78,13 +77,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
         cantidad = getIntent().getStringExtra("Cantidad");
         precio = getIntent().getStringExtra("Precio");
         tvCantidad.setText(cantidad);
-
         redondeado = new BigDecimal(precio).setScale(2, RoundingMode.HALF_EVEN);
-
         tvPrecio.setText("S/ "+formateador.format(redondeado));
-
-
-
 
         btnregresarfechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,7 +94,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 intent.putExtra("Almacen",almacen);
                 intent.putExtra("id_pedido",id_pedido);
                 intent.putExtra("validador","false");
-
                 Bundle bundle = new Bundle();
                 Bundle bundle2 = new Bundle();
                 Bundle bundle3 = new Bundle();
@@ -129,11 +122,9 @@ public class FechaPactadaActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-
                                 etfechapactada.setText(FormatoDiaMes(day) + "/" + FormatoDiaMes(month + 1) + "/" + year);
                             }
                         }, year, month, dayOfMonth);
-
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
                 datePickerDialog.show();
             }
@@ -149,7 +140,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     "Nombre \t: " + cliente.getNombre() + "\n" +
                                     "Almacen \t: " + almacen + "\n" +
                                     "Importe \t: " + redondeado + "\n" +
-                                    "Items  \t\t\t: " + cantidad);
+                                    "Items  \t\t\t: " + cantidad)
+                        .setCancelable(false);
 
                 builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
@@ -160,13 +152,15 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        RegistrarPedido(id_pedido);
+                        int aux = 0;
+                        if (aux==0){
+                            RegistrarPedido(id_pedido);
+                            aux++;
+                        }
                     }
                 });
                 builder.create()
                         .show();
-
             }
         });
     }
@@ -254,7 +248,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                             });
                                             builder.create()
                                                     .show();
-
                                 }
                             }else {
 
