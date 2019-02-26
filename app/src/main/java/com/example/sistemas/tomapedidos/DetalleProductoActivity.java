@@ -38,7 +38,7 @@ import java.util.ArrayList;
 public class DetalleProductoActivity extends AppCompatActivity {
 
     TextView tvcodigoproducto,tvnombreproducto,tvalmacenproducto,tvstock,tvprecio,
-            tvtotal,tvprecioreal,tvunidades;
+            tvtotal,tvprecioreal,tvunidades,tvtasa;
     Productos productos;
     Button btnguardaryrevisar, btnguardaryagregar, btndverificarproducto;
     Clientes cliente;
@@ -80,6 +80,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
         btndverificarproducto = findViewById(R.id.btnVerificar);
         tvprecioreal = findViewById(R.id.tvPrecioReal);
         tvunidades = findViewById(R.id.tvUnidad);
+        tvtasa =  findViewById(R.id.tvTasa);
         imgbtnvolverdetalleproducto = findViewById(R.id.ibVolverDetalleProducto);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         btndverificarproducto.setOnClickListener(new View.OnClickListener() {
@@ -203,7 +204,7 @@ else if (etcantidadelegida.getText()== null){
 
                         String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
                                 productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
-                                "|" + productos.getTasaDescuento().trim() + "|"+productos.getNumPromocion()+
+                                "|" + tvtasa.getText().toString().trim() + "|"+productos.getNumPromocion()+
                                 "|"+productos.getPresentacion()+"|"+productos.getEquivalencia();
                     ActualizarProducto(trama);
                     productos.setCantidad(etcantidadelegida.getText().toString());
@@ -298,7 +299,7 @@ else if (etcantidadelegida.getText()== null){
 
                 String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
                         productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
-                        "|" + productos.getTasaDescuento().trim() + "|"+productos.getNumPromocion()+
+                        "|" + tvtasa.getText().toString().trim() + "|"+productos.getNumPromocion()+
                         "|"+productos.getPresentacion()+"|"+productos.getEquivalencia();  // Tasas
 
                         ActualizarProducto(trama);
@@ -423,7 +424,7 @@ else if (etcantidadelegida.getText()== null){
                                     producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
                                     producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
                                     producto.setAlmacen(almacen);
-
+                                    tvtasa.setText(producto.getTasaDescuento());
                                     tvprecio.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
                                     preciounitario = Double.valueOf(producto.getPrecio());
 
@@ -479,7 +480,7 @@ else if (etcantidadelegida.getText()== null){
                     @Override
                     public void onResponse(String response) {
 
-                        response = response.toString().trim();
+                        response = response.trim();
 
                         if (response.equals("OK")){
 
