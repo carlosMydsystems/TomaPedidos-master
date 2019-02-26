@@ -204,8 +204,8 @@ else if (etcantidadelegida.getText()== null){
 
                         String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
                                 productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
-                                "|" + tvtasa.getText().toString().trim() + "|N|"+productos.getPresentacion()+
-                                "|"+productos.getEquivalencia();  // Tasas
+                                "|" + tvtasa.getText().toString().trim() + "|"+productos.getNumPromocion().trim()+"|"+productos.getPresentacion()+
+                                "|"+productos.getEquivalencia()+"|N";  // Tasas
                     ActualizarProducto(trama);
 
                     productos.setCantidad(etcantidadelegida.getText().toString());
@@ -298,10 +298,10 @@ else if (etcantidadelegida.getText()== null){
 
                     } else {
 
-                String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                        productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
-                        "|" + tvtasa.getText().toString().trim() + "|N|"+productos.getPresentacion()+
-                        "|"+productos.getEquivalencia();  // Tasas
+                        String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
+                                productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
+                                "|" + tvtasa.getText().toString().trim() + "|"+productos.getNumPromocion().trim()+"|"+productos.getPresentacion()+
+                                "|"+productos.getEquivalencia()+"|N";  // Tasas
 
                         ActualizarProducto(trama);
 

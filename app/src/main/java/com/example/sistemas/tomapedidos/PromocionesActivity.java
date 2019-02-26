@@ -268,8 +268,6 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                         placeOrder(listaproductoselegidos);
 
-                                        // ActualizarProducto(trama);
-
                                         Intent intent = new Intent(PromocionesActivity.this,IntermediaActivity.class);
 
                                         intent.putExtra("cantidadlista",cantidadlista);
