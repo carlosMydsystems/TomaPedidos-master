@@ -222,6 +222,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
                                     AlertDialog.Builder dialog = new AlertDialog.Builder(
                                             FechaPactadaActivity.this);
+                                    dialog.setCancelable(false);
                                     dialog.setMessage(Mensaje)
                                             .setNegativeButton("Regresar", null)
                                             .create()
@@ -229,7 +230,9 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                 }else{
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
+                                            .setCancelable(false)
                                             .setMessage("Se ha generado de forma correcta el pedido N° " + Mensaje);
+                                    builder.setCancelable(false);
 
                                             builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                                                 @Override
@@ -253,6 +256,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
                                 builder.setMessage("No se llego a encontrar el registro")
+                                        .setCancelable(false)
                                         .setNegativeButton("Aceptar",null)
                                         .create()
                                         .show();

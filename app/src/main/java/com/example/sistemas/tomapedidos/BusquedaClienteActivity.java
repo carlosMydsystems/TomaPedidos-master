@@ -63,6 +63,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                 if (etcliente.getText().toString().equals(""))
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
+                    builder.setCancelable(false);
                     builder.setMessage("Por favor ingrese un valor valido")
                             .setNegativeButton("Aceptar",null)
                             .create()
@@ -72,6 +73,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                     progressDialog.setMessage("Cargando...");
                     progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
                     progressDialog.show();
+                    progressDialog.setCancelable(false);
                     btnbuscar.setVisibility(View.GONE);
                     buscarCliente(etcliente.getText().toString(),tipoConsulta);
                 }
@@ -165,6 +167,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
 
                                 lvclientes.setAdapter(adapter);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
+                                builder.setCancelable(false);
                                 builder.setMessage("No se llego a encontrar el registro")
                                         .setNegativeButton("Aceptar",null)
                                         .create()

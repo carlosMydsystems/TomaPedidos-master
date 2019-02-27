@@ -44,7 +44,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
     Clientes cliente;
     ArrayList<Productos> listaproductoselegidos;
     EditText etcantidadelegida;
-    Double preciounitario,cantidad, Aux,validarStock;
+    Double preciounitario,cantidad, Aux,validarStock,precioDouble;
     String url,almacen,tipoPago,id_pedido,Index;
     ProgressDialog progressDialog;
     Productos producto;
@@ -86,6 +86,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
         btndverificarproducto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 btndverificarproducto.setVisibility(View.GONE);
                 progressDialog =  new ProgressDialog(DetalleProductoActivity.this);
                 progressDialog.setMessage("... Por favor esperar");
@@ -155,7 +156,8 @@ else if (etcantidadelegida.getText()== null){
 
                     validarStock = stockDouble - cantidadElegida;
 
-                if (validarStock < 0) {
+                //if (validarStock < 0) {
+                if (false) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
                             .setMessage("El Stock es insuficiente, desea elegir otro articulo");
@@ -199,14 +201,27 @@ else if (etcantidadelegida.getText()== null){
 
                 } else {
 
+
                     if (etcantidadelegida.getText().toString().equals("")) {
                     } else {
 
-                        String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                                productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
-                                "|" + tvtasa.getText().toString().trim() + "|"+productos.getNumPromocion().trim()+"|"+productos.getPresentacion()+
-                                "|"+productos.getEquivalencia()+"|N";  // Tasas
-                    ActualizarProducto(trama);
+                        if (productos.getNumPromocion().trim().equals("null")){
+
+                            String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
+                                    productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
+                                    "|" + tvtasa.getText().toString().trim() + "||"+productos.getPresentacion()+
+                                    "|"+productos.getEquivalencia()+"|N";  // Tasas
+                            ActualizarProducto(trama);
+
+                        }else {
+
+                            String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
+                                    productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",", "") +
+                                    "|" + tvtasa.getText().toString().trim() + "|" + productos.getNumPromocion().trim() + "|" + productos.getPresentacion() +
+                                    "|" + productos.getEquivalencia() + "|N";  // Tasas
+                            ActualizarProducto(trama);
+
+                        }
 
                     productos.setCantidad(etcantidadelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecio.getText().toString().replace(",",""));
@@ -251,7 +266,8 @@ else if (etcantidadelegida.getText()== null){
                 Double cantidadElegida = Double.valueOf(etcantidadelegida.getText().toString());
                 validarStock = stockDouble - cantidadElegida;
                 
-                if (validarStock < 0) {
+                //if (validarStock < 0) {
+                if (false) {
 
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
@@ -298,12 +314,23 @@ else if (etcantidadelegida.getText()== null){
 
                     } else {
 
-                        String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                                productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
-                                "|" + tvtasa.getText().toString().trim() + "|"+productos.getNumPromocion().trim()+"|"+productos.getPresentacion()+
-                                "|"+productos.getEquivalencia()+"|N";  // Tasas
+                        if (productos.getNumPromocion().trim().equals("null")){
 
-                        ActualizarProducto(trama);
+                            String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
+                                    productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
+                                    "|" + tvtasa.getText().toString().trim() + "||"+productos.getPresentacion()+
+                                    "|"+productos.getEquivalencia()+"|N";  // Tasas
+                            ActualizarProducto(trama);
+
+                        }else {
+
+                            String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
+                                    productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",", "") +
+                                    "|" + tvtasa.getText().toString().trim() + "|" + productos.getNumPromocion().trim() + "|" + productos.getPresentacion() +
+                                    "|" + productos.getEquivalencia() + "|N";  // Tasas
+                            ActualizarProducto(trama);
+
+                        }
 
                         productos.setCantidad(etcantidadelegida.getText().toString());
                         preciounitario = Double.valueOf(producto.getPrecio());
@@ -412,21 +439,21 @@ else if (etcantidadelegida.getText()== null){
                                     jsonObject = jsonArray.getJSONObject(i);
                                     producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
                                     producto.setMarca(jsonObject.getString("DES_MARCA"));
-                                    producto.setDescripcion(jsonObject.getString("DES_ARTICULO")); //
-
-                                    BigDecimal precioBig = new BigDecimal(jsonObject.getString("PRECIO_SOLES"));
+                                    producto.setDescripcion(jsonObject.getString("DES_ARTICULO"));
+                                    producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
+                                    precioDouble = Double.valueOf(jsonObject.getString("PRECIO_SOLES"))* (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO"))/100  );
+                                    BigDecimal precioBig = new BigDecimal(precioDouble.toString());
                                     precioBig = precioBig.setScale(2,RoundingMode.HALF_UP);
-                                    producto.setPrecio(precioBig+"");
+                                    Toast.makeText(DetalleProductoActivity.this, ""+precioBig, Toast.LENGTH_SHORT).show();
+                                    tvprecio.setText(precioBig.toString());
+                                    precioDouble = Double.valueOf(precioBig.toString())*Double.valueOf(etcantidadelegida.getText().toString());
                                     producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
                                     producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
                                     producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
-                                    producto.setNumPromocion(jsonObject.getString("NRO_PROMOCION"));
                                     producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
                                     producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
                                     producto.setAlmacen(almacen);
                                     tvtasa.setText(producto.getTasaDescuento());
-                                    tvprecio.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
-                                    preciounitario = Double.valueOf(producto.getPrecio());
 
                                     if (etcantidadelegida.getText().toString().equals("")){
 
@@ -434,21 +461,20 @@ else if (etcantidadelegida.getText()== null){
 
                                     }else {
 
-                                        Double cant = Double.valueOf(etcantidadelegida.getText().toString());
-                                        Double preciototal = cant*preciounitario; // Se hace la definicion del precio que se va ha acumular
-                                        String preciototalredondeado = preciototal+"";
-                                        BigDecimal precioTotalBig = new BigDecimal(preciototalredondeado);
+                                        BigDecimal precioTotalBig = new BigDecimal(precioDouble.toString());
                                         precioTotalBig = precioTotalBig.setScale(2,RoundingMode.HALF_UP);
                                         tvunidades.setText(producto.getUnidad().toUpperCase());
                                         Double Aux = Double.valueOf(producto.getStock());
                                         tvstock.setText(formateador.format((double)Aux) + " ");
-                                        tvtotal.setText(formateador.format((BigDecimal)precioTotalBig) + " ");
+                                        tvtotal.setText(precioTotalBig.toString());
                                     }
                                 }
                             }else {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
-                                builder.setMessage("No se llego a encontrar el registro")
+
+                                builder.setCancelable(false)
+                                        .setMessage("No se llego a encontrar el registro")
                                         .setNegativeButton("Aceptar",null)
                                         .create()
                                         .show();

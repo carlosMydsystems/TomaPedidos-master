@@ -42,7 +42,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
     Clientes cliente;
     ArrayList<Productos> listaproductoselegidos,listaProductos;
     EditText etcantprodelegida;
-    Double preciounitario,cantidad, Aux;
+    Double preciounitario,cantidad, Aux,precioDouble;
     String url,almacen,position,tipoformapago,id_pedido,Index;
     ProgressDialog progressDialog;
     Productos producto;
@@ -243,34 +243,40 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                     producto = new Productos();
                                     jsonObject = jsonArray.getJSONObject(i);
                                     producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
-                                    producto.setMarca(jsonObject.getString("MARCA"));
-                                    producto.setDescripcion(jsonObject.getString("DESCRIPCION")); //
-
-                                    BigDecimal preciobig = new BigDecimal(jsonObject.getString("PRECIO")).setScale(2, RoundingMode.HALF_EVEN);
-
-                                    producto.setPrecio(""+preciobig);
-                                    producto.setStock(jsonObject.getString("STOCK"));
+                                    producto.setMarca(jsonObject.getString("DES_MARCA"));
+                                    producto.setDescripcion(jsonObject.getString("DES_ARTICULO"));
+                                    producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
+                                    precioDouble = Double.valueOf(jsonObject.getString("PRECIO_SOLES"))* (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO"))/100  );
+                                    BigDecimal precioBig = new BigDecimal(precioDouble.toString());
+                                    precioBig = precioBig.setScale(2,RoundingMode.HALF_UP);
+                                    tvprecioelegido.setText(precioBig.toString());
+                                    precioDouble = Double.valueOf(precioBig.toString())*Double.valueOf(etcantprodelegida.getText().toString());
+                                    producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
                                     producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
+                                    producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
+                                    producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
+                                    producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
                                     producto.setAlmacen(almacen);
-                                    listaProductos.add(producto);
-                                    tvprecioelegido.setText(formateador.format((double)Double.valueOf(producto.getPrecio())));
 
-                                    preciounitario = Double.valueOf(tvprecioelegido.getText().toString().replace(",",""));
 
                                     if (etcantprodelegida.getText().toString().equals("")){
 
-                                        Toast.makeText(ActualizarRegistroPedidosActivity.this,
-                                                "cantidad invalida", Toast.LENGTH_SHORT).show();
 
-                                    }else{
+                                    }else {
 
-                                        Double cant = Double.valueOf(etcantprodelegida.getText().toString());
-                                        String preciototal = String.valueOf(Math.round((cant*preciounitario*100.00))/100.00); // Se hace la definicion del precio que se va ha acumular
-                                        tvunidadelegida.setText(producto.getUnidad());
-                                        tvstockelegido.setText(formateador.format((double)Double.valueOf(producto.getStock())));
-                                        tvtotalelegido.setText(formateador.format((double)Double.valueOf(preciototal)));
+                                        BigDecimal precioTotalBig = new BigDecimal(precioDouble.toString());
+                                        precioTotalBig = precioTotalBig.setScale(2,RoundingMode.HALF_UP);
+                                        tvunidadelegida.setText(producto.getUnidad().toUpperCase());
+                                        Double Aux = Double.valueOf(producto.getStock());
+                                        tvstockelegido.setText(formateador.format((double)Aux) + " ");
+                                        tvtotalelegido.setText(precioTotalBig.toString());
                                     }
                                 }
+
+
+
+
+
 
                             }else {
 

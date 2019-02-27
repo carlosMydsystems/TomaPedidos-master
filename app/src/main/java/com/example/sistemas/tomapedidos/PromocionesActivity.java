@@ -197,7 +197,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setPrecioDolares(jsonObject.getString("PRECIO_DOLARES"));
                                         promocion.setStkDisponible(jsonObject.getString("STK_DISPONIBLE"));
                                         promocion.setStkFisico(jsonObject.getString("STK_FISICO"));
-                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_BONIFICADA"));
+                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_PEDIDA"));
                                         promocion.setFactor(jsonObject.getString("FACTOR"));
                                         promocion.setFormaPromocion(jsonObject.getString("FORMA_PROMOCION"));
                                         promocion.setCodDocumento(jsonObject.getString("COD_DOCUMENTO"));
@@ -223,7 +223,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setPrecioDolares(jsonObject.getString("PRECIO_DOLARES"));
                                         promocion.setStkDisponible(jsonObject.getString("STK_DISPONIBLE"));
                                         promocion.setStkFisico(jsonObject.getString("STK_FISICO"));
-                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_BONIFICADA"));
+                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_PEDIDA"));
                                         promocion.setFactor(jsonObject.getString("FACTOR"));
                                         promocion.setFormaPromocion(jsonObject.getString("FORMA_PROMOCION"));
                                         promocion.setCodDocumento(jsonObject.getString("COD_DOCUMENTO"));
@@ -252,6 +252,9 @@ public class PromocionesActivity extends AppCompatActivity {
                                         productopromocion.setUnidad(listaPromocionesTipoT.get(i).getUnidad());
                                         productopromocion.setCantidad(listaPromocionesTipoT.get(i).getCantidadBonificada());
                                         productopromocion.setPrecio(listaPromocionesTipoT.get(i).getPrecioSoles());
+                                        productopromocion.setTasaDescuento(listaPromocionesTipoT.get(i).getTasaDescuento());
+                                        productopromocion.setPresentacion(listaPromocionesTipoT.get(i).getCodPresentacion());
+                                        productopromocion.setEquivalencia(listaPromocionesTipoT.get(i).getEquivalencia());
                                         productopromocion.setPrecioAcumulado("0.0");
                                         productopromocion.setObservacion("Promocion");
                                         listaproductoselegidos.add(productopromocion);

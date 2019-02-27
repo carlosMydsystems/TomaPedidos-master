@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -58,13 +60,34 @@ public class IntermediaActivity extends AppCompatActivity {
 
             Integer indice = Integer.valueOf(Index)+1;
             listaproductoselegidos.get(i).setIndice(indice);
+
+
             Double cantidad = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
             precio = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
-            String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
-                    get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getIdProducto() + "|" +
-                    precio + "|" + precio + "||"+listaproductoselegidos.get(i).getNumPromocion();
-            Index = indice.toString();
-            ActualizarProducto(trama);
+
+            if (listaproductoselegidos.get(i).getNumPromocion().trim().equals("null")) {
+
+
+                String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
+                        get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getCodigo() + "|" +
+                        listaproductoselegidos.get(i).getPrecio() + "||" + listaproductoselegidos.get(i).getNumPromocion() + "|" +
+                        listaproductoselegidos.get(i).getPresentacion() + "|" + listaproductoselegidos.get(i)
+                        .getEquivalencia() + "|S";
+                Index = indice.toString();
+                ActualizarProducto(trama);
+            }else {
+
+                Toast.makeText(this, ""+listaproductoselegidos.get(i).getNumPromocion().trim(), Toast.LENGTH_SHORT).show();
+                String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
+                        get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getCodigo() + "|" +
+                        listaproductoselegidos.get(i).getPrecio() + "|" + listaproductoselegidos.get(i)
+                        .getTasaDescuento() + "|" + listaproductoselegidos.get(i).getNumPromocion() + "|" +
+                        listaproductoselegidos.get(i).getPresentacion() + "|" + listaproductoselegidos.get(i)
+                        .getEquivalencia() + "|S";
+                Index = indice.toString();
+                ActualizarProducto(trama);
+
+            }
         }
 
         Intent intent = new Intent(IntermediaActivity.this,bandejaProductosActivity.class);

@@ -108,6 +108,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
+                        .setCancelable(false)
                         .setMessage("Esta seguro que desea regresar, a la lisat de formas de pago ")
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             @Override
@@ -174,9 +175,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
                         }
                     }
                     if( verficador){
-                        AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.
-                                this).setMessage("EL Producto "+listaproductoselegidos.get(posicion).getCodigo()+" ya se encuentra registrado");
-                        builder
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
+                                .setMessage("EL Producto "+listaproductoselegidos.get(posicion).getCodigo()+" ya se encuentra registrado");
+                        builder.setCancelable(false)
                                 .setPositiveButton("Aceptar",null)
                                 .create()
                                 .show();
