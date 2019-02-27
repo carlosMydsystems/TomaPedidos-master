@@ -1,14 +1,12 @@
 package com.example.sistemas.tomapedidos;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -24,18 +22,15 @@ import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 public class FechaPactadaActivity extends AppCompatActivity {
 
@@ -50,6 +45,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
     DatePickerDialog datePickerDialog;
     int year,month,dayOfMonth;
     Calendar calendar;
+    ArrayList<String> listaDiasFechasHabiles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +62,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
         etfechapactada = findViewById(R.id.etFechaPactada);
         tvCantidad = findViewById(R.id.tvNumeroItem);
         tvPrecio = findViewById(R.id.tvMontoTotal);
-        listaproductoselegidos = (ArrayList<Productos>) getIntent()
-                .getSerializableExtra("listaproductoselegidos");
+        listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         almacen =  getIntent().getStringExtra("Almacen");
@@ -100,11 +95,9 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 Bundle bundle2 = new Bundle();
                 Bundle bundle3 = new Bundle();
-
                 bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
                 bundle2.putSerializable("Cliente",cliente);
                 bundle3.putSerializable("Usuario",usuario);
-
                 intent.putExtras(bundle);
                 intent.putExtras(bundle2);
                 intent.putExtras(bundle3);
@@ -126,7 +119,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                                 etfechapactada.setText(FormatoDiaMes(day) + "/" + FormatoDiaMes(month + 1) + "/" + year);
-                                VerificaFecha();
+                                VerificaFecha(etfechapactada.getText().toString());
                             }
                         }, year, month, dayOfMonth);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -170,12 +163,12 @@ public class FechaPactadaActivity extends AppCompatActivity {
         });
     }
 
-    private void VerificaFecha() {
+    private void VerificaFecha(String trama) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables=''";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables='"+trama+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -223,9 +216,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     for (int i = 0; i < jsonArray.length(); i++) {
 
                                         jsonObject = jsonArray.getJSONObject(i);
-                                        // producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
 
-                                        listaProductos.add(producto);
+                                        listaDiasFechasHabiles.add(jsonObject.getString("FECHAS"));
                                     }
                                 }
                             }else {
@@ -363,7 +355,4 @@ public class FechaPactadaActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
-
-
-
 }

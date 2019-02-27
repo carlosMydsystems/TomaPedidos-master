@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -72,6 +73,8 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         id_pedido = getIntent().getStringExtra("id_pedido");
         etcantprodelegida.setText(productos.getCantidad());
+        etcantprodelegida.requestFocus();
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         // Se referencia a todas las partes del XML asociado al Activity
 
@@ -272,12 +275,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                         tvtotalelegido.setText(precioTotalBig.toString());
                                     }
                                 }
-
-
-
-
-
-
                             }else {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this);
