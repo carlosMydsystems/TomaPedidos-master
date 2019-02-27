@@ -96,7 +96,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                 } else {
 
-
                     precio = precio + Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",", ""));
                     Aux = Double.valueOf(listaproductoselegidos.get(i).getPrecioAcumulado().replace(",", ""));
                 }
@@ -127,10 +126,10 @@ public class bandejaProductosActivity extends AppCompatActivity {
             imgbtnregresar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                     AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this)
-                    .setMessage("Esta seguro que desea regresar, Todos los cambios se perderan")
-                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+             AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this)
+                     .setCancelable(false)
+                     .setMessage("Esta seguro que desea regresar, Todos los cambios se perderan")
+                     .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
@@ -212,7 +211,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 }
             });
 
-            // Boton terminar
+            // Boton para poder verificar las promociones que se encuentren
 
             btnterminar.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -228,31 +227,23 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         intent.putExtra("Almacen", almacen);
                         intent.putExtra("id_pedido", id_pedido);
                         intent.putExtra("validador", "false");
-
                         Bundle bundle = new Bundle();
                         Bundle bundle2 = new Bundle();
                         Bundle bundle3 = new Bundle();
-
                         bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
                         bundle2.putSerializable("Cliente", cliente);
                         bundle3.putSerializable("Usuario", usuario);
-
                         intent.putExtras(bundle);
                         intent.putExtras(bundle2);
                         intent.putExtras(bundle3);
-
                         startActivity(intent);
                         finish();
 
                     } else {
-
                         Toast.makeText(bandejaProductosActivity.this, "La canasta esta vacia", Toast.LENGTH_SHORT).show();
-
                     }
                 }
             });
-
-
 
             btnregresarbandeja.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -313,7 +304,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     if (listaproductoselegidos.get(position).getObservacion() == null) {
 
                         final AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
-                        builder.setCancelable(true);
+                        builder.setCancelable(false);
 
                         listView = mview.findViewById(R.id.lvopciones);
                         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(
@@ -415,7 +406,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     Double Aux = Double.valueOf(listaproductoselegidos.get(position).getPrecioAcumulado().replace(",", ""));
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
-                    builder.setMessage(
+                    builder.setCancelable(false)
+                        .setMessage(
                             "Codigo\t\t\t:\t\t" + listaproductoselegidos.get(position).getCodigo() + "\n" +
                                     "Nombre\t\t\t:\t\t" + listaproductoselegidos.get(position).getDescripcion() + "\n" +
                                     "Unidad\t\t\t:\t\t" + listaproductoselegidos.get(position).getUnidad() + "\n" +

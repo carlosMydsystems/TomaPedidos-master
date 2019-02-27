@@ -90,6 +90,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
                 btndverificarproducto.setVisibility(View.GONE);
                 progressDialog =  new ProgressDialog(DetalleProductoActivity.this);
                 progressDialog.setMessage("... Por favor esperar");
+                progressDialog.setCancelable(false);
                 progressDialog.show();
                 if(etcantidadelegida.getText().toString().equals("")|| etcantidadelegida.getText().toString().equals("0")){
                     progressDialog.dismiss();
@@ -107,7 +108,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvtotal = findViewById(R.id.tvTotalElegido);
         tvstock.setText(productos.getStock());
         tvunidades.setText(productos.getUnidad());
-        Toast.makeText(this, productos.getStock(), Toast.LENGTH_SHORT).show();
 
 if (tvstock.getText() == null){
 
@@ -160,6 +160,7 @@ else if (etcantidadelegida.getText()== null){
                 if (false) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
+                            .setCancelable(false)
                             .setMessage("El Stock es insuficiente, desea elegir otro articulo");
 
                     if (stockDouble >0.0){
@@ -227,7 +228,6 @@ else if (etcantidadelegida.getText()== null){
                     preciounitario = Double.valueOf(tvprecio.getText().toString().replace(",",""));
                     cantidad = Double.valueOf(etcantidadelegida.getText().toString());   // Cambio
                     redondeado = new BigDecimal(preciounitario).setScale(2, RoundingMode.HALF_EVEN);
-                        Toast.makeText(DetalleProductoActivity.this, ""+redondeado, Toast.LENGTH_SHORT).show();
                     productos.setPrecio(""+redondeado);
                     productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
                     productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tene
@@ -271,6 +271,7 @@ else if (etcantidadelegida.getText()== null){
 
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
+                            .setCancelable(false)
                             .setMessage("El Stock es insuficiente, desea elegir otro articulo");
 
                     if (stockDouble > 0.0) {
@@ -444,7 +445,6 @@ else if (etcantidadelegida.getText()== null){
                                     precioDouble = Double.valueOf(jsonObject.getString("PRECIO_SOLES"))* (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO"))/100  );
                                     BigDecimal precioBig = new BigDecimal(precioDouble.toString());
                                     precioBig = precioBig.setScale(2,RoundingMode.HALF_UP);
-                                    Toast.makeText(DetalleProductoActivity.this, ""+precioBig, Toast.LENGTH_SHORT).show();
                                     tvprecio.setText(precioBig.toString());
                                     precioDouble = Double.valueOf(precioBig.toString())*Double.valueOf(etcantidadelegida.getText().toString());
                                     producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));

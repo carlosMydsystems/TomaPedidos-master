@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -77,7 +75,6 @@ public class IntermediaActivity extends AppCompatActivity {
                 ActualizarProducto(trama);
             }else {
 
-                Toast.makeText(this, ""+listaproductoselegidos.get(i).getNumPromocion().trim(), Toast.LENGTH_SHORT).show();
                 String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
                         get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getCodigo() + "|" +
                         listaproductoselegidos.get(i).getPrecio() + "|" + listaproductoselegidos.get(i)

@@ -1,12 +1,14 @@
 package com.example.sistemas.tomapedidos;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -33,12 +35,13 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 public class FechaPactadaActivity extends AppCompatActivity {
 
     Button btnregistrafechapactada, btnregresarfechapactada;
     EditText etfechapactada;
-    ArrayList<Productos> listaproductoselegidos;
+    ArrayList<Productos> listaproductoselegidos, listaProductos;
     Clientes cliente;
     Usuario usuario;
     String almacen,tipoformapago,Ind,id_pedido,validador,retorno,Index,precio,cantidad,url;
@@ -53,7 +56,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fecha_pactada);
 
-        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols(); // Procedimiento que pone dm
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
@@ -123,10 +126,12 @@ public class FechaPactadaActivity extends AppCompatActivity {
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                                 etfechapactada.setText(FormatoDiaMes(day) + "/" + FormatoDiaMes(month + 1) + "/" + year);
+                                VerificaFecha();
                             }
                         }, year, month, dayOfMonth);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
                 datePickerDialog.show();
+
             }
         });
 
@@ -165,6 +170,88 @@ public class FechaPactadaActivity extends AppCompatActivity {
         });
     }
 
+    private void VerificaFecha() {
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables=''";
+
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        String Mensaje = "";
+
+                        try {
+                            JSONObject jsonObject=new JSONObject(response);
+                            boolean success = jsonObject.getBoolean("success");
+                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                            Boolean condicion = false,error = false;
+                            if (success) {
+                                String Aux = response.replace("{", "|");
+                                Aux = Aux.replace("}", "|");
+                                Aux = Aux.replace("[", "|");
+                                Aux = Aux.replace("]", "|");
+                                Aux = Aux.replace("\"", "|");
+                                Aux = Aux.replace(",", " ");
+                                Aux = Aux.replace("|", "");
+                                Aux = Aux.replace(":", " ");
+                                String partes[] = Aux.split(" ");
+                                for (String palabras : partes) {
+                                    if (condicion) {
+                                        Mensaje += palabras + " ";
+                                    }
+                                    if (palabras.equals("ERROR")) {
+                                        condicion = true;
+                                        error = true;
+                                    }
+                                }
+                                if (error) {
+
+                                    AlertDialog.Builder dialog = new AlertDialog.Builder(
+                                            FechaPactadaActivity.this);
+                                    dialog.setMessage(Mensaje)
+                                            .setNegativeButton("Regresar", null)
+                                            .create()
+                                            .show();
+                                } else {
+
+                                    Productos producto = new Productos();
+                                    listaProductos.clear();
+
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+
+                                        jsonObject = jsonArray.getJSONObject(i);
+                                        // producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
+
+                                        listaProductos.add(producto);
+                                    }
+                                }
+                            }else {
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
+                                builder.setMessage("No se llego a encontrar el registro")
+                                        .setNegativeButton("Aceptar",null)
+                                        .create()
+                                        .show();
+                            }
+                        } catch (JSONException e) { e.printStackTrace(); }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+    }
+
     private String FormatoDiaMes(Integer valor) {
 
         String ValorString;
@@ -181,7 +268,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"'";
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -232,7 +320,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
                                             .setCancelable(false)
                                             .setMessage("Se ha generado de forma correcta el pedido N° " + Mensaje);
-                                    builder.setCancelable(false);
 
                                             builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                                                 @Override
@@ -276,4 +363,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
+
+
+
 }

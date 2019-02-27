@@ -49,7 +49,7 @@ public class PromocionesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_promociones);
 
-        listView = (ListView) findViewById(R.id.customListView);
+        listView = findViewById(R.id.customListView);
         listAdapter = new ListAdapter(this,products);
         id_pedido = getIntent().getStringExtra("id_pedido");
         Index = getIntent().getStringExtra("Index");
@@ -63,6 +63,8 @@ public class PromocionesActivity extends AppCompatActivity {
         cantidadlista =  getIntent().getStringExtra("cantidadlista");
         listaProductosPromociones = new ArrayList<>();
         btnregistrarpromociones = (Button) findViewById(R.id.btnRegistrarPromociones);
+        btnregistrarpromociones.setVisibility(View.INVISIBLE);
+
         btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,6 +175,7 @@ public class PromocionesActivity extends AppCompatActivity {
                             boolean success = jsonObject.getBoolean("success");
                             listaPromociones = new ArrayList<>();
                             listaPromocionesTipoT = new ArrayList<>();
+                            btnregistrarpromociones.setVisibility(View.VISIBLE);
 
                             if (success){
                                 JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
@@ -301,6 +304,7 @@ public class PromocionesActivity extends AppCompatActivity {
                             }else{
                                 AlertDialog.Builder build1 = new AlertDialog.Builder(PromocionesActivity.this);
                                 build1.setTitle("No se han encontrado Promociones")
+                                        .setCancelable(false)
                                         .setNegativeButton("Regresar",new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
@@ -314,8 +318,6 @@ public class PromocionesActivity extends AppCompatActivity {
                                                 intent.putExtra("Index",Index);
                                                 intent.putExtra("id_pedido",id_pedido);
                                                 intent.putExtra("validador","false");
-                                                //intent.putExtra("retorno", "retorno");
-
                                                 Bundle bundle = new Bundle();
                                                 Bundle bundle1 = new Bundle();
                                                 Bundle bundle2 = new Bundle();

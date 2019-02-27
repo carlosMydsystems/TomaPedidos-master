@@ -159,6 +159,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
                 btnregresarproducto.setVisibility(View.GONE);
                 progressDialog = new ProgressDialog(BuscarProductoActivity.this);
                 progressDialog.setMessage("Cargando...");
+                progressDialog.setCancelable(false);
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog.show();
 
@@ -176,6 +177,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
                     }
                     if( verficador){
                         AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
+                                .setCancelable(false)
                                 .setMessage("EL Producto "+listaproductoselegidos.get(posicion).getCodigo()+" ya se encuentra registrado");
                         builder.setCancelable(false)
                                 .setPositiveButton("Aceptar",null)
