@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -119,7 +121,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                                 etfechapactada.setText(FormatoDiaMes(day) + "/" + FormatoDiaMes(month + 1) + "/" + year);
-                                VerificaFecha(etfechapactada.getText().toString());
+                                VerificaFechaDuro(etfechapactada.getText().toString());
                             }
                         }, year, month, dayOfMonth);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -214,9 +216,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     listaProductos.clear();
 
                                     for (int i = 0; i < jsonArray.length(); i++) {
-
                                         jsonObject = jsonArray.getJSONObject(i);
-
                                         listaDiasFechasHabiles.add(jsonObject.getString("FECHAS"));
                                     }
                                 }
@@ -354,5 +354,27 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
+    }
+
+    public void VerificaFechaDuro(String fecha){
+
+        listaDiasFechasHabiles = new ArrayList<String>();
+
+        listaDiasFechasHabiles.add("");
+        listaDiasFechasHabiles.add("28/02/2019");
+        listaDiasFechasHabiles.add("01/03/2019");
+        listaDiasFechasHabiles.add("05/03/2019");
+        listaDiasFechasHabiles.add("10/03/2019");
+        listaDiasFechasHabiles.add("10/04/2019");
+
+        for (int i = 0; i<listaDiasFechasHabiles.size();i++){
+
+            if (fecha.equals(listaDiasFechasHabiles.get(i))){
+
+                Toast.makeText(this, "La fecha ingresada no es valida", Toast.LENGTH_SHORT).show();
+                etfechapactada.setText("");
+
+            }
+        }
     }
 }

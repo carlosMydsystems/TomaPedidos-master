@@ -91,6 +91,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
             public void onClick(View v) {
                 btndverificarproductoelegido.setVisibility(View.GONE);
                 progressDialog =  new ProgressDialog(ActualizarRegistroPedidosActivity.this);
+                progressDialog.setCancelable(false);
                 progressDialog.setMessage("... Por favor esperar");
                 progressDialog.show();
                 if (etcantprodelegida.getText()==null || etcantprodelegida.getText().toString().equals("")){
