@@ -22,6 +22,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
@@ -37,19 +38,21 @@ import java.util.ArrayList;
 public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
     TextView tvcodprodelegido, tvnomprodelegido, tvalmprodelegido, tvstockelegido, tvprecioelegido,
-             tvtotalelegido, tvpreciorealelegido,tvunidadelegida;
+             tvtotalelegido, tvpreciorealelegido,tvunidadelegida,tvpreciorealjsonelegido,tvtasaelegida;
     Productos productos;
     Button   btndverificarproductoelegido,btnactualizarproductoelegido;
     Clientes cliente;
     ArrayList<Productos> listaproductoselegidos,listaProductos;
     EditText etcantprodelegida;
     Double preciounitario,cantidad, Aux,precioDouble;
-    String url,almacen,position,tipoformapago,id_pedido,Index;
+    String url,almacen,position,tipoformapago,id_pedido,Index,Mensaje;
     ProgressDialog progressDialog;
     Productos producto;
     ArrayList<String> listaProducto;
     Usuario usuario;
-    BigDecimal redondeado;
+    BigDecimal redondeado,precioBigTotal;
+    ArrayList<ClienteSucursal> listaClienteSucursal;
+    Double Descuento;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +64,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         productos  = new Productos();
         listaProductos=new ArrayList<>();
 
-        // se recibe los datos de los productos y del que se han encontrado en el otro intent
-
+        listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
         productos = (Productos) getIntent().getSerializableExtra("Producto");
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
@@ -70,13 +72,15 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         position =  getIntent().getStringExtra("position");
         Index =  getIntent().getStringExtra("Index");
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
+
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         id_pedido = getIntent().getStringExtra("id_pedido");
         etcantprodelegida.setText(productos.getCantidad());
         etcantprodelegida.requestFocus();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-        // Se referencia a todas las partes del XML asociado al Activity
+        //Toast.makeText(ActualizarRegistroPedidosActivity.this, "sucursal "+listaClienteSucursal.get(0).getCodSucursal(), Toast.LENGTH_SHORT).show();
+        // Se referencia a todas las partes del XML asociado al ProveedorActivity
 
         tvcodprodelegido =  findViewById(R.id.tvCodProdElegido);
         tvnomprodelegido = findViewById(R.id.tvNomProdElegido);
@@ -85,6 +89,8 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         tvpreciorealelegido = findViewById(R.id.tvPrecioElegido);
         btnactualizarproductoelegido = findViewById(R.id.btnActualizarElegido);
         tvunidadelegida =  findViewById(R.id.tvUnidadElegida);
+        tvpreciorealjsonelegido = findViewById(R.id.tvPrecioRealJsonElegido);
+        tvtasaelegida = findViewById(R.id.tvTasaElegida);
 
         btndverificarproductoelegido.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,8 +142,18 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
                     } else {
 
+/*
+                        String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice()
+                                + "|" + etcantprodelegida.getText() + "|" + productos.getCodigo() + "|"
+                                + tvpreciorealjsonelegido.getText().toString().replace(",","") + "|"
+                                + tvtotalelegido.getText().toString().trim().replace(",","") + "||";
+*/
+
                         String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
-                                productos.getCodigo() + "|" + tvprecioelegido.getText().toString().replace(",","") + "|" + tvtotalelegido.getText().toString().trim().replace(",","") + "||";
+                                    productos.getCodigo() + "|" + tvpreciorealjsonelegido.getText().toString().replace(",", "") +
+                                    "|" + tvtasaelegida.getText().toString().trim() + "|" + productos.getNumPromocion().trim() + "|" + productos.getPresentacion() +
+                                    "|" + productos.getEquivalencia() + "|N";  // Tasas
+
                         ActualizarProducto(trama);
                         productos.setCantidad(etcantprodelegida.getText().toString());
                         preciounitario = Double.valueOf(tvprecioelegido.getText().toString().replace(",",""));
@@ -170,6 +186,9 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                         Bundle bundle3 = new Bundle();
                         bundle3.putSerializable("Almacen", almacen);
                         intent.putExtras(bundle3);
+                        Bundle bundle4 = new Bundle();
+                        bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                        intent.putExtras(bundle4);
                         startActivity(intent);
                         finish();
                     }
@@ -243,39 +262,126 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
                             if (success){
 
-                                for(int i=0;i<jsonArray.length();i++) {
-                                    producto = new Productos();
-                                    jsonObject = jsonArray.getJSONObject(i);
-                                    producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
-                                    producto.setMarca(jsonObject.getString("DES_MARCA"));
-                                    producto.setDescripcion(jsonObject.getString("DES_ARTICULO"));
+                                response = response.trim();
+                                Boolean condicion = false,error = false;
+
+                                String Aux = response.replace("{","|");
+                                Aux = Aux.replace("}","|");
+                                Aux = Aux.replace("[","|");
+                                Aux = Aux.replace("]","|");
+                                Aux = Aux.replace("\"","|");
+                                Aux = Aux.replace(","," ");
+                                Aux = Aux.replace("|","");
+                                Aux = Aux.replace(":"," ");
+                                String partes[] = Aux.split(" ");
+
+                                for (String palabras : partes){
+                                    if (condicion){ Mensaje += palabras+" "; }
+                                    if (palabras.equals("ERROR")){
+                                        condicion = true;
+                                        error = true;
+                                    }
+                                }
+                                if (error) {
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this);
+                                    builder.setTitle("Alerta !");
+                                    builder.setMessage(Mensaje);
+                                    builder.setNegativeButton("Aceptar",null);
+                                    builder.create().show();
+                                    //btnguardaryagregar.setVisibility(View.GONE);
+                                    //btnguardaryrevisar.setVisibility(View.GONE);
+                                    //btndverificarproducto.setVisibility(View.VISIBLE);
+
+                                    Mensaje = "";
+
+
+                                }else {
+
+
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        producto = new Productos();
+                                        jsonObject = jsonArray.getJSONObject(i);
+                                        producto.setCodigo(jsonObject.getString("COD_ARTICULO"));//
+                                        producto.setMarca(jsonObject.getString("DES_MARCA"));//
+                                        producto.setDescripcion(jsonObject.getString("DES_ARTICULO"));//
+                                        producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
+
+
+                                        precioDouble = Double.valueOf(jsonObject.getString("PRECIO_SOLES")) * (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO")) / 100);
+                                        BigDecimal precioBig = new BigDecimal(precioDouble.toString());
+                                        precioBig = precioBig.setScale(4, RoundingMode.HALF_EVEN);
+
+
+                                        BigDecimal precioBig1 = new BigDecimal(producto.getPrecio());
+                                        precioBig1 = precioBig1.setScale(4, RoundingMode.HALF_EVEN);
+
+                                        Descuento = (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO")) / 100);
+                                        precioDouble = Double.valueOf(precioBig1.toString()) * Descuento * Double.valueOf(etcantprodelegida.getText().toString());
+                                        precioBigTotal = new BigDecimal(precioDouble.toString());
+                                        precioBigTotal = precioBigTotal.setScale(2, RoundingMode.HALF_EVEN);
+/*
+                                    Toast.makeText(ActualizarRegistroPedidosActivity.this, "precioBig : " + precioBig, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ActualizarRegistroPedidosActivity.this, "precioBig1 : " + precioBig1, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ActualizarRegistroPedidosActivity.this, "Descuento : " + Descuento, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ActualizarRegistroPedidosActivity.this, "precioDouble : " + precioDouble, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ActualizarRegistroPedidosActivity.this, "precioBigTotal : " + precioBigTotal, Toast.LENGTH_SHORT).show();
+*/
+                                        tvprecioelegido.setText(precioBig.toString());
+                                        tvpreciorealjsonelegido.setText(jsonObject.getString("PRECIO_SOLES"));
+                                        precioDouble = Double.valueOf(precioBig.toString()) * Double.valueOf(etcantprodelegida.getText().toString());
+                                        producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
+                                        producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
+                                        producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
+                                        producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
+                                        tvtasaelegida.setText(jsonObject.getString("TASA_DESCUENTO"));
+                                        producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
+                                        producto.setAlmacen(almacen);
+
+//--------------------------------------------------------------------------------
+/*
                                     producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
-                                    precioDouble = Double.valueOf(jsonObject.getString("PRECIO_SOLES"))* (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO"))/100  );
-                                    BigDecimal precioBig = new BigDecimal(precioDouble.toString());
-                                    precioBig = precioBig.setScale(2,RoundingMode.HALF_UP);
-                                    tvprecioelegido.setText(precioBig.toString());
-                                    precioDouble = Double.valueOf(precioBig.toString())*Double.valueOf(etcantprodelegida.getText().toString());
+
+                                    BigDecimal precioBig1 = new BigDecimal(producto.getPrecio());
+                                    precioBig1 = precioBig1.setScale(2,RoundingMode.HALF_EVEN);
+                                    Descuento = (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO"))/100  );
+                                    precioDouble = Double.valueOf(precioBig1.toString()) * Descuento *  Double.valueOf(etcantidadelegida.getText().toString());
+                                    precioBigTotal = new BigDecimal(precioDouble.toString());
+                                    precioBigTotal = precioBigTotal.setScale(2,RoundingMode.HALF_EVEN);
+                                    tvtotal.setText(""+precioBigTotal);
+                                    precioUnitarioDouble = Double.valueOf(producto.getPrecio()) * Descuento;
+                                    precioBigUnitario = new BigDecimal(precioUnitarioDouble.toString());
+                                    precioBigUnitario = precioBigUnitario.setScale(4,RoundingMode.HALF_EVEN);
+                                    tvprecio.setText(precioBigUnitario.toString());
+                                    tvpreciorealjson.setText(jsonObject.getString("PRECIO_SOLES"));
                                     producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
                                     producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
                                     producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
                                     producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
                                     producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
                                     producto.setAlmacen(almacen);
+                                    tvtasa.setText(producto.getTasaDescuento());
 
+*/
 
-                                    if (etcantprodelegida.getText().toString().equals("")){
+                                        if (etcantprodelegida.getText().toString().equals("")) {
 
+                                        } else {
 
-                                    }else {
-
-                                        BigDecimal precioTotalBig = new BigDecimal(precioDouble.toString());
-                                        precioTotalBig = precioTotalBig.setScale(2,RoundingMode.HALF_UP);
-                                        tvunidadelegida.setText(producto.getUnidad().toUpperCase());
-                                        Double Aux = Double.valueOf(producto.getStock());
-                                        tvstockelegido.setText(formateador.format((double)Aux) + " ");
-                                        tvtotalelegido.setText(precioTotalBig.toString());
+                                            BigDecimal precioTotalBig = new BigDecimal(precioDouble.toString());
+                                            precioTotalBig = precioTotalBig.setScale(2, RoundingMode.HALF_UP);
+                                            tvunidadelegida.setText(producto.getUnidad().toUpperCase());
+                                            Double Aux1 = Double.valueOf(producto.getStock());
+                                            tvstockelegido.setText(formateador.format((double) Aux1) + " ");
+                                            tvtotalelegido.setText(precioTotalBig.toString());
+                                        }
                                     }
+
+
                                 }
+
+                                
+
                             }else {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this);
@@ -330,6 +436,4 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
-
-
 }

@@ -13,7 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.FormaPago;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
@@ -30,6 +32,8 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
     ArrayList<FormaPago> listaFormasPago;
     Button btnretornolistadoalmacen;
     String indice;
+    ArrayList<ClienteSucursal> listaClienteSucursal;
+    static ArrayList<ClienteSucursal> listaClienteSucursalBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +43,17 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
         cliente  = new Clientes();
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
+        listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
+
+        if (listaClienteSucursal==null){
+
+            listaClienteSucursal = listaClienteSucursalBack;
+
+        }
         indice = getIntent().getStringExtra("Ind");
         //listaFormasPago = (ArrayList<FormaPago>) getIntent().getSerializableExtra("ListaFomasPago");
 
         // se hace la insercion del codigo en duro
-
 
         listaalmacen =  new ArrayList<>();
         listaalmacen.add("T02");
@@ -65,13 +75,15 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent =  new Intent(ListadoAlmacenActivity.this,MostrarClienteActivity.class);
-
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle);
                 Bundle bundle1 = new Bundle();
                 bundle1.putSerializable("Usuario",usuario);
                 intent.putExtras(bundle1);
+                Bundle bundle2 = new Bundle();
+                bundle2.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                intent.putExtras(bundle2);
                 startActivity(intent);
                 finish();
             }
@@ -93,11 +105,9 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
                 Bundle bundle1 = new Bundle();
                 bundle1.putSerializable("Usuario",usuario);
                 intent.putExtras(bundle1);
-                /*
                 Bundle bundle2 = new Bundle();
-                bundle2.putSerializable("listaFormasPago",listaFormasPago);
+                bundle2.putSerializable("listaClienteSucursal",listaClienteSucursal);
                 intent.putExtras(bundle2);
-                */
                 startActivity(intent);
                 finish();
             }
@@ -128,13 +138,15 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
 
             TextView text = (TextView) mView.findViewById(R.id.textView);
 
-            if(items.get(position) != null)
+            if(items.get(position) != null )
             {
+
                 text.setTextColor(Color.BLACK);
                 text.setText(items.get(position));
                 text.setTextSize(15);
                 int color = Color.argb(10, 0, 20, 255);
                 text.setBackgroundColor(color);
+
             }
 
             return mView;

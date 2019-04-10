@@ -15,4 +15,8 @@
         <item>Boleta</item>
         <item>Factura</item>
     </string-array>
+    <string-array name="sucursal">
+        <item>Principal</item>
+        <item>Sucursal</item>
+    </string-array>
 </resources>

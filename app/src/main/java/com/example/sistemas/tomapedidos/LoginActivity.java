@@ -1,5 +1,6 @@
 package com.example.sistemas.tomapedidos;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,8 +28,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText etusuario,etclave;
     Button btnlogeo;
     Usuario usuario;
-    String url;
-
+    String url,Mensaje="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,22 +55,59 @@ public class LoginActivity extends AppCompatActivity {
 
     public void verificarUsuario(String Codigo_usuario,String Contraseña_usuario){
 
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+        progressDialog.setMessage("... Validando");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario+"|"+Contraseña_usuario+"'"; // se debe actalizar la URL
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|358192060106435'"; // se debe actalizar la URL
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response1) {
+
+                        progressDialog.dismiss();
                         try {
                             JSONObject jsonObject=new JSONObject(response1);
                             boolean success = jsonObject.getBoolean("success");
-                            if (success){
-                                JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                            Boolean condicion = false,error = false;
 
-                                for(int i=0;i<jsonArray.length();i++) {
+                            if (success) {
+
+                                String Aux = response1.replace("{","|");
+                                Aux = Aux.replace("}","|");
+                                Aux = Aux.replace("[","|");
+                                Aux = Aux.replace("]","|");
+                                Aux = Aux.replace("\"","|");
+                                Aux = Aux.replace(","," ");
+                                Aux = Aux.replace("|","");
+                                Aux = Aux.replace(":"," ");
+                                String partes[] = Aux.split(" ");
+
+                                for (String palabras : partes){
+                                    if (condicion){ Mensaje += palabras+" "; }
+                                    if (palabras.equals("ERROR")){
+                                        condicion = true;
+                                        error = true;
+                                    }
+                                }
+                                if (error) {
+
+                                    android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(
+                                            LoginActivity.this);
+                                    dialog.setMessage(Mensaje)
+                                            .setNegativeButton("Regresar",null)
+                                            .create()
+                                            .show();
+                                }else {
+
+                                for (int i = 0; i < jsonArray.length(); i++) {
                                     usuario = new Usuario();
                                     jsonObject = jsonArray.getJSONObject(i);
                                     usuario.setCodAlmacen(jsonObject.getString("COD_ALMACEN"));
@@ -79,14 +118,18 @@ public class LoginActivity extends AppCompatActivity {
                                     usuario.setFechaActual(jsonObject.getString("FECHA_ACTUAL"));
                                     usuario.setTipoCambio(jsonObject.getString("TIPO_CAMBIO"));
                                     usuario.setLugar("LIMA"); // Se usa en la busqueda de producto
-                                    usuario.setUser(etusuario.getText().toString());
+                                    usuario.setUser(etusuario.getText().toString().toUpperCase().trim());
                                 }
-                                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("userId", etusuario.getText().toString());
                                 Bundle bundle = new Bundle();
-                                bundle.putSerializable("Usuario",usuario);
+                                bundle.putSerializable("Usuario", usuario);
                                 intent.putExtras(bundle);
                                 startActivity(intent);
                                 finish();
+                            }
+
                             }else{
                                 AlertDialog.Builder build1 = new AlertDialog.Builder(LoginActivity.this);
                                 build1.setTitle("Usuario  o Clave incorrecta")

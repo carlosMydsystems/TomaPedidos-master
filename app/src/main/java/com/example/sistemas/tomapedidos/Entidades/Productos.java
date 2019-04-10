@@ -11,7 +11,7 @@ public class Productos implements Serializable {
     private String precio;
     private String cantidad;
     private String tasaDescuento;
-    private String idProducto;
+    private String idPedido;
     private String marca;
     private String unidad;
     private String estado;
@@ -23,9 +23,14 @@ public class Productos implements Serializable {
     private Integer indice;
     private String presentacion;
     private String equivalencia;
+    private String tipoTupla;
+    private String codigoSucursalCliente;
 
-
-    public Productos(String descripcion, String nombre, String codigo, String stock, String precio, String cantidad, String tasaDescuento, String idProducto, String marca, String unidad, String estado, String precioAcumulado, String almacen, String observacion, String distrito, String numPromocion, Integer indice, String presentacion, String equivalencia) {
+    public Productos(String descripcion, String nombre, String codigo, String stock, String precio,
+                     String cantidad, String tasaDescuento, String idPedido, String marca, String unidad,
+                     String estado, String precioAcumulado, String almacen, String observacion, String distrito,
+                     String numPromocion, Integer indice, String presentacion, String equivalencia,
+                     String tipoTupla, String codigoSucursalCliente) {
         this.descripcion = descripcion;
         this.nombre = nombre;
         this.codigo = codigo;
@@ -33,7 +38,7 @@ public class Productos implements Serializable {
         this.precio = precio;
         this.cantidad = cantidad;
         this.tasaDescuento = tasaDescuento;
-        this.idProducto = idProducto;
+        this.idPedido = idPedido;
         this.marca = marca;
         this.unidad = unidad;
         this.estado = estado;
@@ -45,11 +50,29 @@ public class Productos implements Serializable {
         this.indice = indice;
         this.presentacion = presentacion;
         this.equivalencia = equivalencia;
+        this.tipoTupla = tipoTupla;
+        this.codigoSucursalCliente = codigoSucursalCliente;
     }
 
     public Productos() {
+
     }
 
+    public String getCodigoSucursalCliente() {
+        return codigoSucursalCliente;
+    }
+
+    public void setCodigoSucursalCliente(String codigoSucursalCliente) {
+        this.codigoSucursalCliente = codigoSucursalCliente;
+    }
+
+    public String getTipoTupla() {
+        return tipoTupla;
+    }
+
+    public void setTipoTupla(String tipoTupla) {
+        this.tipoTupla = tipoTupla;
+    }
 
     public String getEquivalencia() {
         return equivalencia;
@@ -113,12 +136,12 @@ public class Productos implements Serializable {
         this.estado = estado;
     }
 
-    public String getIdProducto() {
-        return idProducto;
+    public String getIdPedido() {
+        return idPedido;
     }
 
-    public void setIdProducto(String idProducto) {
-        this.idProducto = idProducto;
+    public void setIdPedido(String idPedido) {
+        this.idPedido = idPedido;
     }
 
     public String getMarca() {

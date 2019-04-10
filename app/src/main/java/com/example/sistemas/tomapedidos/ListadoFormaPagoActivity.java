@@ -1,5 +1,6 @@
 package com.example.sistemas.tomapedidos;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,6 +23,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
@@ -41,7 +43,8 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
     ArrayList<Productos> listaproductoselegidos;
     Usuario usuario;
     Button btnregresarformalistapago;
-    String indice="0",validador = "true",id_pedido;
+    String validador = "true",id_pedido;
+    ArrayList<ClienteSucursal> listaClienteSucursal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
         almacen = getIntent().getStringExtra("Almacen") ;
+        listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
         listatipopago =  new ArrayList<>();
         listaAux = new ArrayList<>();
         String fechaRegistro ;
@@ -69,6 +73,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
         // Donde se va a colocar el nuevo id del pedido
 
+
         ObtenerId();
 
         // id segun el antiguo metodo
@@ -77,18 +82,19 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
-
     }
 
-    private void Consultartipopago(String COD_FPAGO_LIMITE) {
+    private void Consultartipopago(String COD_FPAGO_LIMITE,final ProgressDialog progressdialog) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_FPAGO&variables='"+COD_FPAGO_LIMITE+"'";
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_FPAGO&variables='"+COD_FPAGO_LIMITE+"'";
         listatipopago = new ArrayList<>();
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        progressdialog.dismiss();
                         try {
                             JSONObject jsonObject=new JSONObject(response);
                             boolean success = jsonObject.getBoolean("success");
@@ -110,7 +116,6 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
                                         Intent intent =  new Intent(ListadoFormaPagoActivity.this,BuscarProductoActivity.class);
                                         intent.putExtra("Almacen",almacen);
-                                        //intent.putExtra("indice",indice);
                                         intent.putExtra("Index","1");
                                         intent.putExtra("validador",validador);
                                         intent.putExtra("id_pedido",id_pedido);
@@ -124,10 +129,11 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                                         Bundle bundle2 = new Bundle();
                                         bundle2.putSerializable("Usuario",usuario);
                                         intent.putExtras(bundle2);
+                                        Bundle bundle3 = new Bundle();
+                                        bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                                        intent.putExtras(bundle3);
                                         startActivity(intent);
                                         finish();
-
-
                                     }
                                 });
                             }else {
@@ -201,6 +207,11 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
     private void ObtenerId() {
 
+        final ProgressDialog progressDialog = new ProgressDialog(ListadoFormaPagoActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("... Cargando");
+        progressDialog.show();
+
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=" +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_COR_PEDIDO_MOVIL&variables=%27PWE%27,%27888%27,%27TH000%27";
@@ -223,12 +234,15 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                                 Bundle bundle2 = new Bundle();
                                 bundle2.putSerializable("Usuario",usuario);
                                 intent.putExtras(bundle2);
+                                Bundle bundle3 = new Bundle();
+                                bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                                intent.putExtras(bundle3);
                                 startActivity(intent);
                                 finish();
                             }
                         });
 
-                        Consultartipopago(cliente.getCodFPago());
+                        Consultartipopago(cliente.getCodFPago(),progressDialog);
                         lvtipopago = findViewById(R.id.lvtipopago);
 
                     }

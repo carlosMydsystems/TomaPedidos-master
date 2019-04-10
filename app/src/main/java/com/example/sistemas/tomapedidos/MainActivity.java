@@ -22,9 +22,14 @@ import com.example.sistemas.tomapedidos.Entidades.Usuario;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    Button btnprimero,btnsegundo,btntercero;
+    Button btnprimero,btnsegundo,btntercero,btnconsultas;
     TextView tvusuario;
     Usuario usuario;
+    Bundle bundle;
+    String userId;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +40,16 @@ public class MainActivity extends AppCompatActivity
         btnsegundo = findViewById(R.id.btnsegundo);
         btntercero =  findViewById(R.id.btntercero);
         tvusuario = findViewById(R.id.tvUsuario);
+        btnconsultas = findViewById(R.id.btnConsultas);
 
         //recibe el bundle con los datos del usuario
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
+
+
         String cadenaAux = usuario.getCodVendedor()+ " - "+ usuario.getNombre();
         tvusuario.setText(cadenaAux);
-
+        userId = getIntent().getStringExtra("userId");
+        bundle = new Bundle();
 
         // mostrar el codigo del vendedor
 
@@ -48,7 +57,19 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,BusquedaClienteActivity.class);
-                Bundle bundle = new Bundle();
+
+                bundle.putSerializable("Usuario",usuario);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        btnsegundo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this,DetallePedidoActivity.class);
                 bundle.putSerializable("Usuario",usuario);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -60,6 +81,20 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
 
                 Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+        });
+
+        btnconsultas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(MainActivity.this,ConsultasListadoActivity.class);
+
+                bundle.putSerializable("Usuario",usuario);
+                intent.putExtras(bundle);
                 startActivity(intent);
                 finish();
 

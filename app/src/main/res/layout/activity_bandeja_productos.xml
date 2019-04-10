@@ -24,7 +24,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/imgbtnRegresaBandejaPedidos"
+        android:id="@+id/imgPromocionElegida"
         android:layout_width="64dp"
         android:layout_height="43dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,18 +33,18 @@
 
     <ListView
         android:id="@+id/lvbandejaProductos"
-        android:layout_width="368dp"
-        android:layout_height="437dp"
+        android:layout_width="0dp"
+        android:layout_height="397dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvtitulodinamico" />
+        app:layout_constraintTop_toBottomOf="@+id/tvtitulodinamicoPedidos" />
 
     <TextView
-        android:id="@+id/tvtitulodinamico"
+        android:id="@+id/tvtitulodinamicoPedidos"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -57,7 +57,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgbtnRegresaBandejaPedidos" />
+        app:layout_constraintTop_toBottomOf="@+id/imgPromocionElegida" />
 
     <Button
         android:id="@+id/btnproducto"
@@ -110,4 +110,5 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lvbandejaProductos" />
+
 </android.support.constraint.ConstraintLayout>

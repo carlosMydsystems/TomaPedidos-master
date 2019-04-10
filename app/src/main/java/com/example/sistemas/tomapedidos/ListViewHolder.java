@@ -13,4 +13,12 @@ public class ListViewHolder {
     TextView tvidpromociones;
     TextView tvCodArticulo;
     TextView tvunidadpromocion;
+    TextView tvtasadescuento;
+    TextView tvprecio;
+    TextView tvPresentacionSelect;
+    TextView tvEquivalencia;
+    TextView tvPrecioUni;
+    TextView tvObservacionSeleccion;
+    TextView tvStock;
+
 }

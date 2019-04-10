@@ -1,18 +1,22 @@
 package com.example.sistemas.tomapedidos;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
+import android.app.TaskStackBuilder;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -21,8 +25,12 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
+import com.example.sistemas.tomapedidos.Entidades.DiasPactados;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
+import com.example.sistemas.tomapedidos.Entidades.Proveedor;
+import com.example.sistemas.tomapedidos.Entidades.SucursalProveedor;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,18 +44,28 @@ import java.util.Calendar;
 
 public class FechaPactadaActivity extends AppCompatActivity {
 
-    Button btnregistrafechapactada, btnregresarfechapactada;
-    EditText etfechapactada;
-    ArrayList<Productos> listaproductoselegidos, listaProductos;
+    Button btnregistrafechapactada, btnfechapactada;
+    ArrayList<Productos> listaproductoselegidos;
     Clientes cliente;
     Usuario usuario;
-    String almacen,tipoformapago,Ind,id_pedido,validador,retorno,Index,precio,cantidad,url;
-    TextView tvCantidad,tvPrecio;
+    String almacen,tipoformapago,Ind,id_pedido,validador,retorno,Index,precio,cantidad,url,SucursalProveedor,
+            fechahabil,codProveedor,tvnombreproveedor,tvdireccionproveedor;
+    TextView tvCantidad,tvPrecio,tv22;
     BigDecimal redondeado;
     DatePickerDialog datePickerDialog;
     int year,month,dayOfMonth;
     Calendar calendar;
-    ArrayList<String> listaDiasFechasHabiles;
+    DiasPactados diasPactados;
+    ArrayList<DiasPactados> listadiaspactados;
+    ArrayList<String> listadiasvalidos,listaSucursalesProveedorStr ;
+    Spinner spfechashabiles;
+    ArrayList<ClienteSucursal> listaClienteSucursal;
+    EditText etComentario;
+    ArrayList<Proveedor> listaProveedores;
+    ArrayList<SucursalProveedor> listaSucursalesProveedor;
+    ImageButton ibRetornoFechaPactadaProveedores;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +78,20 @@ public class FechaPactadaActivity extends AppCompatActivity {
         final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
 
         btnregistrafechapactada =  findViewById(R.id.btnRegistrarFechaPactada);
-        btnregresarfechapactada = findViewById(R.id.btnRegresarFechaPactada);
-        etfechapactada = findViewById(R.id.etFechaPactada);
+        ibRetornoFechaPactadaProveedores = findViewById(R.id.ibRetornoFechaPactadaProveedores);
+
         tvCantidad = findViewById(R.id.tvNumeroItem);
         tvPrecio = findViewById(R.id.tvMontoTotal);
-        listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
+        btnfechapactada = findViewById(R.id.btnfechaPactada);
+        spfechashabiles = findViewById(R.id.spFechasHabiles);
+        etComentario = findViewById(R.id.etComentario);
+        tv22 = findViewById(R.id.textView22);
+
+        listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos"); //
+        listaSucursalesProveedor = (ArrayList<SucursalProveedor>)getIntent().getSerializableExtra("listaSucursalesProveedor");
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
+        listaProveedores = (ArrayList<Proveedor>)getIntent().getSerializableExtra("listaProveedores");
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("indice");
@@ -76,39 +101,60 @@ public class FechaPactadaActivity extends AppCompatActivity {
         Index = getIntent().getStringExtra("Index");
         cantidad = getIntent().getStringExtra("Cantidad");
         precio = getIntent().getStringExtra("Precio");
+        tvnombreproveedor = getIntent().getStringExtra("tvnombreproveedor");
+        tvdireccionproveedor = getIntent().getStringExtra("tvdireccionproveedor");
+        codProveedor = getIntent().getStringExtra("codProveedor");
+        SucursalProveedor = getIntent().getStringExtra("SucursalProveedor");
+        listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
+        listaSucursalesProveedorStr  = (ArrayList<String>) getIntent().getSerializableExtra("listaSucursalesProveedorStr");
+
         tvCantidad.setText(cantidad);
         redondeado = new BigDecimal(precio).setScale(2, RoundingMode.HALF_EVEN);
         tvPrecio.setText("S/ "+formateador.format(redondeado));
 
-        btnregresarfechapactada.setOnClickListener(new View.OnClickListener() {
+        ibRetornoFechaPactadaProveedores.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(FechaPactadaActivity.this,bandejaProductosActivity.class);
-                intent.putExtra("TipoPago",tipoformapago);
-                intent.putExtra("indice",Ind);
-                intent.putExtra("Index",Index);
-                intent.putExtra("Cantidad",cantidad);
-                intent.putExtra("Precio",precio);
-                intent.putExtra("cantidadlista",listaproductoselegidos.size()+"");
-                intent.putExtra("Almacen",almacen);
-                intent.putExtra("id_pedido",id_pedido);
-                intent.putExtra("validador","false");
+                Intent intent = new Intent(FechaPactadaActivity.this, ProveedorActivity.class);
+                intent.putExtra("TipoPago", tipoformapago);
+                intent.putExtra("validador", "true");
+                intent.putExtra("Index", Index);
+                intent.putExtra("Precio", precio);
+                intent.putExtra("validadorRetornoFechaPactadaProveedor", "false");
+                intent.putExtra("id_pedido", id_pedido);
+                intent.putExtra("Almacen", almacen);
+                intent.putExtra("Cantidad", cantidad);
+                intent.putExtra("tvnombreproveedor", tvnombreproveedor);
+                intent.putExtra("tvdireccionproveedor", tvdireccionproveedor);
                 Bundle bundle = new Bundle();
-                Bundle bundle2 = new Bundle();
-                Bundle bundle3 = new Bundle();
-                bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                bundle2.putSerializable("Cliente",cliente);
-                bundle3.putSerializable("Usuario",usuario);
+                bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
                 intent.putExtras(bundle);
+                Bundle bundle1 = new Bundle();
+                bundle1.putSerializable("Cliente", cliente);
+                intent.putExtras(bundle1);
+                Bundle bundle2 = new Bundle();
+                bundle2.putSerializable("Usuario", usuario);
                 intent.putExtras(bundle2);
+                Bundle bundle3 = new Bundle();
+                bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
                 intent.putExtras(bundle3);
+                Bundle bundle4 = new Bundle();
+                bundle4.putSerializable("listaSucursalesProveedorStr",listaSucursalesProveedorStr);
+                intent.putExtras(bundle4);
+                Bundle bundle5 = new Bundle();
+                bundle5.putSerializable("listaSucursalesProveedor",listaSucursalesProveedor);
+                intent.putExtras(bundle5);
+                Bundle bundle6 = new Bundle();
+                bundle6.putSerializable("listaProveedores",listaProveedores);
+                intent.putExtras(bundle6);
                 startActivity(intent);
                 finish();
             }
         });
 
-        etfechapactada.setOnClickListener(new View.OnClickListener() {
+
+        btnfechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -120,26 +166,40 @@ public class FechaPactadaActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                                etfechapactada.setText(FormatoDiaMes(day) + "/" + FormatoDiaMes(month + 1) + "/" + year);
-                                VerificaFechaDuro(etfechapactada.getText().toString());
+                                String trama = id_pedido+"|"+FormatoDiaMes(day) + "/" + FormatoDiaMes(month + 1) + "/" + year;
+                                VerificaFecha(trama);
                             }
                         }, year, month, dayOfMonth);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
                 datePickerDialog.show();
-
             }
         });
 
         btnregistrafechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String moneda;
+                if (usuario.getMoneda().equals("1")){
+                    moneda = " S/ ";
+                }else{
+                    moneda = " USD ";
+                }
+
+                String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
+                        getCodVendedor() + "|"+tipoformapago+"|"+cliente.getTipoDocumento()
+                        +"|"+usuario.getMoneda()+"|"+usuario.getUser().trim()+"|"+usuario.getCodTienda()+"|"+
+                        listaClienteSucursal.get(0).getCodSucursal()+"|"+codProveedor+"|"+
+                        listaSucursalesProveedor.get(0).getCodigoSucursalProveedor()+"|"+fechahabil+"|"+etComentario.getText();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
                         .setTitle("Fin del Pedido")
-                        .setMessage("Codigo \t\t: " + cliente.getCodCliente() + "\n" +
-                                    "Nombre \t: " + cliente.getNombre() + "\n" +
+                        .setMessage("Cliente \t: " + cliente.getCodCliente() + " - " + cliente.getNombre() +  "\n" +
+
+                                    "Transportista \t: " + listaProveedores.get(0).getNombreProveedor() + "\n" +
+                                    "Suc Transportista\t: "  + listaSucursalesProveedor.get(0).getNombreSucursalProveedor()+"\n" +
+                                    "F.Pactada \t: " + fechahabil + "\n" +
                                     "Almacen \t: " + almacen + "\n" +
-                                    "Importe \t: " + redondeado + "\n" +
+                                    "Importe \t: "+ moneda + redondeado + "\n" +
                                     "Items  \t\t\t: " + cantidad)
                         .setCancelable(false);
 
@@ -154,7 +214,20 @@ public class FechaPactadaActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         int aux = 0;
                         if (aux==0){
-                            RegistrarPedido(id_pedido);
+
+                            String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
+                                    getCodVendedor() + "|"+tipoformapago+"|"+cliente.getTipoDocumento()
+                                    +"|"+usuario.getMoneda()+"|"+usuario.getUser().trim()+"|"+usuario.getCodTienda()+"|"+
+                                    listaClienteSucursal.get(0).getCodSucursal()+"|"+codProveedor+"|"+
+                                    listaSucursalesProveedor.get(0).getCodigoSucursalProveedor()+"|"+fechahabil+"|"+etComentario.getText().toString().replace(" ","%20");
+/*
+                            String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
+                                    getCodVendedor() + "|"+tipoformapago+"|"+cliente.getTipoDocumento()
+                                    +"|"+usuario.getMoneda()+"|"+usuario.getUser().trim()+"|"+usuario.getCodTienda()+"||"+codProveedor+"|"+SucursalProveedor+"|"+fechahabil+"|";
+
+*/
+                            ActualizarProducto(Trama);
+
                             aux++;
                         }
                     }
@@ -167,10 +240,15 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
     private void VerificaFecha(String trama) {
 
+        final ProgressDialog progressDialog = new ProgressDialog(FechaPactadaActivity.this);
+        progressDialog.setMessage("... Cargando");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+        listadiaspactados = new ArrayList<DiasPactados>();
 
         url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables='"+trama+"'";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_VAL_FECHA_PACTADA&variables=%27"+trama+"%27";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -212,13 +290,30 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                             .show();
                                 } else {
 
-                                    Productos producto = new Productos();
-                                    listaProductos.clear();
+
+                                    listadiaspactados.clear();
 
                                     for (int i = 0; i < jsonArray.length(); i++) {
+
+                                        diasPactados = new DiasPactados();
                                         jsonObject = jsonArray.getJSONObject(i);
-                                        listaDiasFechasHabiles.add(jsonObject.getString("FECHAS"));
+
+                                            diasPactados.setDia1(jsonObject.getString("DIA1"));
+                                            diasPactados.setDia2(jsonObject.getString("DIA2"));
+                                            diasPactados.setDia3(jsonObject.getString("DIA3"));
+                                            diasPactados.setDia4(jsonObject.getString("DIA4"));
+                                            diasPactados.setDia5(jsonObject.getString("DIA5"));
+                                            diasPactados.setDia6(jsonObject.getString("DIA6"));
+                                            diasPactados.setDia7(jsonObject.getString("DIA7"));
+                                            diasPactados.setDia8(jsonObject.getString("DIA8"));
+                                            diasPactados.setDia9(jsonObject.getString("DIA9"));
+                                            diasPactados.setDia10(jsonObject.getString("DIA10"));
+                                            listadiaspactados.add(diasPactados);
                                     }
+                                    progressDialog.dismiss();
+
+                                    verificaPesosporfecha(listadiaspactados);
+
                                 }
                             }else {
 
@@ -244,6 +339,55 @@ public class FechaPactadaActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    private void verificaPesosporfecha(ArrayList<DiasPactados> listadiaspactados) {
+
+        listadiasvalidos = new ArrayList<>();
+
+        Double fecha1= Double.valueOf(listadiaspactados.get(1).getDia1()) - Double.valueOf(listadiaspactados.get(2).getDia1());
+        Double fecha2= Double.valueOf(listadiaspactados.get(1).getDia2()) - Double.valueOf(listadiaspactados.get(2).getDia2());
+        Double fecha3= Double.valueOf(listadiaspactados.get(1).getDia3()) - Double.valueOf(listadiaspactados.get(2).getDia3());
+        Double fecha4= Double.valueOf(listadiaspactados.get(1).getDia4()) - Double.valueOf(listadiaspactados.get(2).getDia4());
+        Double fecha5= Double.valueOf(listadiaspactados.get(1).getDia5()) - Double.valueOf(listadiaspactados.get(2).getDia5());
+        Double fecha6= Double.valueOf(listadiaspactados.get(1).getDia6()) - Double.valueOf(listadiaspactados.get(2).getDia6());
+        Double fecha7= Double.valueOf(listadiaspactados.get(1).getDia7()) - Double.valueOf(listadiaspactados.get(2).getDia7());
+        Double fecha8= Double.valueOf(listadiaspactados.get(1).getDia8()) - Double.valueOf(listadiaspactados.get(2).getDia8());
+        Double fecha9= Double.valueOf(listadiaspactados.get(1).getDia9()) - Double.valueOf(listadiaspactados.get(2).getDia9());
+        Double fecha10= Double.valueOf(listadiaspactados.get(1).getDia10()) - Double.valueOf(listadiaspactados.get(2).getDia10());
+
+        if (fecha1>0){
+            listadiasvalidos.add(listadiaspactados.get(0).getDia1());
+        }
+        if (fecha2>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia2());}
+        if (fecha3>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia3());}
+        if (fecha4>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia4());}
+        if (fecha5>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia5());}
+        if (fecha6>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia6());}
+        if (fecha7>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia7());}
+        if (fecha8>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia8());}
+        if (fecha9>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia9());}
+        if (fecha10>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia10());}
+
+
+        spfechashabiles.setAdapter(new SpinnerAdapter(getApplicationContext(),listadiasvalidos));
+        spfechashabiles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
+                fechahabil = listadiasvalidos.get(position);
+                tv22.setVisibility(View.VISIBLE);
+                etComentario.setVisibility(View.VISIBLE);
+                btnregistrafechapactada.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
     private String FormatoDiaMes(Integer valor) {
 
         String ValorString;
@@ -257,6 +401,12 @@ public class FechaPactadaActivity extends AppCompatActivity {
     }
 
     private void RegistrarPedido(String id_pedido) {
+
+
+        final ProgressDialog progressDialog = new ProgressDialog(FechaPactadaActivity.this);
+        progressDialog.setMessage("... Enviando");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
@@ -274,6 +424,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
                             boolean success = jsonObject.getBoolean("success");
                             JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
                             Boolean condicion = false,error = false;
+
+                            progressDialog.dismiss();
 
                             if (success){
 
@@ -331,6 +483,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                             builder.create()
                                                     .show();
                                 }
+
                             }else {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
@@ -356,25 +509,47 @@ public class FechaPactadaActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void VerificaFechaDuro(String fecha){
-
-        listaDiasFechasHabiles = new ArrayList<String>();
-
-        listaDiasFechasHabiles.add("");
-        listaDiasFechasHabiles.add("28/02/2019");
-        listaDiasFechasHabiles.add("01/03/2019");
-        listaDiasFechasHabiles.add("05/03/2019");
-        listaDiasFechasHabiles.add("10/03/2019");
-        listaDiasFechasHabiles.add("10/04/2019");
+    public void VerificaFechaDuro(String fecha, ArrayList<String> listaDiasFechasHabiles){
 
         for (int i = 0; i<listaDiasFechasHabiles.size();i++){
 
             if (fecha.equals(listaDiasFechasHabiles.get(i))){
 
                 Toast.makeText(this, "La fecha ingresada no es valida", Toast.LENGTH_SHORT).show();
-                etfechapactada.setText("");
 
             }
         }
     }
+
+    private void ActualizarProducto(String trama) {
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        if (response.equals("OK")){
+
+                            RegistrarPedido(id_pedido);
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+    }
+
+
 }

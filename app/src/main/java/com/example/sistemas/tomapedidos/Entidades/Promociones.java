@@ -27,6 +27,13 @@ public class Promociones implements Serializable {
     private String valido;
     private String equivalencia;
 
+
+
+
+
+
+
+
     public Promociones(String numeroPromocion, String codArticulo, String descripcionPromocion,
                        String marcaPromocion, String unidad, String cantidadPedida, String flgGraba,
                        String tasaDescuento, String codPresentacion, String precioSoles,

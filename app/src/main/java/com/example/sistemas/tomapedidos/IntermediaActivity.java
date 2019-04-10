@@ -12,6 +12,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
@@ -21,8 +22,7 @@ import java.util.ArrayList;
 
 public class IntermediaActivity extends AppCompatActivity {
 
-    String id;
-    String url,id_pedido,cantidadlista,almacen,tipoformapago,validador,Index;
+    String url,id_pedido,cantidadlista,almacen,tipoformapago,validador,Index,id;
     private ListView listView;
     private ListAdapter listAdapter;
     ArrayList<Product> products = new ArrayList<>();
@@ -31,6 +31,7 @@ public class IntermediaActivity extends AppCompatActivity {
     Usuario usuario;
     ArrayList<Productos>listaproductoselegidos;
     BigDecimal precio;
+    ArrayList<ClienteSucursal> listaClienteSucursal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class IntermediaActivity extends AppCompatActivity {
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         cantidadlista =  getIntent().getStringExtra("cantidadlista");
         Index = getIntent().getStringExtra("Index");
+        listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
 
         listaproductoselegidos = (ArrayList<Productos>) getIntent()
                 .getSerializableExtra("listaProductoselegidos");
@@ -98,14 +100,19 @@ public class IntermediaActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         Bundle bundle1 = new Bundle();
         Bundle bundle2 = new Bundle();
+        Bundle bundle3 = new Bundle();
 
         bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
         bundle2.putSerializable("Usuario", usuario);
         bundle1.putSerializable("Cliente", cliente);
+        bundle3.putSerializable("listaClienteSucursal", listaClienteSucursal);
 
         intent.putExtras(bundle);
         intent.putExtras(bundle2);
         intent.putExtras(bundle1);
+        intent.putExtras(bundle3);
+
+
 
         startActivity(intent);
         finish();

@@ -24,6 +24,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
@@ -43,9 +44,10 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ArrayList<String> listaProducto;
     Clientes cliente;
     EditText etproducto,etglosa;
-    String url,Tipobusqueda = "Nombre",tipoPago,almacen,indice,validador,id_pedido,Index;
+    String url,Tipobusqueda = "Nombre",tipoPago,almacen,validador,id_pedido,Index;
     ProgressDialog progressDialog;
     Usuario usuario;
+    ArrayList<ClienteSucursal> listaClienteSucursal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +57,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
         cliente  = new Clientes();
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
+        listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
         tipoPago = getIntent().getStringExtra("TipoPago");
         almacen = getIntent().getStringExtra("Almacen");
         validador = getIntent().getStringExtra("validador");
@@ -70,6 +73,8 @@ public class BuscarProductoActivity extends AppCompatActivity {
         lvProducto = findViewById(R.id.lvProducto);
         etproducto  = findViewById(R.id.etPrducto);
         etglosa = findViewById(R.id.etGlosa);
+
+
 
         btnregresarproducto = findViewById(R.id.btnRegresarProducto);
 
@@ -96,9 +101,11 @@ public class BuscarProductoActivity extends AppCompatActivity {
                         Bundle bundle2 = new Bundle();
                         bundle2.putSerializable("listaProductoselegidos", listaproductoselegidos);
                         intent.putExtras(bundle2);
+                        Bundle bundle3 = new Bundle();
+                        bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                        intent.putExtras(bundle3);
                         startActivity(intent);
                         finish();
-
             }
         });
         }else {
@@ -109,7 +116,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
                         .setCancelable(false)
-                        .setMessage("Esta seguro que desea regresar, a la lisat de formas de pago ")
+                        .setMessage("Esta seguro que desea regresar, a la lista de formas de pago ")
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -121,6 +128,8 @@ public class BuscarProductoActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
+                        EliminarProductoporIdpedido(id_pedido);
+
                         Intent intent =  new Intent(BuscarProductoActivity.this,ListadoFormaPagoActivity.class);
                         intent.putExtra("Almacen",almacen);
                         Bundle bundle = new Bundle();
@@ -129,6 +138,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
                         Bundle bundle1 = new Bundle();
                         bundle1.putSerializable("Usuario",usuario);
                         intent.putExtras(bundle1);
+                        Bundle bundle3 = new Bundle();
+                        bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                        intent.putExtras(bundle3);
                         startActivity(intent);
                         finish();
                     }
@@ -141,8 +153,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
         if (listaproductoselegidos.size()==0 && validador.equals("true")){
 
-            String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
-                    getCodVendedor() + "|"+tipoPago+"|"+cliente.getTipoDocumento()+"|"+usuario.getMoneda()+"|"+usuario.getUser().trim()+"|"+usuario.getCodTienda();
+            String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor()
+                    + "|"+tipoPago+"|"+cliente.getTipoDocumento()+"|"+usuario.getMoneda()+"|"+usuario.getUser().trim()
+                    +"|"+usuario.getCodTienda()+"|"+listaClienteSucursal.get(0).getCodSucursal()+"|00000000|00000000||";
 
             ActualizarProducto(Trama);
 
@@ -157,11 +170,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
                 btnbuscarProducto.setVisibility(View.GONE);
                 btnregresarproducto.setVisibility(View.GONE);
-                progressDialog = new ProgressDialog(BuscarProductoActivity.this);
-                progressDialog.setMessage("Cargando...");
-                progressDialog.setCancelable(false);
-                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progressDialog.show();
+
 
                 Boolean verficador = false;
                 Integer posicion=0;
@@ -184,7 +193,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
                                 .create()
                                 .show();
 
-                        progressDialog.dismiss();
                         btnbuscarProducto.setVisibility(View.VISIBLE);
                         btnregresarproducto.setVisibility(View.VISIBLE);
                         etproducto.setText("");
@@ -194,10 +202,10 @@ public class BuscarProductoActivity extends AppCompatActivity {
                         lvProducto.setAdapter(listAdapter);
 
                     }else{
-                        buscarproducto(etproducto.getText().toString().replace(" ",""),Tipobusqueda);
+                        buscarproducto(etproducto.getText().toString().replace(" ",""),Tipobusqueda,almacen);
                     }
                 }else{
-                    buscarproducto(etproducto.getText().toString().replace(" ",""),Tipobusqueda);
+                    buscarproducto(etproducto.getText().toString().replace(" ",""),Tipobusqueda,almacen);
                 }
             }
         });
@@ -206,7 +214,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                progressDialog.dismiss();
                 producto = new Productos();
                 cliente = new Clientes();
                 cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
@@ -230,6 +237,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
                 Bundle bundle3 = new Bundle();
                 bundle3.putSerializable("Usuario",usuario);
                 intent.putExtras(bundle3);
+                Bundle bundle4 = new Bundle();
+                bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                intent.putExtras(bundle4);
                 startActivity(intent);
                 finish();
             }
@@ -255,7 +265,12 @@ public class BuscarProductoActivity extends AppCompatActivity {
         });
     }
 
-    private void buscarproducto(String numero, String tipoConsulta) {
+    private void buscarproducto(String numero, String tipoConsulta,String alma) {
+        progressDialog = new ProgressDialog(BuscarProductoActivity.this);
+        progressDialog.setMessage("Cargando...");
+        progressDialog.setCancelable(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
             numero = numero.replace("%","%25");
@@ -263,12 +278,12 @@ public class BuscarProductoActivity extends AppCompatActivity {
         if (tipoConsulta.equals("Nombre")) {
 
             url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                 "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables='"+almacen+"|"+usuario.getLugar()+"|"+numero+"||"+cliente.getCodCliente()+"|||1'";
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO_S&variables='"+alma+"||"+numero+"'";
 
         }else {
 
             url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                  "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables='"+almacen+"|"+usuario.getLugar()+"|"+numero+"||"+cliente.getCodCliente()+"|||1'";
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO_S&variables='"+alma+"|"+numero+"|'";
         }
 
         listaProducto = new ArrayList<>();
@@ -278,9 +293,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         String Mensaje = "";
-                        progressDialog.dismiss();
-                        btnbuscarProducto.setVisibility(View.VISIBLE);
-                        btnregresarproducto.setVisibility(View.VISIBLE);
+
 
                         try {
                             JSONObject jsonObject=new JSONObject(response);
@@ -308,29 +321,37 @@ public class BuscarProductoActivity extends AppCompatActivity {
                                     }
                                     if (error) {
 
+                                        progressDialog.dismiss();
+
                                         AlertDialog.Builder dialog = new AlertDialog.Builder(
                                                 BuscarProductoActivity.this);
                                         dialog.setMessage(Mensaje)
                                                 .setNegativeButton("Regresar", null)
                                                 .create()
                                                 .show();
+                                        btnbuscarProducto.setVisibility(View.VISIBLE);
+                                        btnregresarproducto.setVisibility(View.VISIBLE);
                                     } else {
 
-                                        producto = new Productos();
+
                                         listaProducto.clear();
                                         listaProductos.clear();
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         jsonObject = jsonArray.getJSONObject(i);
+                                        producto = new Productos();
                                         producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
                                         producto.setMarca(jsonObject.getString("DES_MARCA"));
                                         producto.setDescripcion(jsonObject.getString("DES_ARTICULO")); //
-                                        producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
                                         producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
                                         producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
+                                        /*
+                                        producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
                                         producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
                                         producto.setNumPromocion(jsonObject.getString("NRO_PROMOCION"));
                                         producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
                                         producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
+*/
+
                                         producto.setAlmacen(almacen);
                                         listaProductos.add(producto);
                                         listaProducto.add(producto.getCodigo() + " - " + producto.getDescripcion());
@@ -338,12 +359,55 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
                                     // Se hace un llamado al adaptador personalizado asociado al SML custom_list
 
-                                    ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
-                                            CustomListAdapter(BuscarProductoActivity.this, R.layout.custom_list, listaProducto);
-                                    lvProducto.setAdapter(listAdapter);
+                                        if (listaProductos.size()<=1){
+
+
+                                            producto = new Productos();
+                                            cliente = new Clientes();
+                                            cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
+
+                                            Intent intent =  new Intent(BuscarProductoActivity.this,DetalleProductoActivity.class);
+                                            intent.putExtra("TipoPago",tipoPago);
+                                            intent.putExtra("Almacen",almacen);
+                                            intent.putExtra("id_pedido",id_pedido);
+                                            intent.putExtra("Index",Index);
+
+                                            Bundle bundle = new Bundle();
+                                            producto =  listaProductos.get(0);
+                                            bundle.putSerializable("Producto",producto);
+                                            intent.putExtras(bundle);
+                                            Bundle bundle1 = new Bundle();
+                                            bundle1.putSerializable("Cliente",cliente);
+                                            intent.putExtras(bundle1);
+                                            Bundle bundle2 = new Bundle();
+                                            bundle2.putSerializable("listaproductoselegidos",listaproductoselegidos);
+                                            intent.putExtras(bundle2);
+                                            Bundle bundle3 = new Bundle();
+                                            bundle3.putSerializable("Usuario",usuario);
+                                            intent.putExtras(bundle3);
+                                            Bundle bundle4 = new Bundle();
+                                            bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                                            intent.putExtras(bundle4);
+
+                                            startActivity(intent);
+                                            finish();
+
+                                        }else {
+                                            progressDialog.dismiss();
+                                            btnbuscarProducto.setVisibility(View.VISIBLE);
+                                            btnregresarproducto.setVisibility(View.VISIBLE);
+                                            ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
+                                                    CustomListAdapter(BuscarProductoActivity.this, R.layout.custom_list, listaProducto);
+                                            lvProducto.setAdapter(listAdapter);
+                                        }
                                 }
+
                             }else {
+                                progressDialog.dismiss();
                                 listaProducto.clear();
+
+                                btnbuscarProducto.setVisibility(View.VISIBLE);
+                                btnregresarproducto.setVisibility(View.VISIBLE);
                                 final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
                                         , R.layout.support_simple_spinner_dropdown_item,listaProducto);
                                 lvProducto.setAdapter(adapter);
@@ -352,7 +416,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
                                         .setNegativeButton("Aceptar",null)
                                         .create()
                                         .show();
+
                             }
+
                         } catch (JSONException e) { e.printStackTrace(); }
                     }
                 }, new Response.ErrorListener() {
@@ -395,5 +461,34 @@ public class BuscarProductoActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
+    }
+
+    private void EliminarProductoporIdpedido(String idpedido) {
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_PEDIDO_TRAMA&variables='"+idpedido+"'";
+
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.equals("OK")){
+                            // insertaCampos(listaproductoselegidos,id);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
     }
 }

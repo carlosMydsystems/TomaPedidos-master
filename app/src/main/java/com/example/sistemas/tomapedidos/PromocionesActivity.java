@@ -1,5 +1,6 @@
 package com.example.sistemas.tomapedidos;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -8,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,6 +17,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Promociones;
@@ -42,6 +43,7 @@ public class PromocionesActivity extends AppCompatActivity {
     Clientes cliente;
     Usuario usuario;
 
+    ArrayList<ClienteSucursal> listaClienteSucursal;
     ArrayList<Productos> listaProductosPromociones,listaproductoselegidos;
 
     @Override
@@ -54,7 +56,7 @@ public class PromocionesActivity extends AppCompatActivity {
         id_pedido = getIntent().getStringExtra("id_pedido");
         Index = getIntent().getStringExtra("Index");
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
-
+        listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         almacen =  getIntent().getStringExtra("Almacen");
@@ -64,7 +66,6 @@ public class PromocionesActivity extends AppCompatActivity {
         listaProductosPromociones = new ArrayList<>();
         btnregistrarpromociones = (Button) findViewById(R.id.btnRegistrarPromociones);
         btnregistrarpromociones.setVisibility(View.INVISIBLE);
-
         btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,21 +73,17 @@ public class PromocionesActivity extends AppCompatActivity {
             }
         });
         validador = getIntent().getStringExtra("validador");
-
         cantidadlista = ""+listaproductoselegidos.size();
-
         id = id_pedido;
-
 
         CalcularPromociones(id);
     }
 
     private void placeOrder(ArrayList<Productos> listaproductoselegidos) // Captura el listado
     {
+
         productOrders.clear();
         listaTrama =  new ArrayList<>();
-
-
         for(int i=0;i<listAdapter.listProducts.size();i++)
         {
             productopromocion = new Productos();
@@ -98,20 +95,32 @@ public class PromocionesActivity extends AppCompatActivity {
                         ,listAdapter.listProducts.get(i).ProductImage
                         ,listAdapter.listProducts.get(i).ProductIdArticulo  //
                         ,listAdapter.listProducts.get(i).UnidadProducto
-                );
+                        ,listAdapter.listProducts.get(i).TasaDescuento
+                        ,listAdapter.listProducts.get(i).Presentacion
+                        ,listAdapter.listProducts.get(i).Equivalencia
+                        ,listAdapter.listProducts.get(i).PrecioUni
+                        ,listAdapter.listProducts.get(i).ObservacionSeleccion
+                        ,listAdapter.listProducts.get(i).Stock
+                        );
 
-                productopromocion.setIdProducto(listAdapter.listProducts.get(i).ProductIdArticulo);
+                productopromocion.setIdPedido(listAdapter.listProducts.get(i).ProductIdArticulo);
                 productopromocion.setDescripcion(listAdapter.listProducts.get(i).ProductImage);
                 productopromocion.setUnidad(listAdapter.listProducts.get(i).UnidadProducto);
                 productopromocion.setCantidad(String.valueOf(listAdapter.listProducts.get(i).CartQuantity));
                 productopromocion.setPrecio(listAdapter.listProducts.get(i).ProductPrice.toString());
+                //Double precioacumulado = Double.valueOf(productopromocion.getPrecio())*Double.valueOf(productopromocion.getCantidad());
+                //productopromocion.setPrecioAcumulado(precioacumulado.toString());
                 productopromocion.setPrecioAcumulado("0.0");
                 productopromocion.setNumPromocion(listAdapter.listProducts.get(i).ProductName);
                 productopromocion.setObservacion("Promocion");
                 productopromocion.setCodigo(listAdapter.listProducts.get(i).ProductIdArticulo);
-                listaproductoselegidos.add(productopromocion);
+                productopromocion.setTasaDescuento(listAdapter.listProducts.get(i).TasaDescuento);
+                productopromocion.setPresentacion(listAdapter.listProducts.get(i).Presentacion);
+                productopromocion.setEquivalencia(listAdapter.listProducts.get(i).Equivalencia);
+                productopromocion.setPrecio(listAdapter.listProducts.get(i).PrecioUni);
+             //   productopromocion.setTasaDescuento(listAdapter.listProducts.get(i).P);
 
-                Toast.makeText(this,listAdapter.listProducts.get(i).UnidadProducto , Toast.LENGTH_SHORT).show();
+                listaproductoselegidos.add(productopromocion);
 
             }
         }
@@ -135,6 +144,10 @@ public class PromocionesActivity extends AppCompatActivity {
         intent.putExtras(bundle2);
         intent.putExtras(bundle1);
 
+        Bundle bundle4 = new Bundle();
+        bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+        intent.putExtras(bundle4);
+
         startActivity(intent);
         finish();
     }
@@ -146,17 +159,28 @@ public class PromocionesActivity extends AppCompatActivity {
         for (int i = 0 ; i <listaPromociones.size() ; i++) {
             valorcantidad = Double.valueOf(listaPromociones.get(i).getEquivalencia()) * Double.valueOf(listaPromociones.get(i).getCantidadBonificada());
 
-            products.add(new Product(listaPromociones.get(i).getNumeroPromocion(),
+            products.add(new Product(
+                    listaPromociones.get(i).getNumeroPromocion(),
                     valorcantidad,
                     listaPromociones.get(i).getDescripcionPromocion(),
                     listaPromociones.get(i).getCodArticulo(),
-                    listaPromociones.get(i).getPrecioSoles()
+                    listaPromociones.get(i).getUnidad(),
+                    listaPromociones.get(i).getTasaDescuento(),
+                    listaPromociones.get(i).getCodPresentacion(),
+                    listaPromociones.get(i).getEquivalencia(),
+                    listaPromociones.get(i).getPrecioSoles(),
+                    listaPromociones.get(i).getOpcionSeleccion(),
+                    listaPromociones.get(i).getStkDisponible()
                    ));
-            Toast.makeText(this, listaPromociones.get(i).getPrecioSoles(), Toast.LENGTH_SHORT).show();
         }
     }
 
     public void CalcularPromociones(String identificador) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(PromocionesActivity.this);
+        progressDialog.setMessage("...Cargando Promociones");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         final String Id = identificador;
 
@@ -180,6 +204,7 @@ public class PromocionesActivity extends AppCompatActivity {
                             if (success){
                                 JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
 
+                                progressDialog.dismiss();
                                 for(int i=0;i<jsonArray.length();i++) {
 
                                     promocion = new Promociones();
@@ -209,6 +234,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setPrecioRegularDolares(jsonObject.getString("PRECIO_REGULAR_DOLARES"));
                                         promocion.setValido(jsonObject.getString("VALIDO"));
                                         promocion.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
+                                        promocion.setOpcionSeleccion("S");
                                         listaPromociones.add(promocion);
 
                                     }else if(jsonObject.getString("OPCION_SELECCION").equals("T")){
@@ -235,13 +261,12 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setPrecioRegularDolares(jsonObject.getString("PRECIO_REGULAR_DOLARES"));
                                         promocion.setValido(jsonObject.getString("VALIDO"));
                                         promocion.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
+                                        promocion.setOpcionSeleccion("S");
                                         listaPromocionesTipoT.add(promocion);
                                     }
                                 }
 
                                 if (listaPromocionesTipoT.size() == 0){
-
-                                    Toast.makeText(PromocionesActivity.this, "No existe promociones T", Toast.LENGTH_SHORT).show();
 
                                 }else {
 
@@ -250,7 +275,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         productopromocion = new Productos();
                                         productopromocion.setNumPromocion(listaPromocionesTipoT.get(i).getNumeroPromocion());
                                         productopromocion.setCodigo(listaPromocionesTipoT.get(i).getCodArticulo());
-                                        productopromocion.setIdProducto(listaPromocionesTipoT.get(i).getCodArticulo());
+                                        productopromocion.setIdPedido(listaPromocionesTipoT.get(i).getCodArticulo());
                                         productopromocion.setDescripcion(listaPromocionesTipoT.get(i).getDescripcionPromocion());
                                         productopromocion.setUnidad(listaPromocionesTipoT.get(i).getUnidad());
                                         productopromocion.setCantidad(listaPromocionesTipoT.get(i).getCantidadBonificada());
@@ -259,7 +284,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         productopromocion.setPresentacion(listaPromocionesTipoT.get(i).getCodPresentacion());
                                         productopromocion.setEquivalencia(listaPromocionesTipoT.get(i).getEquivalencia());
                                         productopromocion.setPrecioAcumulado("0.0");
-                                        productopromocion.setObservacion("Promocion");
+                                        productopromocion.setObservacion("S");
                                         listaproductoselegidos.add(productopromocion);
                                         listaProductosPromociones.add(productopromocion);
                                     }
@@ -268,6 +293,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                 getProduct(listaPromociones);
                                 listView.setAdapter(listAdapter);
 
+
                                 btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
@@ -275,7 +301,6 @@ public class PromocionesActivity extends AppCompatActivity {
                                         placeOrder(listaproductoselegidos);
 
                                         Intent intent = new Intent(PromocionesActivity.this,IntermediaActivity.class);
-
                                         intent.putExtra("cantidadlista",cantidadlista);
                                         intent.putExtra("Almacen",almacen);
                                         intent.putExtra("TipoPago",tipoformapago);
@@ -296,11 +321,16 @@ public class PromocionesActivity extends AppCompatActivity {
                                         intent.putExtras(bundle2);
                                         intent.putExtras(bundle1);
 
+                                        Bundle bundle4 = new Bundle();
+                                        bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                                        intent.putExtras(bundle4);
+
                                         startActivity(intent);
                                         finish();
 
                                     }
                                 });
+
                             }else{
                                 AlertDialog.Builder build1 = new AlertDialog.Builder(PromocionesActivity.this);
                                 build1.setTitle("No se han encontrado Promociones")
@@ -321,15 +351,15 @@ public class PromocionesActivity extends AppCompatActivity {
                                                 Bundle bundle = new Bundle();
                                                 Bundle bundle1 = new Bundle();
                                                 Bundle bundle2 = new Bundle();
-
                                                 bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
                                                 bundle2.putSerializable("Usuario", usuario);
                                                 bundle1.putSerializable("Cliente", cliente);
-
                                                 intent.putExtras(bundle);
                                                 intent.putExtras(bundle2);
                                                 intent.putExtras(bundle1);
-
+                                                Bundle bundle4 = new Bundle();
+                                                bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                                                intent.putExtras(bundle4);
                                                 startActivity(intent);
                                                 finish();
                                             }
@@ -337,7 +367,6 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                         .create()
                                         .show();
-
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

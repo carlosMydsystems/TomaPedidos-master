@@ -22,6 +22,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
@@ -38,7 +39,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
     ListView lvbandejaproductos;
     ArrayList<String> listabandejaproductoselegidos;
     Clientes cliente;
-    String cantidad ,Precio, url, almacen, tipoformapago, fechaRegistro, validador,id,id_pedido,retorno,Index;
+    String cantidad ,Precio, url, almacen, tipoformapago, fechaRegistro, validador,id,
+            id_pedido,retorno,Index,check;
     View mview;
     ArrayList<Productos> listaproductoselegidos;
     Usuario  usuario;
@@ -46,15 +48,17 @@ public class bandejaProductosActivity extends AppCompatActivity {
     ListView listView;
     Boolean valida;
     ImageButton imgbtnregresar;
+    ArrayList<ClienteSucursal> listaClienteSucursal;
+    String ValidarBtnTerminar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bandeja_productos);
         // Se captura los parametros de los otros Intent
-        listaproductoselegidos = (ArrayList<Productos>) getIntent()
-                .getSerializableExtra("listaProductoselegidos");   //
 
+        listaproductoselegidos = (ArrayList<Productos>) getIntent()
+                .getSerializableExtra("listaProductoselegidos");
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");   //
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");    //
         almacen =  getIntent().getStringExtra("Almacen");
@@ -63,13 +67,29 @@ public class bandejaProductosActivity extends AppCompatActivity {
         validador = getIntent().getStringExtra("validador");
         retorno = getIntent().getStringExtra("retorno");
         Index = getIntent().getStringExtra("Index");
+        check = getIntent().getStringExtra("Check");
+
+        if (ValidarBtnTerminar == null){
+
+            ValidarBtnTerminar = "true";
+        }else{
+
+            ValidarBtnTerminar = getIntent().getStringExtra("ValidarBtnTerminar");
+
+        }
+
+        listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
+        if (check!=null){
+            EliminaPromocion();
+            check = null;
+        }
 
         valida = Boolean.valueOf(validador);
         listabandejaproductoselegidos = new ArrayList<>();
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
-        final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
+        final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
 
         // SE llega a generar el calendario
 
@@ -89,6 +109,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
             for (int i = 0; i < listaproductoselegidos.size(); i++) {
                 // calcula numero de productos
+
                 Double Aux = 0.0;
                 if (listaproductoselegidos.get(i).getPrecioAcumulado().equals("")) {
 
@@ -119,10 +140,18 @@ public class bandejaProductosActivity extends AppCompatActivity {
             Precio = String.valueOf(precio);
             btnbuscarproducto = findViewById(R.id.btnproducto);
             btnterminar = findViewById(R.id.btnterminar);
-            tvtitulodinamico = findViewById(R.id.tvtitulodinamico);
+            tvtitulodinamico = findViewById(R.id.tvtitulodinamicoPedidos);
             btnregresarbandeja = findViewById(R.id.btnRegresarBandejaPedidos);
             btngrabarpedido = findViewById(R.id.btnValidarPromociones);
-            imgbtnregresar = findViewById(R.id.imgbtnRegresaBandejaPedidos);
+            imgbtnregresar = findViewById(R.id.imgPromocionElegida);
+            if (ValidarBtnTerminar.equals("true")){
+
+                btnterminar.setVisibility(View.VISIBLE);
+                btngrabarpedido.setVisibility(View.GONE);
+            }else {
+                btnterminar.setVisibility(View.GONE);
+                btngrabarpedido.setVisibility(View.VISIBLE);
+            }
             imgbtnregresar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -140,12 +169,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    for (int i = 0 ; i<listaproductoselegidos.size();i++){
-
-                        String trama = id_pedido+"|"+listaproductoselegidos.get(i).getIndice();
-                        EliminarProducto(trama);
-                    }
-
+                    EliminarProductoporIdpedido(id_pedido);
                     Intent intent = new Intent(bandejaProductosActivity.this, MostrarClienteActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("Cliente", cliente);
@@ -153,6 +177,9 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     Bundle bundle1 = new Bundle();
                     bundle1.putSerializable("Usuario", usuario);
                     intent.putExtras(bundle1);
+                    Bundle bundle3 = new Bundle();
+                    bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                    intent.putExtras(bundle3);
                     startActivity(intent);
                     finish();
                 }
@@ -160,7 +187,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
             builder.create()
                     .show();
-
                 }
             });
 
@@ -195,6 +221,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     intent.putExtra("TipoPago", tipoformapago);
                     intent.putExtra("Index", Index);
                     intent.putExtra("validador", "false");
+                    intent.putExtra("retorno", retorno);
                     intent.putExtra("Almacen", almacen);
                     intent.putExtra("id_pedido", id_pedido);
                     Bundle bundle = new Bundle();
@@ -206,6 +233,9 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     Bundle bundle3 = new Bundle();
                     bundle3.putSerializable("Usuario", usuario);
                     intent.putExtras(bundle3);
+                    Bundle bundle4 = new Bundle();
+                    bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                    intent.putExtras(bundle4);
                     startActivity(intent);
                     finish();
                 }
@@ -220,12 +250,13 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     if (listaproductoselegidos.size() > 0) {
 
                         Intent intent = new Intent(bandejaProductosActivity.this, PromocionesActivity.class);
-
                         intent.putExtra("TipoPago", tipoformapago);
                         intent.putExtra("Index", Index);
                         intent.putExtra("cantidadlista", listaproductoselegidos.size() + "");
                         intent.putExtra("Almacen", almacen);
                         intent.putExtra("id_pedido", id_pedido);
+                        intent.putExtra("retorno", retorno);
+                        intent.putExtra("Check", check);
                         intent.putExtra("validador", "false");
                         Bundle bundle = new Bundle();
                         Bundle bundle2 = new Bundle();
@@ -236,11 +267,16 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         intent.putExtras(bundle);
                         intent.putExtras(bundle2);
                         intent.putExtras(bundle3);
+                        Bundle bundle4 = new Bundle();
+                        bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                        intent.putExtras(bundle4);
                         startActivity(intent);
                         finish();
 
                     } else {
+
                         Toast.makeText(bandejaProductosActivity.this, "La canasta esta vacia", Toast.LENGTH_SHORT).show();
+
                     }
                 }
             });
@@ -260,9 +296,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-
-                    Intent intent = new Intent(bandejaProductosActivity.this, FechaPactadaActivity.class);
-
+                    Intent intent = new Intent(bandejaProductosActivity.this, ProveedorActivity.class);
                     intent.putExtra("TipoPago", tipoformapago);
                     intent.putExtra("Index", Index);
                     intent.putExtra("Cantidad", cantidad);
@@ -270,22 +304,26 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     intent.putExtra("cantidadlista", listaproductoselegidos.size() + "");
                     intent.putExtra("Almacen", almacen);
                     intent.putExtra("id_pedido", id_pedido);
+                    intent.putExtra("retorno", retorno);
+                    intent.putExtra("Check", check);
                     intent.putExtra("validador", "false");
-
                     Bundle bundle = new Bundle();
                     Bundle bundle2 = new Bundle();
                     Bundle bundle3 = new Bundle();
-
                     bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
                     bundle2.putSerializable("Cliente", cliente);
                     bundle3.putSerializable("Usuario", usuario);
-
                     intent.putExtras(bundle);
                     intent.putExtras(bundle2);
                     intent.putExtras(bundle3);
-
+                    Bundle bundle4 = new Bundle();
+                    bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                    intent.putExtras(bundle4);
                     startActivity(intent);
                     finish();
+
+
+
 
                 }
             });
@@ -419,7 +457,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                             .show();
                 }
             });
-
         }
     }
 
@@ -464,6 +501,11 @@ public class bandejaProductosActivity extends AppCompatActivity {
         bundle3.putSerializable("Cliente", cliente);
         intent.putExtras(bundle3);
         intent.putExtra("Almacen",almacen);
+
+        Bundle bundle5 = new Bundle();
+        bundle5.putSerializable("listaClienteSucursal",listaClienteSucursal);
+        intent.putExtras(bundle5);
+
         startActivity(intent);
         finish();
 
@@ -473,7 +515,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
     private void Editarproductoselecionado(Integer position) {
 
         producto = listaproductoselegidos.get(position);
-
         Intent intent =  new Intent(bandejaProductosActivity.this, ActualizarRegistroPedidosActivity.class);
         intent.putExtra("TipoPago",tipoformapago);
         intent.putExtra("id_pedido",id_pedido);
@@ -492,6 +533,9 @@ public class bandejaProductosActivity extends AppCompatActivity {
         bundle3.putSerializable("Producto", producto);
         intent.putExtras(bundle3);
         intent.putExtra("Almacen",almacen);
+        Bundle bundle4 = new Bundle();
+        bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+        intent.putExtras(bundle4);
         startActivity(intent);
         finish();
     }
@@ -531,6 +575,36 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
+    }
+
+    private void EliminarProductoporIdpedido(String idpedido) {
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_PEDIDO_TRAMA&variables='"+idpedido+"'";
+
+
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if (response.equals("OK")){
+                            // insertaCampos(listaproductoselegidos,id);
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+
     }
 }
 

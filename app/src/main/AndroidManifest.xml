@@ -7,17 +7,47 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:hardwareAccelerated="false"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FechaPactadaActivity"></activity>
-        <activity android:name=".IntermediaActivity" />
-        <activity android:name=".PromocionesActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".MostrarConsultaActivity"></activity>
+        <activity android:name=".BuscarProductoStockActivity" />
+        <activity android:name=".BuscarClienteStockActivity" />
+        <activity android:name=".PrecioActivity" />
+        <activity android:name=".ConsultarPromocionesActivity" />
+        <activity android:name=".ConsultaPromocionActivity" />
+        <activity android:name=".EventoActivity" />
+        <activity android:name=".ConsultaStockActivity" />
+        <activity android:name=".ProveedorActivity" />
+        <activity
+            android:name=".DetalleActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ConsutlasActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ConsultasListadoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DetallePedidoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FechaPactadaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".IntermediaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".PromocionesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,15 +57,32 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".BusquedaClienteActivity" />
-        <activity android:name=".MostrarClienteActivity" />
-        <activity android:name=".ListadoAlmacenActivity" />
-        <activity android:name=".ListadoFormaPagoActivity" />
-        <activity android:name=".BuscarProductoActivity" />
-        <activity android:name=".DetalleProductoActivity" />
-        <activity android:name=".bandejaProductosActivity" />
-        <activity android:name=".ActualizarRegistroPedidosActivity" />
+        <activity
+            android:name=".BusquedaClienteActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MostrarClienteActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ListadoAlmacenActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ListadoFormaPagoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".BuscarProductoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DetalleProductoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".bandejaProductosActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ActualizarRegistroPedidosActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -94,17 +94,26 @@
             app:layout_constraintTop_toBottomOf="@+id/btnBuscar" />
 
     </LinearLayout>
+
     <TextView
         android:id="@+id/textView14"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="47dp"
+        android:background="#014284"
         android:text="Buscar Cliente"
         android:textAlignment="center"
         android:textColor="#fff"
-        android:background="#014284"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/ibRetornoMenuPrincipal"
+        android:layout_width="64dp"
+        android:layout_height="43dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_media_rew" />
 
 </android.support.constraint.ConstraintLayout>

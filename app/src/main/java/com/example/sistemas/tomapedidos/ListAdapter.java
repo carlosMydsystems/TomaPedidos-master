@@ -59,6 +59,13 @@ public class ListAdapter extends BaseAdapter {
                 listViewHolder.tvidpromociones = row.findViewById(R.id.tvIdPromocion);  // Identificador
                 listViewHolder.tvCodArticulo = row.findViewById(R.id.tvCodArticulo);
                 listViewHolder.tvunidadpromocion = row.findViewById(R.id.tvUnidadPromocion);
+                listViewHolder.tvtasadescuento = row.findViewById(R.id.tvTasaElegida);
+                listViewHolder.tvprecio = row.findViewById(R.id.tvUnidadPromocion);
+                listViewHolder.tvPresentacionSelect = row.findViewById(R.id.tvPresentacionSelect);
+                listViewHolder.tvEquivalencia = row.findViewById(R.id.tvEquivalencia);
+                listViewHolder.tvPrecioUni = row.findViewById(R.id.tvPrecioUni);
+                listViewHolder.tvObservacionSeleccion = row.findViewById(R.id.tvObservacionSeleccion);
+                listViewHolder.tvStock = row.findViewById(R.id.tvStock);
                 row.setTag(listViewHolder);
             }
         else{
@@ -73,15 +80,27 @@ public class ListAdapter extends BaseAdapter {
         listViewHolder.tvidpromociones.setText(products.ProductName);
         listViewHolder.tvCodArticulo.setText(products.ProductIdArticulo);
         listViewHolder.tvunidadpromocion.setText(products.UnidadProducto);
+        listViewHolder.tvPresentacionSelect.setText(products.Presentacion);
+        listViewHolder.tvEquivalencia.setText(products.Equivalencia);
+        listViewHolder.tvPrecioUni.setText(products.PrecioUni);
+        listViewHolder.tvObservacionSeleccion.setText(products.ObservacionSeleccion);
         listViewHolder.btnPlus.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v)
             {
 
-                indice = listViewHolder.tvidpromociones.getText().toString();
-                updateQuantity(position,listViewHolder.edTextQuantity,1);
-                updateQuantityPrice(position,listViewHolder.tvPrice,-1, indice);
+                int minuendo = Integer.valueOf(listViewHolder.tvStock.getText().toString());
+                int sustraendo = Integer.valueOf(listViewHolder.edTextQuantity.getText().toString());
+                int res = minuendo - sustraendo;
 
+                if (res <= 0) {
+
+                }else{
+
+                    indice = listViewHolder.tvidpromociones.getText().toString();
+                    updateQuantity(position, listViewHolder.edTextQuantity, 1);
+                    updateQuantityPrice(position, listViewHolder.tvPrice, -1, indice);
+                }
             }
         });
 
@@ -94,8 +113,13 @@ public class ListAdapter extends BaseAdapter {
                 if (listViewHolder.edTextQuantity.getText().toString().equals("0")){
                 }else {
                     updateQuantityPrice(position,listViewHolder.tvPrice,1,indice);
+
                 }
                 updateQuantity(position,listViewHolder.edTextQuantity,-1);
+
+                Integer minuendo = Integer.valueOf(listViewHolder.tvStock.getText().toString());
+                Integer sustraendo = Integer.valueOf(listViewHolder.edTextQuantity.getText().toString());
+                Integer resultado = minuendo - sustraendo;
 
             }
         });
@@ -104,11 +128,12 @@ public class ListAdapter extends BaseAdapter {
 
             Product producto = getItem(i);
             listaPromocionesElegidas = new ArrayList<>();
-
             if (producto.CartQuantity>0){
 
             }
         }
+        listViewHolder.tvStock.setText(products.Stock);
+
         return row;
     }
 
@@ -129,12 +154,12 @@ public class ListAdapter extends BaseAdapter {
             }
         }  //  Boton Negaativo
         edTextQuantity.setText(products.CartQuantity+"");
+
     }
     private void updateQuantityPrice(int position, TextView tvPrice, int value, String indice) {
 
         String Value;
         Product products = getItem(position);
-
         if(value > 0)
         {
             if(products.CartQuantity >=  0) {
@@ -156,31 +181,25 @@ public class ListAdapter extends BaseAdapter {
 
             if(producto.ProductName.equals(indice)){
                 producto.ProductPrice = Double.valueOf(products.ProductPrice+"");
-
            }
         }
-
     }
 
     private void updateQuantityPriceAll(int position, TextView tvPrice, int value) {
-        Product products = getItem(position);
 
+        Product products = getItem(position);
         tvPrice.setText(products.ProductPrice+"");
+
     }
 
     private void recorrePromocionesSelecciones(){
 
         ArrayList<Product> listaPromociionSelectivo = new ArrayList<>();
-
         for (int i = 0; i < getCount(); i++){
-
             Product producto = new Product();
             producto = getItem(i);
             listaPromociionSelectivo.add(producto);
-
         }
-
-
 
     }
 }

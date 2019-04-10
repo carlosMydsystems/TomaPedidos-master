@@ -23,6 +23,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
@@ -38,20 +39,22 @@ import java.util.ArrayList;
 public class DetalleProductoActivity extends AppCompatActivity {
 
     TextView tvcodigoproducto,tvnombreproducto,tvalmacenproducto,tvstock,tvprecio,
-            tvtotal,tvprecioreal,tvunidades,tvtasa;
+            tvtotal,tvprecioreal,tvunidades,tvtasa,tvpreciorealjson,tvNroPromociones,tvPresetacion,tvEquivalencia;
     Productos productos;
     Button btnguardaryrevisar, btnguardaryagregar, btndverificarproducto;
     Clientes cliente;
     ArrayList<Productos> listaproductoselegidos;
     EditText etcantidadelegida;
-    Double preciounitario,cantidad, Aux,validarStock,precioDouble;
-    String url,almacen,tipoPago,id_pedido,Index;
+    Double preciounitario,cantidad, Aux,validarStock,precioDouble,Descuento, precioUnitarioDouble,Aux1;
+    String url,almacen,tipoPago,id_pedido,Index,Mensaje="";
     ProgressDialog progressDialog;
     Productos producto;
     ArrayList<String> listaProducto;
     Usuario usuario;
-    BigDecimal redondeado;
+    BigDecimal redondeado, precioBigTotal , precioBigUnitario;
     ImageButton imgbtnvolverdetalleproducto;
+    ArrayList<ClienteSucursal> listaClienteSucursal;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +64,11 @@ public class DetalleProductoActivity extends AppCompatActivity {
         etcantidadelegida =  findViewById(R.id.etCantProdElegida);
         listaproductoselegidos = new ArrayList<>();
         productos  = new Productos();
+
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
+        simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
+        final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
 
         // se recibe los datos de los productos y del que se han encontrado en el otro intent
 
@@ -72,8 +80,9 @@ public class DetalleProductoActivity extends AppCompatActivity {
         id_pedido = getIntent().getStringExtra("id_pedido");
         Index = getIntent().getStringExtra("Index");
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
+        listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
 
-        // Se referencia a todas las partes del XML asociado al Activity
+        // Se referencia a todas las partes del XML asociado al ProveedorActivity
         tvcodigoproducto =  findViewById(R.id.tvCofigoProducto);
         tvnombreproducto = findViewById(R.id.tvNomProdElegido);
         tvalmacenproducto = findViewById(R.id.tvAlmProdElegido);
@@ -82,7 +91,13 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvunidades = findViewById(R.id.tvUnidad);
         tvtasa =  findViewById(R.id.tvTasa);
         imgbtnvolverdetalleproducto = findViewById(R.id.ibVolverDetalleProducto);
+        tvpreciorealjson = findViewById(R.id.tvPrecioRealJson);
+        tvNroPromociones = findViewById(R.id.tvNroPromociones);
+        tvPresetacion = findViewById(R.id.tvPresetacion);
+        tvEquivalencia = findViewById(R.id.tvEquivalencia);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+
         btndverificarproducto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,7 +121,14 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvstock  =findViewById(R.id.tvStockElegido);
         tvprecio = findViewById(R.id.tvPrecioElegido);
         tvtotal = findViewById(R.id.tvTotalElegido);
+
+
         tvstock.setText(productos.getStock());
+
+        Aux1 = Double.valueOf(tvstock.getText().toString());
+        tvstock.setText(formateador.format((double) Aux1) + " ");
+
+
         tvunidades.setText(productos.getUnidad());
 
 if (tvstock.getText() == null){
@@ -141,6 +163,9 @@ else if (etcantidadelegida.getText()== null){
                 Bundle bundle3 = new Bundle();
                 bundle3.putSerializable("Usuario",usuario);
                 intent.putExtras(bundle3);
+                Bundle bundle4 = new Bundle();
+                bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                intent.putExtras(bundle4);
                 startActivity(intent);
                 finish();
 
@@ -192,6 +217,9 @@ else if (etcantidadelegida.getText()== null){
                             Bundle bundle3 = new Bundle();
                             bundle3.putSerializable("Usuario",usuario);
                             intent.putExtras(bundle3);
+                            Bundle bundle4 = new Bundle();
+                            bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                            intent.putExtras(bundle4);
                             startActivity(intent);
                             finish();
                         }
@@ -206,53 +234,31 @@ else if (etcantidadelegida.getText()== null){
                     if (etcantidadelegida.getText().toString().equals("")) {
                     } else {
 
+                        productos.setNumPromocion(tvNroPromociones.getText().toString());
+                        productos.setPresentacion(tvPresetacion.getText().toString());
+                        productos.setEquivalencia(tvEquivalencia.getText().toString());
+
+
                         if (productos.getNumPromocion().trim().equals("null")){
 
                             String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                                    productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
+                                    productos.getCodigo() + "|" + tvpreciorealjson.getText().toString().replace(",","") +
                                     "|" + tvtasa.getText().toString().trim() + "||"+productos.getPresentacion()+
                                     "|"+productos.getEquivalencia()+"|N";  // Tasas
-                            ActualizarProducto(trama);
+                            ActualizarProducto1(trama);
 
                         }else {
 
                             String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                                    productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",", "") +
+                                    productos.getCodigo() + "|" + tvpreciorealjson.getText().toString().replace(",", "") +
                                     "|" + tvtasa.getText().toString().trim() + "|" + productos.getNumPromocion().trim() + "|" + productos.getPresentacion() +
                                     "|" + productos.getEquivalencia() + "|N";  // Tasas
-                            ActualizarProducto(trama);
+                            ActualizarProducto1(trama);
 
                         }
 
-                    productos.setCantidad(etcantidadelegida.getText().toString());
-                    preciounitario = Double.valueOf(tvprecio.getText().toString().replace(",",""));
-                    cantidad = Double.valueOf(etcantidadelegida.getText().toString());   // Cambio
-                    redondeado = new BigDecimal(preciounitario).setScale(2, RoundingMode.HALF_EVEN);
-                    productos.setPrecio(""+redondeado);
-                    productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
-                    productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tene
-                    productos.setIndice(Integer.valueOf(Index));
-                    listaproductoselegidos.add(productos);
 
-                    Intent intent = new Intent(DetalleProductoActivity.this, bandejaProductosActivity.class);
-                    intent.putExtra("TipoPago", tipoPago);
-                    intent.putExtra("validador", "true");
-                    intent.putExtra("Index", Index);
-                    intent.putExtra("id_pedido", id_pedido);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                    intent.putExtras(bundle);
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putSerializable("Cliente", cliente);
-                    intent.putExtras(bundle1);
-                    Bundle bundle2 = new Bundle();
-                    bundle2.putSerializable("Usuario", usuario);
-                    intent.putExtras(bundle2);
-                    Bundle bundle3 = new Bundle();
-                    bundle3.putSerializable("Almacen", almacen);
-                    intent.putExtras(bundle3);
-                    startActivity(intent);
-                    finish();
+
                 }
             }
             }
@@ -301,6 +307,9 @@ else if (etcantidadelegida.getText()== null){
                             Bundle bundle3 = new Bundle();
                             bundle3.putSerializable("Usuario",usuario);
                             intent.putExtras(bundle3);
+                            Bundle bundle4 = new Bundle();
+                            bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                            intent.putExtras(bundle4);
                             startActivity(intent);
                             finish();
                         }
@@ -315,10 +324,14 @@ else if (etcantidadelegida.getText()== null){
 
                     } else {
 
+                        productos.setNumPromocion(tvNroPromociones.getText().toString());
+                        productos.setPresentacion(tvPresetacion.getText().toString());
+                        productos.setEquivalencia(tvEquivalencia.getText().toString());
+
                         if (productos.getNumPromocion().trim().equals("null")){
 
                             String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                                    productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",","") +
+                                    productos.getCodigo() + "|" + tvpreciorealjson.getText().toString().replace(",","") +
                                     "|" + tvtasa.getText().toString().trim() + "||"+productos.getPresentacion()+
                                     "|"+productos.getEquivalencia()+"|N";  // Tasas
                             ActualizarProducto(trama);
@@ -326,42 +339,13 @@ else if (etcantidadelegida.getText()== null){
                         }else {
 
                             String trama = id_pedido + "|D|" + Index + "|" + etcantidadelegida.getText() + "|" +
-                                    productos.getCodigo() + "|" + tvprecio.getText().toString().replace(",", "") +
+                                    productos.getCodigo() + "|" + tvpreciorealjson.getText().toString().replace(",", "") +
                                     "|" + tvtasa.getText().toString().trim() + "|" + productos.getNumPromocion().trim() + "|" + productos.getPresentacion() +
                                     "|" + productos.getEquivalencia() + "|N";  // Tasas
                             ActualizarProducto(trama);
-
                         }
 
-                        productos.setCantidad(etcantidadelegida.getText().toString());
-                        preciounitario = Double.valueOf(producto.getPrecio());
-                        cantidad = Double.valueOf(etcantidadelegida.getText().toString());
-                        productos.setPrecio(tvprecio.getText().toString());
-                        productos.setIndice(Integer.valueOf(Index));
-                        productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
-                        productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
-                        listaproductoselegidos.add(productos);
-                        Index = String.valueOf(Integer.valueOf(Index)+1);
-                        Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
 
-                        intent.putExtra("TipoPago", tipoPago);
-                        intent.putExtra("validador", "true");
-                        intent.putExtra("Index",Index);
-                        intent.putExtra("id_pedido",id_pedido);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
-                        intent.putExtras(bundle);
-                        Bundle bundle1 = new Bundle();
-                        bundle1.putSerializable("Cliente", cliente);
-                        intent.putExtras(bundle1);
-                        Bundle bundle2 = new Bundle();
-                        bundle2.putSerializable("Usuario", usuario);
-                        intent.putExtras(bundle2);
-                        Bundle bundle3 = new Bundle();
-                        bundle3.putSerializable("Almacen", almacen);
-                        intent.putExtras(bundle3);
-                        startActivity(intent);
-                        finish();
                     }
                 }
             }
@@ -411,7 +395,7 @@ else if (etcantidadelegida.getText()== null){
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
-        final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
+        final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
@@ -435,40 +419,91 @@ else if (etcantidadelegida.getText()== null){
                             JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
                             if (success){
 
-                                for(int i=0;i<jsonArray.length();i++) {
-                                    producto = new Productos();
-                                    jsonObject = jsonArray.getJSONObject(i);
-                                    producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
-                                    producto.setMarca(jsonObject.getString("DES_MARCA"));
-                                    producto.setDescripcion(jsonObject.getString("DES_ARTICULO"));
-                                    producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
-                                    precioDouble = Double.valueOf(jsonObject.getString("PRECIO_SOLES"))* (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO"))/100  );
-                                    BigDecimal precioBig = new BigDecimal(precioDouble.toString());
-                                    precioBig = precioBig.setScale(2,RoundingMode.HALF_UP);
-                                    tvprecio.setText(precioBig.toString());
-                                    precioDouble = Double.valueOf(precioBig.toString())*Double.valueOf(etcantidadelegida.getText().toString());
-                                    producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
-                                    producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
-                                    producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
-                                    producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
-                                    producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
-                                    producto.setAlmacen(almacen);
-                                    tvtasa.setText(producto.getTasaDescuento());
 
-                                    if (etcantidadelegida.getText().toString().equals("")){
+                                response = response.trim();
+                                Boolean condicion = false,error = false;
 
-                                        Toast.makeText(DetalleProductoActivity.this, "Por favor ingrese un valor valido", Toast.LENGTH_SHORT).show();
+                                String Aux = response.replace("{","|");
+                                Aux = Aux.replace("}","|");
+                                Aux = Aux.replace("[","|");
+                                Aux = Aux.replace("]","|");
+                                Aux = Aux.replace("\"","|");
+                                Aux = Aux.replace(","," ");
+                                Aux = Aux.replace("|","");
+                                Aux = Aux.replace(":"," ");
+                                String partes[] = Aux.split(" ");
 
-                                    }else {
-
-                                        BigDecimal precioTotalBig = new BigDecimal(precioDouble.toString());
-                                        precioTotalBig = precioTotalBig.setScale(2,RoundingMode.HALF_UP);
-                                        tvunidades.setText(producto.getUnidad().toUpperCase());
-                                        Double Aux = Double.valueOf(producto.getStock());
-                                        tvstock.setText(formateador.format((double)Aux) + " ");
-                                        tvtotal.setText(precioTotalBig.toString());
+                                for (String palabras : partes){
+                                    if (condicion){ Mensaje += palabras+" "; }
+                                    if (palabras.equals("ERROR")){
+                                        condicion = true;
+                                        error = true;
                                     }
                                 }
+                                if (error) {
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
+                                    builder.setTitle("Alerta !");
+                                    builder.setMessage(Mensaje);
+                                    builder.setNegativeButton("Aceptar",null);
+                                    builder.create().show();
+                                    btnguardaryagregar.setVisibility(View.GONE);
+                                    btnguardaryrevisar.setVisibility(View.GONE);
+                                    btndverificarproducto.setVisibility(View.VISIBLE);
+
+                                    Mensaje = "";
+
+
+                                }else {
+
+
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        producto = new Productos();
+                                        jsonObject = jsonArray.getJSONObject(i);
+                                        producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
+                                        producto.setMarca(jsonObject.getString("DES_MARCA"));
+                                        producto.setDescripcion(jsonObject.getString("DES_ARTICULO"));
+                                        producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
+                                        BigDecimal precioBig1 = new BigDecimal(producto.getPrecio());
+                                        precioBig1 = precioBig1.setScale(2, RoundingMode.HALF_EVEN);
+                                        Descuento = (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO")) / 100);
+                                        precioDouble = Double.valueOf(precioBig1.toString()) * Descuento * Double.valueOf(etcantidadelegida.getText().toString());
+                                        precioBigTotal = new BigDecimal(precioDouble.toString());
+                                        precioBigTotal = precioBigTotal.setScale(2, RoundingMode.HALF_EVEN);
+                                        tvtotal.setText("" + precioBigTotal);
+                                        precioUnitarioDouble = Double.valueOf(producto.getPrecio()) * Descuento;
+                                        precioBigUnitario = new BigDecimal(precioUnitarioDouble.toString());
+                                        precioBigUnitario = precioBigUnitario.setScale(4, RoundingMode.HALF_EVEN);
+                                        tvprecio.setText(precioBigUnitario.toString());
+                                        tvpreciorealjson.setText(jsonObject.getString("PRECIO_SOLES"));
+                                        producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
+                                        producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
+                                        producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
+                                        producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
+                                        producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
+                                        producto.setNumPromocion(jsonObject.getString("NRO_PROMOCION"));
+                                        tvNroPromociones.setText(producto.getNumPromocion());
+                                        tvPresetacion.setText(producto.getPresentacion());
+                                        tvEquivalencia.setText(producto.getEquivalencia());
+                                        producto.setAlmacen(almacen);
+                                        tvtasa.setText(producto.getTasaDescuento());
+
+                                        if (etcantidadelegida.getText().toString().equals("")) {
+
+                                            Toast.makeText(DetalleProductoActivity.this, "Por favor ingrese un valor valido", Toast.LENGTH_SHORT).show();
+
+                                        } else {
+
+                                            tvunidades.setText(producto.getUnidad().toUpperCase());
+                                            Double Aux1 = Double.valueOf(producto.getStock());
+                                            tvstock.setText(formateador.format((double) Aux1) + " ");
+                                        }
+                                    }
+
+
+                                }
+
+
                             }else {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
@@ -495,6 +530,102 @@ else if (etcantidadelegida.getText()== null){
         requestQueue.add(stringRequest);
     }
 
+
+    private void ActualizarProducto1(String trama) {
+
+        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        response = response.trim();
+                        Boolean condicion = false,error = false;
+
+                        String Aux = response.replace("{","|");
+                        Aux = Aux.replace("}","|");
+                        Aux = Aux.replace("[","|");
+                        Aux = Aux.replace("]","|");
+                        Aux = Aux.replace("\"","|");
+                        Aux = Aux.replace(","," ");
+                        Aux = Aux.replace("|","");
+                        Aux = Aux.replace(":"," ");
+                        String partes[] = Aux.split(" ");
+
+                        for (String palabras : partes){
+                            if (condicion){ Mensaje += palabras+" "; }
+                            if (palabras.equals("ERROR")){
+                                condicion = true;
+                                error = true;
+                            }
+                        }
+                        if (error) {
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
+                            builder.setTitle("Alerta !");
+                            builder.setMessage(Mensaje);
+                            builder.setNegativeButton("Aceptar",null);
+
+                            builder.create().show();
+
+                            Mensaje = "";
+
+
+                        }else {
+
+                            productos.setCantidad(etcantidadelegida.getText().toString());
+                            preciounitario = Double.valueOf(tvprecio.getText().toString().replace(",",""));
+                            cantidad = Double.valueOf(etcantidadelegida.getText().toString());   // Cambio
+                            redondeado = new BigDecimal(preciounitario).setScale(2, RoundingMode.HALF_EVEN);
+                            productos.setPrecio(""+redondeado);
+                            productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
+                            productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tene
+                            productos.setIndice(Integer.valueOf(Index));
+
+                            listaproductoselegidos.add(productos);
+
+                            Intent intent = new Intent(DetalleProductoActivity.this, bandejaProductosActivity.class);
+                            intent.putExtra("TipoPago", tipoPago);
+                            intent.putExtra("validador", "true");
+                            intent.putExtra("Index", Index);
+                            intent.putExtra("id_pedido", id_pedido);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                            intent.putExtras(bundle);
+                            Bundle bundle1 = new Bundle();
+                            bundle1.putSerializable("Cliente", cliente);
+                            intent.putExtras(bundle1);
+                            Bundle bundle2 = new Bundle();
+                            bundle2.putSerializable("Usuario", usuario);
+                            intent.putExtras(bundle2);
+                            Bundle bundle3 = new Bundle();
+                            bundle3.putSerializable("Almacen", almacen);
+                            intent.putExtras(bundle3);
+                            Bundle bundle4 = new Bundle();
+                            bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                            intent.putExtras(bundle4);
+                            startActivity(intent);
+                            finish();
+
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        int socketTimeout = 30000;
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+    }
     private void ActualizarProducto(String trama) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
@@ -507,8 +638,71 @@ else if (etcantidadelegida.getText()== null){
                     public void onResponse(String response) {
 
                         response = response.trim();
+                        Boolean condicion = false,error = false;
 
-                        if (response.equals("OK")){
+                        String Aux = response.replace("{","|");
+                        Aux = Aux.replace("}","|");
+                        Aux = Aux.replace("[","|");
+                        Aux = Aux.replace("]","|");
+                        Aux = Aux.replace("\"","|");
+                        Aux = Aux.replace(","," ");
+                        Aux = Aux.replace("|","");
+                        Aux = Aux.replace(":"," ");
+                        String partes[] = Aux.split(" ");
+
+                        for (String palabras : partes){
+                            if (condicion){ Mensaje += palabras+" "; }
+                            if (palabras.equals("ERROR")){
+                                condicion = true;
+                                error = true;
+                            }
+                        }
+                        if (error) {
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
+                            builder.setTitle("Alerta !");
+                            builder.setMessage(Mensaje);
+                            builder.setNegativeButton("Aceptar",null);
+
+                            builder.create().show();
+
+                            Mensaje = "";
+
+
+                        }else {
+
+                            productos.setCantidad(etcantidadelegida.getText().toString());
+                            preciounitario = Double.valueOf(producto.getPrecio());
+                            cantidad = Double.valueOf(etcantidadelegida.getText().toString());
+                            productos.setPrecio(tvprecio.getText().toString());
+                            productos.setIndice(Integer.valueOf(Index));
+                            productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
+                            productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
+                            listaproductoselegidos.add(productos);
+                            Index = String.valueOf(Integer.valueOf(Index)+1);
+                            Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
+                            intent.putExtra("TipoPago", tipoPago);
+                            intent.putExtra("validador", "true");
+                            intent.putExtra("Index",Index);
+                            intent.putExtra("id_pedido",id_pedido);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
+                            intent.putExtras(bundle);
+                            Bundle bundle1 = new Bundle();
+                            bundle1.putSerializable("Cliente", cliente);
+                            intent.putExtras(bundle1);
+                            Bundle bundle2 = new Bundle();
+                            bundle2.putSerializable("Usuario", usuario);
+                            intent.putExtras(bundle2);
+                            Bundle bundle3 = new Bundle();
+                            bundle3.putSerializable("Almacen", almacen);
+                            intent.putExtras(bundle3);
+                            Bundle bundle4 = new Bundle();
+                            bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                            intent.putExtras(bundle4);
+                            startActivity(intent);
+                            finish();
+
 
                         }
                     }
