@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:allowBackup="true"
@@ -15,12 +16,14 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MostrarConsultaActivity"></activity>
+        <activity android:name=".IntemedioDetalleProductoActivity"></activity>
+        <activity android:name=".DetalleProductoPrecioActivity" />
+        <activity android:name=".BuscarProductoPrecioActivity" />
+        <activity android:name=".ConsultaPrecioActivity" />
+        <activity android:name=".MostrarConsultaActivity" />
         <activity android:name=".BuscarProductoStockActivity" />
-        <activity android:name=".BuscarClienteStockActivity" />
         <activity android:name=".PrecioActivity" />
         <activity android:name=".ConsultarPromocionesActivity" />
-        <activity android:name=".ConsultaPromocionActivity" />
         <activity android:name=".EventoActivity" />
         <activity android:name=".ConsultaStockActivity" />
         <activity android:name=".ProveedorActivity" />

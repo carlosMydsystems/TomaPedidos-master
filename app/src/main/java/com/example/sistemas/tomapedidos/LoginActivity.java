@@ -2,14 +2,13 @@ package com.example.sistemas.tomapedidos;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,10 +24,10 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
-    EditText etusuario,etclave;
+    EditText etusuario, etclave;
     Button btnlogeo;
     Usuario usuario;
-    String url,Mensaje="";
+    String url, Mensaje = "",myIMEI = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,26 +38,29 @@ public class LoginActivity extends AppCompatActivity {
         etusuario = findViewById(R.id.etUsuario);
         etclave = findViewById(R.id.etClave);
         btnlogeo = findViewById(R.id.btnLogin);
+
+        final String myIMEI = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
         btnlogeo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (etusuario.getText().equals("") || etclave.getText().equals("")){
-
-                }else{
-                    verificarUsuario(etusuario.getText().toString().replace(" ","").toUpperCase()
-                            ,etclave.getText().toString().replace(" ","").toUpperCase());
+                if (etusuario.getText().equals("") || etclave.getText().equals("")) {
+                } else {
+                    verificarUsuario(etusuario.getText().toString().replace(" ", "").toUpperCase()
+                            , etclave.getText().toString().replace(" ", "").toUpperCase(),myIMEI);
                 }
             }
         });
     }
 
-    public void verificarUsuario(String Codigo_usuario,String Contraseña_usuario){
+    public void verificarUsuario(String Codigo_usuario,String Contraseña_usuario,String Imei){
 
         final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
         progressDialog.setMessage("... Validando");
         progressDialog.setCancelable(false);
         progressDialog.show();
+        Mensaje = "";
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
@@ -107,29 +109,27 @@ public class LoginActivity extends AppCompatActivity {
                                             .show();
                                 }else {
 
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    usuario = new Usuario();
-                                    jsonObject = jsonArray.getJSONObject(i);
-                                    usuario.setCodAlmacen(jsonObject.getString("COD_ALMACEN"));
-                                    usuario.setNombre(jsonObject.getString("NOMBRE"));
-                                    usuario.setMoneda(jsonObject.getString("MONEDA"));
-                                    usuario.setCodTienda(jsonObject.getString("COD_TIENDA"));
-                                    usuario.setCodVendedor(jsonObject.getString("COD_VENDEDOR"));
-                                    usuario.setFechaActual(jsonObject.getString("FECHA_ACTUAL"));
-                                    usuario.setTipoCambio(jsonObject.getString("TIPO_CAMBIO"));
-                                    usuario.setLugar("LIMA"); // Se usa en la busqueda de producto
-                                    usuario.setUser(etusuario.getText().toString().toUpperCase().trim());
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        usuario = new Usuario();
+                                        jsonObject = jsonArray.getJSONObject(i);
+                                        usuario.setCodAlmacen(jsonObject.getString("COD_ALMACEN"));
+                                        usuario.setNombre(jsonObject.getString("NOMBRE"));
+                                        usuario.setMoneda(jsonObject.getString("MONEDA"));
+                                        usuario.setCodTienda(jsonObject.getString("COD_TIENDA"));
+                                        usuario.setCodVendedor(jsonObject.getString("COD_VENDEDOR"));
+                                        usuario.setFechaActual(jsonObject.getString("FECHA_ACTUAL"));
+                                        usuario.setTipoCambio(jsonObject.getString("TIPO_CAMBIO"));
+                                        usuario.setLugar(jsonObject.getString("COD_TIPO_LISTAPRE")); // Se usa en la busqueda de producto
+                                        usuario.setUser(etusuario.getText().toString().toUpperCase().trim());
+                                    }
+                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                    intent.putExtra("userId", etusuario.getText().toString());
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("Usuario", usuario);
+                                    intent.putExtras(bundle);
+                                    startActivity(intent);
+                                    finish();
                                 }
-
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                intent.putExtra("userId", etusuario.getText().toString());
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable("Usuario", usuario);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                                finish();
-                            }
-
                             }else{
                                 AlertDialog.Builder build1 = new AlertDialog.Builder(LoginActivity.this);
                                 build1.setTitle("Usuario  o Clave incorrecta")
@@ -154,4 +154,5 @@ public class LoginActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
+
 }

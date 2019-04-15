@@ -90,7 +90,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvprecioreal = findViewById(R.id.tvPrecioReal);
         tvunidades = findViewById(R.id.tvUnidad);
         tvtasa =  findViewById(R.id.tvTasa);
-        imgbtnvolverdetalleproducto = findViewById(R.id.ibVolverDetalleProducto);
+        imgbtnvolverdetalleproducto = findViewById(R.id.ibVolverDetalleProductoPrecio);
         tvpreciorealjson = findViewById(R.id.tvPrecioRealJson);
         tvNroPromociones = findViewById(R.id.tvNroPromociones);
         tvPresetacion = findViewById(R.id.tvPresetacion);
@@ -513,6 +513,8 @@ else if (etcantidadelegida.getText()== null){
                                         .setNegativeButton("Aceptar",null)
                                         .create()
                                         .show();
+                                btnguardaryrevisar.setVisibility(View.GONE);
+                                btnguardaryagregar.setVisibility(View.GONE);
                             }
                         } catch (JSONException e) { e.printStackTrace(); }
                     }

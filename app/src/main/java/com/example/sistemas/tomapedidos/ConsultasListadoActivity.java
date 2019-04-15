@@ -9,6 +9,8 @@ import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -103,9 +105,18 @@ public class ConsultasListadoActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                         break;
+
                     case 3:
 
+                        Intent intent2 = new Intent(ConsultasListadoActivity.this,ConsultaPrecioActivity.class);
+                        Bundle bundle2 = new Bundle();
+                        bundle2.putSerializable("Usuario",usuario);
+                        intent2.putExtras(bundle2);
+                        startActivity(intent2);
+                        finish();
+                        Toast.makeText(ConsultasListadoActivity.this, "ingreso", Toast.LENGTH_SHORT).show();
                         break;
+
                 }
                 }
             });

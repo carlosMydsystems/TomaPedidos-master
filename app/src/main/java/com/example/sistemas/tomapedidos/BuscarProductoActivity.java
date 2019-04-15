@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -48,6 +49,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     Usuario usuario;
     ArrayList<ClienteSucursal> listaClienteSucursal;
+    int longitudMaxima=50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,26 +88,26 @@ public class BuscarProductoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                        Intent intent = new Intent(BuscarProductoActivity.this, bandejaProductosActivity.class);
-                        intent.putExtra("TipoPago", tipoPago);
-                        intent.putExtra("id_pedido", id_pedido                                                                                                                                                                                                                                                                                          );
-                        intent.putExtra("Almacen", almacen);
-                        intent.putExtra("Index", Index);
-                        intent.putExtra("retorno", "retorno");
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("Cliente", cliente);
-                        intent.putExtras(bundle);
-                        Bundle bundle1 = new Bundle();
-                        bundle1.putSerializable("Usuario", usuario);
-                        intent.putExtras(bundle1);
-                        Bundle bundle2 = new Bundle();
-                        bundle2.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                        intent.putExtras(bundle2);
-                        Bundle bundle3 = new Bundle();
-                        bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                        intent.putExtras(bundle3);
-                        startActivity(intent);
-                        finish();
+                    Intent intent = new Intent(BuscarProductoActivity.this, bandejaProductosActivity.class);
+                    intent.putExtra("TipoPago", tipoPago);
+                    intent.putExtra("id_pedido", id_pedido                                                                                                                                                                                                                                                                                          );
+                    intent.putExtra("Almacen", almacen);
+                    intent.putExtra("Index", Index);
+                    intent.putExtra("retorno", "retorno");
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Cliente", cliente);
+                    intent.putExtras(bundle);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("Usuario", usuario);
+                    intent.putExtras(bundle1);
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                    intent.putExtras(bundle2);
+                    Bundle bundle3 = new Bundle();
+                    bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                    intent.putExtras(bundle3);
+                    startActivity(intent);
+                    finish();
             }
         });
         }else {
@@ -115,34 +117,34 @@ public class BuscarProductoActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
-                        .setCancelable(false)
-                        .setMessage("Esta seguro que desea regresar, a la lista de formas de pago ")
-                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
+                    .setCancelable(false)
+                    .setMessage("Esta seguro que desea regresar, a la lista de formas de pago ")
+                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
 
                 builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        EliminarProductoporIdpedido(id_pedido);
+                    EliminarProductoporIdpedido(id_pedido);
 
-                        Intent intent =  new Intent(BuscarProductoActivity.this,ListadoFormaPagoActivity.class);
-                        intent.putExtra("Almacen",almacen);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("Cliente",cliente);
-                        intent.putExtras(bundle);
-                        Bundle bundle1 = new Bundle();
-                        bundle1.putSerializable("Usuario",usuario);
-                        intent.putExtras(bundle1);
-                        Bundle bundle3 = new Bundle();
-                        bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                        intent.putExtras(bundle3);
-                        startActivity(intent);
-                        finish();
+                    Intent intent =  new Intent(BuscarProductoActivity.this,ListadoFormaPagoActivity.class);
+                    intent.putExtra("Almacen",almacen);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Cliente",cliente);
+                    intent.putExtras(bundle);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("Usuario",usuario);
+                    intent.putExtras(bundle1);
+                    Bundle bundle3 = new Bundle();
+                    bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                    intent.putExtras(bundle3);
+                    startActivity(intent);
+                    finish();
                     }
                 });
                 builder.create()
@@ -156,7 +158,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
             String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.getCodVendedor()
                     + "|"+tipoPago+"|"+cliente.getTipoDocumento()+"|"+usuario.getMoneda()+"|"+usuario.getUser().trim()
                     +"|"+usuario.getCodTienda()+"|"+listaClienteSucursal.get(0).getCodSucursal()+"|00000000|00000000||";
-
             ActualizarProducto(Trama);
 
         }
@@ -202,10 +203,43 @@ public class BuscarProductoActivity extends AppCompatActivity {
                         lvProducto.setAdapter(listAdapter);
 
                     }else{
-                        buscarproducto(etproducto.getText().toString().replace(" ",""),Tipobusqueda,almacen);
+                        if (etproducto.getText().toString().equals("")) {
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this);
+                            builder.setTitle("Atención !");
+                            builder.setMessage("Por favor ingrese una cantidad valida");
+                            builder.setCancelable(false);
+                            builder.setNegativeButton("Aceptar",null);
+                            builder.create()
+                                    .show();
+                            btnbuscarProducto.setVisibility(View.VISIBLE);
+                            btnregresarproducto.setVisibility(View.VISIBLE);
+
+                        }else {
+
+                            buscarproducto(etproducto.getText().toString().replace(" ", ""), Tipobusqueda, almacen);
+
+                        }
                     }
                 }else{
-                    buscarproducto(etproducto.getText().toString().replace(" ",""),Tipobusqueda,almacen);
+
+                    if (etproducto.getText().toString().equals("")) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this);
+                        builder.setTitle("Atención !");
+                        builder.setMessage("Por favor ingrese una cantidad valida");
+                        builder.setCancelable(false);
+                        builder.setNegativeButton("Aceptar",null);
+                        builder.create()
+                                .show();
+                        btnbuscarProducto.setVisibility(View.VISIBLE);
+                        btnregresarproducto.setVisibility(View.VISIBLE);
+
+                    }else {
+
+                        buscarproducto(etproducto.getText().toString().replace(" ", ""), Tipobusqueda, almacen);
+
+                    }
                 }
             }
         });
@@ -252,7 +286,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
                  etproducto.setInputType(2);   // envia el teclado de tipo numerico
                  Tipobusqueda = "Codigo";
                  etproducto.setText("");
-             }
+                 etproducto.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
+
+         }
         });
      rbnombreproducto.setOnClickListener(new View.OnClickListener() {
          @Override
@@ -261,7 +297,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
                  etproducto.setInputType(16384 );  // envia el teclado de tipo alfanumerico
                  Tipobusqueda = "Nombre";
                  etproducto.setText("");
-             }
+                 etproducto.setFilters(new InputFilter[] {new InputFilter.LengthFilter(80)});
+
+         }
         });
     }
 
@@ -344,14 +382,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
                                         producto.setDescripcion(jsonObject.getString("DES_ARTICULO")); //
                                         producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
                                         producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
-                                        /*
-                                        producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
-                                        producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
-                                        producto.setNumPromocion(jsonObject.getString("NRO_PROMOCION"));
-                                        producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
-                                        producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
-*/
-
                                         producto.setAlmacen(almacen);
                                         listaProductos.add(producto);
                                         listaProducto.add(producto.getCodigo() + " - " + producto.getDescripcion());
@@ -403,7 +433,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
                                 }
 
                             }else {
-                                progressDialog.dismiss();
                                 listaProducto.clear();
 
                                 btnbuscarProducto.setVisibility(View.VISIBLE);
@@ -416,9 +445,8 @@ public class BuscarProductoActivity extends AppCompatActivity {
                                         .setNegativeButton("Aceptar",null)
                                         .create()
                                         .show();
-
+                                progressDialog.dismiss();
                             }
-
                         } catch (JSONException e) { e.printStackTrace(); }
                     }
                 }, new Response.ErrorListener() {
@@ -489,6 +517,5 @@ public class BuscarProductoActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
-
     }
 }

@@ -12,8 +12,7 @@ public class Stock implements Serializable {
         this.stockDisponible = stockDisponible;
     }
 
-    public Stock() {
-    }
+    public Stock() {}
 
     public String getCodalmacen() {
         return codalmacen;

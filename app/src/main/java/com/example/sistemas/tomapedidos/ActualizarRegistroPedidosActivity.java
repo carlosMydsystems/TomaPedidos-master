@@ -79,9 +79,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         etcantprodelegida.requestFocus();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-        //Toast.makeText(ActualizarRegistroPedidosActivity.this, "sucursal "+listaClienteSucursal.get(0).getCodSucursal(), Toast.LENGTH_SHORT).show();
-        // Se referencia a todas las partes del XML asociado al ProveedorActivity
-
         tvcodprodelegido =  findViewById(R.id.tvCodProdElegido);
         tvnomprodelegido = findViewById(R.id.tvNomProdElegido);
         tvalmprodelegido = findViewById(R.id.tvAlmProdElegido);
@@ -142,13 +139,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
                     } else {
 
-/*
-                        String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice()
-                                + "|" + etcantprodelegida.getText() + "|" + productos.getCodigo() + "|"
-                                + tvpreciorealjsonelegido.getText().toString().replace(",","") + "|"
-                                + tvtotalelegido.getText().toString().trim().replace(",","") + "||";
-*/
-
                         String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
                                     productos.getCodigo() + "|" + tvpreciorealjsonelegido.getText().toString().replace(",", "") +
                                     "|" + tvtasaelegida.getText().toString().trim() + "|" + productos.getNumPromocion().trim() + "|" + productos.getPresentacion() +
@@ -174,21 +164,27 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                         intent.putExtra("validador", "true");
                         intent.putExtra("Almacen", almacen);
                         intent.putExtra("Index", Index);
+
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
                         intent.putExtras(bundle);
+
                         Bundle bundle1 = new Bundle();
                         bundle1.putSerializable("Cliente", cliente);
                         intent.putExtras(bundle1);
+
                         Bundle bundle2 = new Bundle();
                         bundle2.putSerializable("Usuario", usuario);
                         intent.putExtras(bundle2);
+
                         Bundle bundle3 = new Bundle();
                         bundle3.putSerializable("Almacen", almacen);
                         intent.putExtras(bundle3);
+
                         Bundle bundle4 = new Bundle();
                         bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
                         intent.putExtras(bundle4);
+
                         startActivity(intent);
                         finish();
                     }
@@ -282,6 +278,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                         error = true;
                                     }
                                 }
+
                                 if (error) {
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this);
@@ -289,15 +286,10 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                     builder.setMessage(Mensaje);
                                     builder.setNegativeButton("Aceptar",null);
                                     builder.create().show();
-                                    //btnguardaryagregar.setVisibility(View.GONE);
-                                    //btnguardaryrevisar.setVisibility(View.GONE);
-                                    //btndverificarproducto.setVisibility(View.VISIBLE);
 
                                     Mensaje = "";
 
-
                                 }else {
-
 
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         producto = new Productos();
@@ -306,7 +298,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                         producto.setMarca(jsonObject.getString("DES_MARCA"));//
                                         producto.setDescripcion(jsonObject.getString("DES_ARTICULO"));//
                                         producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
-
 
                                         precioDouble = Double.valueOf(jsonObject.getString("PRECIO_SOLES")) * (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO")) / 100);
                                         BigDecimal precioBig = new BigDecimal(precioDouble.toString());
@@ -320,13 +311,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                         precioDouble = Double.valueOf(precioBig1.toString()) * Descuento * Double.valueOf(etcantprodelegida.getText().toString());
                                         precioBigTotal = new BigDecimal(precioDouble.toString());
                                         precioBigTotal = precioBigTotal.setScale(2, RoundingMode.HALF_EVEN);
-/*
-                                    Toast.makeText(ActualizarRegistroPedidosActivity.this, "precioBig : " + precioBig, Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(ActualizarRegistroPedidosActivity.this, "precioBig1 : " + precioBig1, Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(ActualizarRegistroPedidosActivity.this, "Descuento : " + Descuento, Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(ActualizarRegistroPedidosActivity.this, "precioDouble : " + precioDouble, Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(ActualizarRegistroPedidosActivity.this, "precioBigTotal : " + precioBigTotal, Toast.LENGTH_SHORT).show();
-*/
                                         tvprecioelegido.setText(precioBig.toString());
                                         tvpreciorealjsonelegido.setText(jsonObject.getString("PRECIO_SOLES"));
                                         precioDouble = Double.valueOf(precioBig.toString()) * Double.valueOf(etcantprodelegida.getText().toString());
@@ -376,11 +360,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                             tvtotalelegido.setText(precioTotalBig.toString());
                                         }
                                     }
-
-
                                 }
-
-                                
 
                             }else {
 

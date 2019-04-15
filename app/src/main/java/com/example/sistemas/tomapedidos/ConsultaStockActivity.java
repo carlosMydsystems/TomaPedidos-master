@@ -134,6 +134,7 @@ public class ConsultaStockActivity extends AppCompatActivity {
                                 }
                                 if (error) {
 
+                                    progressDialog.dismiss();
                                     AlertDialog.Builder dialog = new AlertDialog.Builder(
                                             ConsultaStockActivity.this);
                                     dialog.setMessage(Mensaje)

@@ -7,6 +7,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -252,12 +253,16 @@ public class ProveedorActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (rgBuscarProveedor.getCheckedRadioButtonId()){
                     case R.id.rbNombreProveedor:
+                        etProveedor.setFilters(new InputFilter[] {new InputFilter.LengthFilter(80)});
                         etProveedor.setInputType(1);
                         TipodeConsulta = "NombreProveedor";
+
                         break;
                     case R.id.rbCodigoProveedor:
+                        etProveedor.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
                         etProveedor.setInputType(2);
                         TipodeConsulta = "CodigoProveedor";
+
                         break;
                 }
             }

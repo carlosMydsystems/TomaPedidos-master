@@ -10,8 +10,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,15 +20,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.ConsultaPromocion;
-import com.example.sistemas.tomapedidos.Entidades.Promociones;
-import com.example.sistemas.tomapedidos.Entidades.Stock;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.DataOutputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -86,7 +79,6 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-
         url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PROMOCIONES_CAB&variables=%27"+trama+"%27";
 
@@ -94,7 +86,6 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
         listaPromocionesObjetos = new ArrayList<>();
         listaCodigosPromociones = new ArrayList<>();
         listaPromocionAux = new ArrayList<>();
-
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -169,13 +160,9 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
                                         @Override
                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
-                                            Toast.makeText(ConsultarPromocionesActivity.this,listaPromocionesObjetos.get(position).getNroPromocion() , Toast.LENGTH_SHORT).show();
-
                                             Intent intent = new Intent(ConsultarPromocionesActivity.this,MostrarConsultaActivity.class);
                                             Bundle bundle = new Bundle();
                                             intent.putExtra("position",""+position);
-                                            Toast.makeText(getApplicationContext(), "primero"+position, Toast.LENGTH_SHORT).show();
                                             bundle.putSerializable("listaPromocionesObjetos",listaPromocionesObjetos);
                                             intent.putExtras(bundle);
                                             Bundle bundle1 = new Bundle();
@@ -219,5 +206,4 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
-
 }

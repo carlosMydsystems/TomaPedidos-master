@@ -72,6 +72,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         if (ValidarBtnTerminar == null){
 
             ValidarBtnTerminar = "true";
+
         }else{
 
             ValidarBtnTerminar = getIntent().getStringExtra("ValidarBtnTerminar");
@@ -79,6 +80,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         }
 
         listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
+
         if (check!=null){
             EliminaPromocion();
             check = null;
@@ -100,16 +102,15 @@ public class bandejaProductosActivity extends AppCompatActivity {
         final Integer hora =  fecha.get(Calendar.HOUR_OF_DAY);
         final Integer minuto = fecha.get(Calendar.MINUTE);
         final Integer segundo = fecha.get(Calendar.SECOND);
+
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
 
         // valores para el sumarizado de la bandeja
 
         if (listaproductoselegidos != null) {
-
             for (int i = 0; i < listaproductoselegidos.size(); i++) {
                 // calcula numero de productos
-
                 Double Aux = 0.0;
                 if (listaproductoselegidos.get(i).getPrecioAcumulado().equals("")) {
 
@@ -130,8 +131,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 }
 
                 listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo() + " - " +
-                        listaproductoselegidos.get(i).getDescripcion() + "\nCant: " + listaproductoselegidos.
-                        get(i).getCantidad() + "                                             Unidad: " +
+                        listaproductoselegidos.get(i).getDescripcion() + "\nCant: " + formateador.format(Double.valueOf(listaproductoselegidos.
+                        get(i).getCantidad())) + "                                             Unidad: " +
                         listaproductoselegidos.get(i).getUnidad() + "\nPrecio: S/ " + formateador.format((double) preciolista) +
                         "                  Subtotal: S/ " + formateador.format((double) Aux));
             }
@@ -322,9 +323,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
 
-
-
-
                 }
             });
 
@@ -422,7 +420,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                         break;
                                 }
                             }
-                        });  //
+                        });
 
                         builder.setView(mview);
                         AlertDialog dialog = builder.create();
@@ -449,7 +447,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                             "Codigo\t\t\t:\t\t" + listaproductoselegidos.get(position).getCodigo() + "\n" +
                                     "Nombre\t\t\t:\t\t" + listaproductoselegidos.get(position).getDescripcion() + "\n" +
                                     "Unidad\t\t\t:\t\t" + listaproductoselegidos.get(position).getUnidad() + "\n" +
-                                    "Cantidad\t\t:\t\t" + listaproductoselegidos.get(position).getCantidad() + "\n" +
+                                    "Cantidad\t\t:\t\t" + formateador.format(Double.valueOf(listaproductoselegidos.get(position).getCantidad())) + "\n" +
                                     "Precio\t\t\t\t:\t\tS/ " + listaproductoselegidos.get(position).getPrecio() + "\n" +
                                     "Subtotal\t\t\t:\t\tS/ " + formateador.format((double) Aux))
                             .setNegativeButton("Aceptar", null)
@@ -467,7 +465,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
             }else {
 
-                if (listaproductoselegidos.get(position1).getObservacion().equals("Promocion")){
+                if (listaproductoselegidos.get(position1).getObservacion().equals("S")||listaproductoselegidos.get(position1).getObservacion().equals("T")){
 
                     Integer indicePromocion = listaproductoselegidos.get(position1).getIndice();
                     EliminarProducto(id_pedido+"|"+indicePromocion);
@@ -488,29 +486,32 @@ public class bandejaProductosActivity extends AppCompatActivity {
         intent.putExtra("id_pedido",id_pedido);
         intent.putExtra("Index",Index);
         intent.putExtra("TipoPago",tipoformapago);
+        intent.putExtra("Almacen",almacen);
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("Producto", productos);
         intent.putExtras(bundle);
+
         Bundle bundle1 = new Bundle();
         bundle1.putSerializable("listaProductoselegidos", listaproductoselegidos);
         intent.putExtras(bundle1);
+
         Bundle bundle2 = new Bundle();
         bundle2.putSerializable("Usuario", usuario);
         intent.putExtras(bundle2);
+
         Bundle bundle3 = new Bundle();
         bundle3.putSerializable("Cliente", cliente);
         intent.putExtras(bundle3);
-        intent.putExtra("Almacen",almacen);
 
-        Bundle bundle5 = new Bundle();
-        bundle5.putSerializable("listaClienteSucursal",listaClienteSucursal);
-        intent.putExtras(bundle5);
+        Bundle bundle4 = new Bundle();
+        bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+        intent.putExtras(bundle4);
 
         startActivity(intent);
         finish();
 
     }
-
 
     private void Editarproductoselecionado(Integer position) {
 
@@ -520,19 +521,24 @@ public class bandejaProductosActivity extends AppCompatActivity {
         intent.putExtra("id_pedido",id_pedido);
         intent.putExtra("Index",Index);
         intent.putExtra("position",position.toString());
+        intent.putExtra("Almacen",almacen);
+
         Bundle bundle = new Bundle();
         bundle.putSerializable("Usuario",usuario);
         intent.putExtras(bundle);
+
         Bundle bundle1 = new Bundle();
         bundle1.putSerializable("listaproductoselegidos",listaproductoselegidos);
         intent.putExtras(bundle1);
+
         Bundle bundle2 = new Bundle();
         bundle2.putSerializable("Cliente",cliente);
         intent.putExtras(bundle2);
+
         Bundle bundle3 = new Bundle();
         bundle3.putSerializable("Producto", producto);
         intent.putExtras(bundle3);
-        intent.putExtra("Almacen",almacen);
+
         Bundle bundle4 = new Bundle();
         bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
         intent.putExtras(bundle4);
@@ -582,7 +588,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_PEDIDO_TRAMA&variables='"+idpedido+"'";
-
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {

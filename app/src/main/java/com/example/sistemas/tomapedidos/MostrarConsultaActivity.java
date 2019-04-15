@@ -55,7 +55,6 @@ public class MostrarConsultaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mostrar_consulta);
 
         listaPromocionesObjetos = (ArrayList<ConsultaPromocion>)getIntent().getSerializableExtra("listaPromocionesObjetos");
-
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         cliente = (Clientes) getIntent().getSerializableExtra("Cliente");
         nroPromocion = getIntent().getStringExtra("nroPromocion");
@@ -119,12 +118,6 @@ public class MostrarConsultaActivity extends AppCompatActivity {
                 text.setTextSize(15);
                 int color = Color.argb(10, 0, 20, 255);
                 text.setBackgroundColor(color);
-                /*
-                if (String.valueOf(items.get(position).charAt(0)).equals("*") ){
-                    text.setTextColor(Color.BLACK);
-                    text.setBackgroundColor(Color.argb(10, 0, 20, 255));
-                }
-                */
             }
             return mView;
         }
@@ -140,11 +133,9 @@ public class MostrarConsultaActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-
         url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PROMOCIONES_DET&variables=%27"+nroPromocion+"%27";
 
         listaPromocionesObjetos = new ArrayList<>();
-
         listaPromocionAux = new ArrayList<>();
         listaPromocionesStr = new ArrayList<>();
 
@@ -196,15 +187,12 @@ public class MostrarConsultaActivity extends AppCompatActivity {
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         jsonObject = jsonArray.getJSONObject(i);
                                         consultaPromocion = new ConsultaPromocion();
-
                                         consultaPromocion.setCodArticulo(jsonObject.getString("COD_ARTICULO"));
                                         consultaPromocion.setDescripcion(jsonObject.getString("DESCRIPCION"));
                                         consultaPromocion.setDesMarca(jsonObject.getString("DES_MARCA"));
                                         consultaPromocion.setUndVenta(jsonObject.getString("UND_VENTA"));
                                         consultaPromocion.setCantidad(jsonObject.getString("CANTIDAD"));
                                         consultaPromocion.setFlgRegalo(jsonObject.getString("FLG_REGALO"));
-
-
                                         listaPromocionesObjetos.add(consultaPromocion);
                                         Double Aux1 = Double.valueOf(consultaPromocion.getCantidad().toString());
                                         consultaPromocion.setCantidad(formateador.format((double) Aux1) + "");
@@ -214,7 +202,6 @@ public class MostrarConsultaActivity extends AppCompatActivity {
                                     }
 
                                     progressDialog.dismiss();
-
                                     ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
                                             CustomListAdapter(MostrarConsultaActivity.this, R.layout.custom_list, listaPromocionesStr);
                                     lvMuestraPromociones.setAdapter(listAdapter);
@@ -235,14 +222,12 @@ public class MostrarConsultaActivity extends AppCompatActivity {
                                             intent.putExtras(bundle2);
                                             startActivity(intent);
                                             finish();
-
                                         }
                                     });
                                 }
                             }else {
                                 progressDialog.dismiss();
                                 listaPromocionesStr.clear();
-
                                 final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
                                         , R.layout.support_simple_spinner_dropdown_item,listaPromocionesStr);
                                 lvMuestraPromociones.setAdapter(adapter);
@@ -261,7 +246,6 @@ public class MostrarConsultaActivity extends AppCompatActivity {
                 error.printStackTrace();
             }
         });
-
         int socketTimeout = 30000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);

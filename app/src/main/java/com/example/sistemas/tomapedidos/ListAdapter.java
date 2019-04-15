@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.example.sistemas.tomapedidos.Entidades.Promociones;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
 public class ListAdapter extends BaseAdapter {
@@ -89,11 +91,11 @@ public class ListAdapter extends BaseAdapter {
             public void onClick(View v)
             {
 
-                int minuendo = Integer.valueOf(listViewHolder.tvStock.getText().toString());
-                int sustraendo = Integer.valueOf(listViewHolder.edTextQuantity.getText().toString());
-                int res = minuendo - sustraendo;
+                Double minuendo = Double.valueOf(listViewHolder.tvStock.getText().toString().replace(",",""));
+                Double sustraendo = Double.valueOf(listViewHolder.edTextQuantity.getText().toString());
+                Double res = minuendo - sustraendo;
 
-                if (res <= 0) {
+                if (res <= 0.0) {
 
                 }else{
 
@@ -117,9 +119,9 @@ public class ListAdapter extends BaseAdapter {
                 }
                 updateQuantity(position,listViewHolder.edTextQuantity,-1);
 
-                Integer minuendo = Integer.valueOf(listViewHolder.tvStock.getText().toString());
-                Integer sustraendo = Integer.valueOf(listViewHolder.edTextQuantity.getText().toString());
-                Integer resultado = minuendo - sustraendo;
+                Double minuendo = Double.valueOf(listViewHolder.tvStock.getText().toString().replace(",",""));
+                Double sustraendo = Double.valueOf(listViewHolder.edTextQuantity.getText().toString());
+                Double res = minuendo - sustraendo;
 
             }
         });
@@ -132,7 +134,11 @@ public class ListAdapter extends BaseAdapter {
 
             }
         }
-        listViewHolder.tvStock.setText(products.Stock);
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
+        simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
+        final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
+        listViewHolder.tvStock.setText(formateador.format(Double.valueOf(products.Stock)));
 
         return row;
     }

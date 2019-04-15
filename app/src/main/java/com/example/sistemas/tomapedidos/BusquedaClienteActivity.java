@@ -15,8 +15,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -64,6 +62,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
 
         consultaPromociones = getIntent().getStringExtra("consultaPromociones");
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");  //Se pasa el parametro del usuario
+        etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
 
 
         if (consultaPromociones==null){
@@ -165,14 +164,12 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    Toast.makeText(BusquedaClienteActivity.this, "Consulta Promocion", Toast.LENGTH_SHORT).show();
-
-                    Intent intent =  new Intent(BusquedaClienteActivity.this,ConsultasListadoActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("Usuario",usuario);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    finish();
+                Intent intent =  new Intent(BusquedaClienteActivity.this,ConsultasListadoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Usuario",usuario);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                finish();
 
                 }
             });
@@ -181,23 +178,24 @@ public class BusquedaClienteActivity extends AppCompatActivity {
             btnbuscar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (etcliente.getText().toString().equals(""))
-                    {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
-                        builder.setCancelable(false);
-                        builder.setMessage("Por favor ingrese un valor valido")
-                                .setNegativeButton("Aceptar",null)
-                                .create()
-                                .show();
-                    }else {
-                        progressDialog = new ProgressDialog(BusquedaClienteActivity.this);
-                        progressDialog.setMessage("Cargando...");
-                        progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
-                        progressDialog.show();
-                        progressDialog.setCancelable(false);
-                        btnbuscar.setVisibility(View.GONE);
-                        buscarCliente(etcliente.getText().toString(),tipoConsulta,usuario);
-                    }
+
+                if (etcliente.getText().toString().equals(""))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
+                    builder.setCancelable(false);
+                    builder.setMessage("Por favor ingrese un valor valido")
+                            .setNegativeButton("Aceptar",null)
+                            .create()
+                            .show();
+                }else {
+                    progressDialog = new ProgressDialog(BusquedaClienteActivity.this);
+                    progressDialog.setMessage("Cargando...");
+                    progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
+                    progressDialog.show();
+                    progressDialog.setCancelable(false);
+                    btnbuscar.setVisibility(View.GONE);
+                    buscarCliente(etcliente.getText().toString(),tipoConsulta,usuario);
+                }
                 }
             });
 
@@ -205,6 +203,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
 
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
                     cliente = new Clientes();
                     cliente =  listaClientes.get(position);
                     Intent intent =  new Intent(BusquedaClienteActivity.this,ConsultarPromocionesActivity.class);
@@ -216,6 +215,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                     intent.putExtras(bundle1);
                     startActivity(intent);
                     finish();
+
                 }
             });
 
@@ -241,6 +241,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
 
         }
     }
+        /** Hace la busqueda del Cliente por Codigo o por nombre **/
 
     private void buscarCliente(String numero, String tipoConsulta,Usuario usuario) {
 
@@ -250,10 +251,12 @@ public class BusquedaClienteActivity extends AppCompatActivity {
 
         if (tipoConsulta == "Nombre") {
 
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='" + numero + "||'";
+            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='" + numero + "||'";
         } else {
 
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='||" + numero + "'";
+            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='||" + numero + "'";
         }
 
         listaCliente = new ArrayList<>();

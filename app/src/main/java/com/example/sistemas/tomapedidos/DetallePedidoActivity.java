@@ -206,7 +206,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                             if (partesTrama[10].equals("N")){
 
                                             }else{
-                                                productos.setObservacion("Promocion");
+                                                productos.setObservacion(partesTrama[10]);
                                             }
 
                                             String articulo = jsonObject.getString("ARTICULO");

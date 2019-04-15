@@ -218,7 +218,7 @@
         android:layout_width="349dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:background="#014284"
         android:text="VERIFICAR"
@@ -261,7 +261,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvStockElegido" />
 
     <ImageButton
-        android:id="@+id/ibVolverDetalleProducto"
+        android:id="@+id/ibVolverDetalleProductoPrecio"
         android:layout_width="64dp"
         android:layout_height="43dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -317,6 +317,21 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnDsctoxVolumen"
+        android:layout_width="349dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Dscto por Volumen"
+        android:visibility="gone"
+        android:background="#014284"
+        android:textColor="#fff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etCantProdElegida" />
 
 
 </android.support.constraint.ConstraintLayout>

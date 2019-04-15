@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -25,6 +27,8 @@ import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.DataOutputStream;
 import java.util.ArrayList;
 
 public class PromocionesActivity extends AppCompatActivity {
@@ -42,9 +46,8 @@ public class PromocionesActivity extends AppCompatActivity {
     Productos productopromocion;
     Clientes cliente;
     Usuario usuario;
-
     ArrayList<ClienteSucursal> listaClienteSucursal;
-    ArrayList<Productos> listaProductosPromociones,listaproductoselegidos;
+    ArrayList<Productos> listaproductoselegidos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,6 @@ public class PromocionesActivity extends AppCompatActivity {
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("Ind");
         cantidadlista =  getIntent().getStringExtra("cantidadlista");
-        listaProductosPromociones = new ArrayList<>();
         btnregistrarpromociones = (Button) findViewById(R.id.btnRegistrarPromociones);
         btnregistrarpromociones.setVisibility(View.INVISIBLE);
         btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
@@ -90,10 +92,10 @@ public class PromocionesActivity extends AppCompatActivity {
             if(listAdapter.listProducts.get(i).CartQuantity > 0)
             {
                 Product products = new Product(
-                        listAdapter.listProducts.get(i).ProductName     //
+                        listAdapter.listProducts.get(i).ProductName
                         ,listAdapter.listProducts.get(i).ProductPrice
                         ,listAdapter.listProducts.get(i).ProductImage
-                        ,listAdapter.listProducts.get(i).ProductIdArticulo  //
+                        ,listAdapter.listProducts.get(i).ProductIdArticulo
                         ,listAdapter.listProducts.get(i).UnidadProducto
                         ,listAdapter.listProducts.get(i).TasaDescuento
                         ,listAdapter.listProducts.get(i).Presentacion
@@ -108,18 +110,14 @@ public class PromocionesActivity extends AppCompatActivity {
                 productopromocion.setUnidad(listAdapter.listProducts.get(i).UnidadProducto);
                 productopromocion.setCantidad(String.valueOf(listAdapter.listProducts.get(i).CartQuantity));
                 productopromocion.setPrecio(listAdapter.listProducts.get(i).ProductPrice.toString());
-                //Double precioacumulado = Double.valueOf(productopromocion.getPrecio())*Double.valueOf(productopromocion.getCantidad());
-                //productopromocion.setPrecioAcumulado(precioacumulado.toString());
                 productopromocion.setPrecioAcumulado("0.0");
                 productopromocion.setNumPromocion(listAdapter.listProducts.get(i).ProductName);
-                productopromocion.setObservacion("Promocion");
+                productopromocion.setObservacion("S");
                 productopromocion.setCodigo(listAdapter.listProducts.get(i).ProductIdArticulo);
                 productopromocion.setTasaDescuento(listAdapter.listProducts.get(i).TasaDescuento);
                 productopromocion.setPresentacion(listAdapter.listProducts.get(i).Presentacion);
                 productopromocion.setEquivalencia(listAdapter.listProducts.get(i).Equivalencia);
                 productopromocion.setPrecio(listAdapter.listProducts.get(i).PrecioUni);
-             //   productopromocion.setTasaDescuento(listAdapter.listProducts.get(i).P);
-
                 listaproductoselegidos.add(productopromocion);
 
             }
@@ -131,23 +129,18 @@ public class PromocionesActivity extends AppCompatActivity {
         intent.putExtra("TipoPago",tipoformapago);
         intent.putExtra("Ind",Ind);
         intent.putExtra("id_pedido",id_pedido);
-
         Bundle bundle = new Bundle();
-        Bundle bundle1 = new Bundle();
-        Bundle bundle2 = new Bundle();
-
         bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-        bundle2.putSerializable("Usuario", usuario);
-        bundle1.putSerializable("Cliente", cliente);
-
         intent.putExtras(bundle);
-        intent.putExtras(bundle2);
+        Bundle bundle1 = new Bundle();
+        bundle1.putSerializable("Cliente", cliente);
         intent.putExtras(bundle1);
-
+        Bundle bundle2 = new Bundle();
+        bundle2.putSerializable("Usuario", usuario);
+        intent.putExtras(bundle2);
         Bundle bundle4 = new Bundle();
         bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
         intent.putExtras(bundle4);
-
         startActivity(intent);
         finish();
     }
@@ -160,18 +153,18 @@ public class PromocionesActivity extends AppCompatActivity {
             valorcantidad = Double.valueOf(listaPromociones.get(i).getEquivalencia()) * Double.valueOf(listaPromociones.get(i).getCantidadBonificada());
 
             products.add(new Product(
-                    listaPromociones.get(i).getNumeroPromocion(),
-                    valorcantidad,
-                    listaPromociones.get(i).getDescripcionPromocion(),
-                    listaPromociones.get(i).getCodArticulo(),
-                    listaPromociones.get(i).getUnidad(),
-                    listaPromociones.get(i).getTasaDescuento(),
-                    listaPromociones.get(i).getCodPresentacion(),
-                    listaPromociones.get(i).getEquivalencia(),
-                    listaPromociones.get(i).getPrecioSoles(),
-                    listaPromociones.get(i).getOpcionSeleccion(),
-                    listaPromociones.get(i).getStkDisponible()
-                   ));
+                listaPromociones.get(i).getNumeroPromocion(),
+                valorcantidad,
+                listaPromociones.get(i).getDescripcionPromocion(),
+                listaPromociones.get(i).getCodArticulo(),
+                listaPromociones.get(i).getUnidad(),
+                listaPromociones.get(i).getTasaDescuento(),
+                listaPromociones.get(i).getCodPresentacion(),
+                listaPromociones.get(i).getEquivalencia(),
+                listaPromociones.get(i).getPrecioSoles(),
+                listaPromociones.get(i).getOpcionSeleccion(),
+                listaPromociones.get(i).getStkDisponible()
+               ));
         }
     }
 
@@ -188,7 +181,7 @@ public class PromocionesActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTA_PROMOCION&variables=%27"+id+"%27"; // se debe actalizar la URL
+                "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTA_PROMOCION&variables=%27"+identificador+"%27"; // se debe actalizar la URL
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -234,7 +227,6 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setPrecioRegularDolares(jsonObject.getString("PRECIO_REGULAR_DOLARES"));
                                         promocion.setValido(jsonObject.getString("VALIDO"));
                                         promocion.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
-                                        promocion.setOpcionSeleccion("S");
                                         listaPromociones.add(promocion);
 
                                     }else if(jsonObject.getString("OPCION_SELECCION").equals("T")){
@@ -261,7 +253,6 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setPrecioRegularDolares(jsonObject.getString("PRECIO_REGULAR_DOLARES"));
                                         promocion.setValido(jsonObject.getString("VALIDO"));
                                         promocion.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
-                                        promocion.setOpcionSeleccion("S");
                                         listaPromocionesTipoT.add(promocion);
                                     }
                                 }
@@ -284,50 +275,132 @@ public class PromocionesActivity extends AppCompatActivity {
                                         productopromocion.setPresentacion(listaPromocionesTipoT.get(i).getCodPresentacion());
                                         productopromocion.setEquivalencia(listaPromocionesTipoT.get(i).getEquivalencia());
                                         productopromocion.setPrecioAcumulado("0.0");
-                                        productopromocion.setObservacion("S");
+                                        productopromocion.setObservacion("T");
                                         listaproductoselegidos.add(productopromocion);
-                                        listaProductosPromociones.add(productopromocion);
+
                                     }
+
+                                    Toast.makeText(PromocionesActivity.this, "lista de productos elegidos 1 " + listaproductoselegidos.size(), Toast.LENGTH_SHORT).show();
                                 }
 
                                 getProduct(listaPromociones);
                                 listView.setAdapter(listAdapter);
 
-
                                 btnregistrarpromociones.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
 
-                                        placeOrder(listaproductoselegidos);
+                                        if (listAdapter.listProducts.size() != 0){
+                                            if (Double.valueOf(listAdapter.listProducts.get(0).ProductPrice.toString()) > 0.0) {
 
-                                        Intent intent = new Intent(PromocionesActivity.this,IntermediaActivity.class);
-                                        intent.putExtra("cantidadlista",cantidadlista);
-                                        intent.putExtra("Almacen",almacen);
-                                        intent.putExtra("TipoPago",tipoformapago);
-                                        intent.putExtra("Ind",Ind);
-                                        intent.putExtra("Index",Index);
-                                        intent.putExtra("id_pedido",id_pedido);
-                                        intent.putExtra("validador","false");
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(PromocionesActivity.this);
+                                                builder.setTitle("Atencion !")
+                                                        .setMessage("No has seleccionado todas las Bonificaciones ¿Desea Grabar el Pedido?");
 
-                                        Bundle bundle = new Bundle();
-                                        Bundle bundle1 = new Bundle();
-                                        Bundle bundle2 = new Bundle();
+                                                builder.setNegativeButton("No", null);
+                                                builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
 
-                                        bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                                        bundle2.putSerializable("Usuario", usuario);
-                                        bundle1.putSerializable("Cliente", cliente);
+                                                        placeOrder(listaproductoselegidos);
+                                                        Intent intent = new Intent(PromocionesActivity.this, IntermediaActivity.class);
+                                                        intent.putExtra("cantidadlista", cantidadlista);
+                                                        intent.putExtra("Almacen", almacen);
+                                                        intent.putExtra("TipoPago", tipoformapago);
+                                                        intent.putExtra("Ind", Ind);
+                                                        intent.putExtra("Index", Index);
+                                                        intent.putExtra("id_pedido", id_pedido);
+                                                        intent.putExtra("validador", "false");
 
-                                        intent.putExtras(bundle);
-                                        intent.putExtras(bundle2);
-                                        intent.putExtras(bundle1);
+                                                        Bundle bundle = new Bundle();
+                                                        bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                                                        intent.putExtras(bundle);
 
-                                        Bundle bundle4 = new Bundle();
-                                        bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                                        intent.putExtras(bundle4);
+                                                        Bundle bundle1 = new Bundle();
+                                                        bundle1.putSerializable("Cliente", cliente);
+                                                        intent.putExtras(bundle1);
 
-                                        startActivity(intent);
-                                        finish();
+                                                        Bundle bundle2 = new Bundle();
+                                                        bundle2.putSerializable("Usuario", usuario);
+                                                        intent.putExtras(bundle2);
 
+                                                        Bundle bundle3 = new Bundle();
+                                                        bundle3.putSerializable("listaClienteSucursal", listaClienteSucursal);
+                                                        intent.putExtras(bundle3);
+
+                                                        startActivity(intent);
+                                                        finish();
+
+                                                    }
+                                                });
+                                                builder.create()
+                                                        .show();
+
+                                            } else {
+
+                                                placeOrder(listaproductoselegidos);
+                                                Intent intent = new Intent(PromocionesActivity.this, IntermediaActivity.class);
+                                                intent.putExtra("cantidadlista", cantidadlista);
+                                                intent.putExtra("Almacen", almacen);
+                                                intent.putExtra("TipoPago", tipoformapago);
+                                                intent.putExtra("Ind", Ind);
+                                                intent.putExtra("Index", Index);
+                                                intent.putExtra("id_pedido", id_pedido);
+                                                intent.putExtra("validador", "false");
+
+                                                Bundle bundle = new Bundle();
+                                                bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                                                intent.putExtras(bundle);
+
+                                                Bundle bundle1 = new Bundle();
+                                                bundle1.putSerializable("Cliente", cliente);
+                                                intent.putExtras(bundle1);
+
+                                                Bundle bundle2 = new Bundle();
+                                                bundle2.putSerializable("Usuario", usuario);
+                                                intent.putExtras(bundle2);
+
+                                                Bundle bundle3 = new Bundle();
+                                                bundle3.putSerializable("listaClienteSucursal", listaClienteSucursal);
+                                                intent.putExtras(bundle3);
+
+                                                startActivity(intent);
+                                                finish();
+
+                                            }
+
+
+                                    }else {
+
+                                            Intent intent = new Intent(PromocionesActivity.this, IntermediaActivity.class);
+                                            intent.putExtra("cantidadlista", cantidadlista);
+                                            intent.putExtra("Almacen", almacen);
+                                            intent.putExtra("TipoPago", tipoformapago);
+                                            intent.putExtra("Ind", Ind);
+                                            intent.putExtra("Index", Index);
+                                            intent.putExtra("id_pedido", id_pedido);
+                                            intent.putExtra("validador", "false");
+
+                                            Bundle bundle = new Bundle();
+                                            bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                                            intent.putExtras(bundle);
+
+                                            Bundle bundle1 = new Bundle();
+                                            bundle1.putSerializable("Cliente", cliente);
+                                            intent.putExtras(bundle1);
+
+                                            Bundle bundle2 = new Bundle();
+                                            bundle2.putSerializable("Usuario", usuario);
+                                            intent.putExtras(bundle2);
+
+                                            Bundle bundle3 = new Bundle();
+                                            bundle3.putSerializable("listaClienteSucursal", listaClienteSucursal);
+                                            intent.putExtras(bundle3);
+
+                                            startActivity(intent);
+                                            finish();
+
+                                        }
                                     }
                                 });
 
@@ -338,9 +411,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         .setNegativeButton("Regresar",new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-
                                                 Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
-
                                                 intent.putExtra("cantidadlista",cantidadlista);
                                                 intent.putExtra("Almacen",almacen);
                                                 intent.putExtra("TipoPago",tipoformapago);
@@ -348,23 +419,27 @@ public class PromocionesActivity extends AppCompatActivity {
                                                 intent.putExtra("Index",Index);
                                                 intent.putExtra("id_pedido",id_pedido);
                                                 intent.putExtra("validador","false");
+
                                                 Bundle bundle = new Bundle();
-                                                Bundle bundle1 = new Bundle();
-                                                Bundle bundle2 = new Bundle();
                                                 bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                                                bundle2.putSerializable("Usuario", usuario);
-                                                bundle1.putSerializable("Cliente", cliente);
                                                 intent.putExtras(bundle);
-                                                intent.putExtras(bundle2);
+
+                                                Bundle bundle1 = new Bundle();
+                                                bundle1.putSerializable("Cliente", cliente);
                                                 intent.putExtras(bundle1);
-                                                Bundle bundle4 = new Bundle();
-                                                bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                                                intent.putExtras(bundle4);
+
+                                                Bundle bundle2 = new Bundle();
+                                                bundle2.putSerializable("Usuario", usuario);
+                                                intent.putExtras(bundle2);
+
+                                                Bundle bundle3 = new Bundle();
+                                                bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                                                intent.putExtras(bundle3);
+
                                                 startActivity(intent);
                                                 finish();
                                             }
                                         })
-
                                         .create()
                                         .show();
                             }
@@ -378,7 +453,6 @@ public class PromocionesActivity extends AppCompatActivity {
                 error.printStackTrace();
             }
         });
-
         int socketTimeout = 30000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
