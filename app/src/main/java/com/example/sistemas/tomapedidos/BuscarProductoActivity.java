@@ -49,7 +49,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     Usuario usuario;
     ArrayList<ClienteSucursal> listaClienteSucursal;
-    int longitudMaxima=50;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

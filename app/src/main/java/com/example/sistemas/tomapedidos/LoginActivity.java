@@ -1,14 +1,22 @@
 package com.example.sistemas.tomapedidos;
 
+import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
-import android.provider.Settings;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,7 +35,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText etusuario, etclave;
     Button btnlogeo;
     Usuario usuario;
-    String url, Mensaje = "",myIMEI = "";
+    String url, Mensaje = "",imei = "";
+    static final Integer PHONESTATS = 0x1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +47,14 @@ public class LoginActivity extends AppCompatActivity {
         etusuario = findViewById(R.id.etUsuario);
         etclave = findViewById(R.id.etClave);
         btnlogeo = findViewById(R.id.btnLogin);
-
-        final String myIMEI = Settings.Secure.getString(getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-
+        consultarPermiso(Manifest.permission.READ_PHONE_STATE, PHONESTATS);
         btnlogeo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (etusuario.getText().equals("") || etclave.getText().equals("")) {
                 } else {
                     verificarUsuario(etusuario.getText().toString().replace(" ", "").toUpperCase()
-                            , etclave.getText().toString().replace(" ", "").toUpperCase(),myIMEI);
+                            , etclave.getText().toString().replace(" ", "").toUpperCase(),imei);
                 }
             }
         });
@@ -61,27 +67,23 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.show();
         Mensaje = "";
-
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|358192060106435'"; // se debe actalizar la URL
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|"+Imei+"'"; // se debe actalizar la URL
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
 
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response1) {
-
                         progressDialog.dismiss();
                         try {
                             JSONObject jsonObject=new JSONObject(response1);
                             boolean success = jsonObject.getBoolean("success");
                             JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
                             Boolean condicion = false,error = false;
-
                             if (success) {
-
                                 String Aux = response1.replace("{","|");
                                 Aux = Aux.replace("}","|");
                                 Aux = Aux.replace("[","|");
@@ -91,7 +93,6 @@ public class LoginActivity extends AppCompatActivity {
                                 Aux = Aux.replace("|","");
                                 Aux = Aux.replace(":"," ");
                                 String partes[] = Aux.split(" ");
-
                                 for (String palabras : partes){
                                     if (condicion){ Mensaje += palabras+" "; }
                                     if (palabras.equals("ERROR")){
@@ -100,7 +101,6 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 }
                                 if (error) {
-
                                     android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(
                                             LoginActivity.this);
                                     dialog.setMessage(Mensaje)
@@ -153,6 +153,52 @@ public class LoginActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
+    }
+
+    private void consultarPermiso(String permission, Integer requestCode) {
+        if (ContextCompat.checkSelfPermission(LoginActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(LoginActivity.this, permission)) {
+                ActivityCompat.requestPermissions(LoginActivity.this, new String[]{permission}, requestCode);
+            } else {
+                ActivityCompat.requestPermissions(LoginActivity.this, new String[]{permission}, requestCode);
+            }
+        } else {
+            imei = obtenerIMEI();
+        }
+    }
+
+    // Con este método consultamos al usuario si nos puede dar acceso a leer los datos internos del móvil
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        switch (requestCode) {
+            case 1: {
+                // Validamos si el usuario acepta el permiso para que la aplicación acceda a los datos internos del equipo, si no denegamos el acceso
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    imei = obtenerIMEI();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Has negado el permiso a la aplicación", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+    private String obtenerIMEI() {
+        final TelephonyManager telephonyManager= (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            //Hacemos la validación de métodos, ya que el método getDeviceId() ya no se admite para android Oreo en adelante, debemos usar el método getImei()
+
+            return telephonyManager.getImei();
+        }
+        else {
+
+            return telephonyManager.getDeviceId();
+
+        }
     }
 
 }

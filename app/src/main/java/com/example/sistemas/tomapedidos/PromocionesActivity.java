@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,8 +26,6 @@ import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.DataOutputStream;
 import java.util.ArrayList;
 
 public class PromocionesActivity extends AppCompatActivity {
