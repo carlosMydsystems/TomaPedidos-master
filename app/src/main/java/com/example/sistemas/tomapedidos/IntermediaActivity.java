@@ -20,6 +20,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
+
 public class IntermediaActivity extends AppCompatActivity {
 
     String url,id_pedido,cantidadlista,almacen,tipoformapago,validador,Index,id;
@@ -123,7 +125,8 @@ public class IntermediaActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+        url =  ejecutaFuncionTestMovil +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {

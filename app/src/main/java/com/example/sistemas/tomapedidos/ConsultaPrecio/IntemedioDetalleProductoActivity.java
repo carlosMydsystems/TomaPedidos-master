@@ -1,9 +1,6 @@
-package com.example.sistemas.tomapedidos;
+package com.example.sistemas.tomapedidos.ConsultaPrecio;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,42 +12,25 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import com.example.sistemas.tomapedidos.R;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.util.ArrayList;
+
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Dolares;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Soles;
 
 public class IntemedioDetalleProductoActivity extends AppCompatActivity {
 
     TextView tvcodigoproducto,tvnombreproducto,tvalmacenproducto,tvstock,tvprecio,tvtotal,tvprecioreal,
-            tvunidades,tvtasa,tvpreciorealjson,tvNroPromociones,tvPresetacion,tvEquivalencia,tv9,tv16;
+            tvunidades,tvtasa,tvpreciorealjson,tvNroPromociones,tvPresetacion,tvEquivalencia,tv9,tv16,tv7;
     Productos productos;
     Button  btnDsctoxVolumen,btnverificar;
     Clientes cliente;
     EditText etcantidadelegida;
-    Double cantidad, Aux,Aux1;
-    String url,Mensaje="";
-    ProgressDialog progressDialog;
-    Productos producto;
+    Double  Aux,Aux1;
     Usuario usuario;
     ImageButton imgbtnvolverdetalleproducto;
 
@@ -75,7 +55,6 @@ public class IntemedioDetalleProductoActivity extends AppCompatActivity {
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
 
-        Toast.makeText(this, "el codigo es :"+productos.getCodigo(), Toast.LENGTH_SHORT).show();
         // Se referencia a todas las partes del XML asociado al ProveedorActivity
         tvcodigoproducto =  findViewById(R.id.tvCofigoProducto);
         tvnombreproducto = findViewById(R.id.tvNomProdElegido);
@@ -90,7 +69,8 @@ public class IntemedioDetalleProductoActivity extends AppCompatActivity {
         tvEquivalencia = findViewById(R.id.tvEquivalencia);
         btnverificar = findViewById(R.id.btnVerificar);
         btnDsctoxVolumen = findViewById(R.id.btnDsctoxVolumen);
-        tv9 = findViewById(R.id.textView9);
+        tv9 = findViewById(R.id.textView9A);
+        tv7 = findViewById(R.id.textView7A);
         tv16 = findViewById(R.id.textView16);
         tvtotal = findViewById(R.id.tvTotalElegido);
 
@@ -108,6 +88,11 @@ public class IntemedioDetalleProductoActivity extends AppCompatActivity {
         tvprecio = findViewById(R.id.tvPrecioElegido);
         tvtotal = findViewById(R.id.tvTotalElegido);
 
+        if (usuario.getMoneda().equals("1")){
+            tv7.setText("Precio :  " + Soles + " ");
+        }else{
+            tv7.setText("Precio :  " + Dolares + " ");
+        }
 
         if (productos.getStock()!= null) {
             tvstock.setText(productos.getStock());
@@ -134,15 +119,13 @@ public class IntemedioDetalleProductoActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(IntemedioDetalleProductoActivity.this, BuscarProductoPrecioActivity.class);
-
                 intent.putExtra("validador","false");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle);
-
-                Bundle bundle3 = new Bundle();
-                bundle3.putSerializable("Usuario",usuario);
-                intent.putExtras(bundle3);
+                Bundle bundle1 = new Bundle();
+                bundle1.putSerializable("Usuario",usuario);
+                intent.putExtras(bundle1);
                 startActivity(intent);
                 finish();
 
@@ -153,12 +136,10 @@ public class IntemedioDetalleProductoActivity extends AppCompatActivity {
         tvnombreproducto.setText(productos.getDescripcion());
         tvalmacenproducto.setText(productos.getAlmacen());
         tvprecio.setText(productos.getPrecio());
-
-
         btnDsctoxVolumen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(IntemedioDetalleProductoActivity.this,DetalleProductoPrecioActivity.class);
+                Intent intent = new Intent(IntemedioDetalleProductoActivity.this, DetalleProductoPrecioActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Producto",productos);
                 intent.putExtras(bundle);
@@ -201,6 +182,5 @@ public class IntemedioDetalleProductoActivity extends AppCompatActivity {
 
         etcantidadelegida.addTextChangedListener(textWatcher);
     }
-
 }
 

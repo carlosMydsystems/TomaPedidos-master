@@ -27,9 +27,11 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
+
 public class DetalleActivity extends AppCompatActivity {
 
-    String numeroPedido,url,fecha;
+    String numeroPedido,url,fecha,monedaPedido;
     ListView lvdetallepedidos;
     DetallePedido detallepedido;
     ArrayList<DetallePedido> listaDetallePedido;
@@ -49,6 +51,7 @@ public class DetalleActivity extends AppCompatActivity {
         ibretornomenuConsulta = findViewById(R.id.imgPromocionElegida);
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         fecha = getIntent().getStringExtra("fecha");
+        monedaPedido = getIntent().getStringExtra("monedaPedido");
 
         ibretornomenuConsulta.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +84,7 @@ public class DetalleActivity extends AppCompatActivity {
         listadetallemostrarPedido = new ArrayList<>();
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_DET_PEDIDO&variables=%27"+numeroPedido+"%27";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
@@ -90,7 +93,6 @@ public class DetalleActivity extends AppCompatActivity {
                     public void onResponse(String response) {
 
                         Double precioAcumulado =0.0;
-
 
                         try {
                             JSONObject jsonObject=new JSONObject(response);
@@ -110,19 +112,17 @@ public class DetalleActivity extends AppCompatActivity {
                                     detallepedido.setSubtotal(jsonObject.getString("SUBTOTAL"));
                                     Double preciodb = Double.valueOf(detallepedido.getSubtotal().replace(",",""));
                                     precioAcumulado = precioAcumulado + preciodb;
-
                                     Double Aux = Double.valueOf(detallepedido.getPrecio().replace(",", ""));
                                     Double Aux1 = Double.valueOf(detallepedido.getSubtotal().replace(",", ""));
                                     listadetallemostrarPedido.add(detallepedido.getCodArticulo() + " - "
                                             + detallepedido.getArticulo() + "\n" + "Cant : " + detallepedido.getCantidad()+"\t\t\t\t\t\t\t\t\t\t\t\t\t Unidad : "+
-                                            detallepedido.getUndMedida()+ "\n" + "Precio : S/ " + formateador.format((double) Aux)+"\t\t\t\t\t\t Subtotal : S/ "+
+                                            detallepedido.getUndMedida()+ "\n" + "Precio : "+monedaPedido+" " + formateador.format((double) Aux)+"\t\t\t\t\t\t Subtotal : "+monedaPedido+" "+
                                             formateador.format((double) Aux1)) ;
                                     listaDetallePedido.add(detallepedido);
-
                                 }
                                 progressDialog.dismiss();
 
-                                String cadenaTituloAux = "Productos : " + listaDetallePedido.size() + "   |  Monto : S/ " + formateador.format(precioAcumulado)+ "";
+                                String cadenaTituloAux = "Productos : " + listaDetallePedido.size() + "   |  Monto : "+monedaPedido+" " + formateador.format(precioAcumulado)+ "";
                                 tvtitulodinamicoPedidos.setText(cadenaTituloAux);
 
                                 ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
@@ -133,21 +133,21 @@ public class DetalleActivity extends AppCompatActivity {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                                        Double Aux = Double.valueOf(listaDetallePedido.get(position).getSubtotal().replace(",", ""));
-                                        Double Aux1 = Double.valueOf(listaDetallePedido.get(position).getPrecio().replace(",", ""));
+                                    Double Aux = Double.valueOf(listaDetallePedido.get(position).getSubtotal().replace(",", ""));
+                                    Double Aux1 = Double.valueOf(listaDetallePedido.get(position).getPrecio().replace(",", ""));
 
                                         AlertDialog.Builder builder = new AlertDialog.Builder(DetalleActivity.this);
                                         builder.setCancelable(false)
-                                                .setMessage(
-                                                        "Codigo\t\t\t:\t\t" + listaDetallePedido.get(position).getCodArticulo() + "\n" +
-                                                                "Nombre\t\t\t:\t\t" + listaDetallePedido.get(position).getArticulo() + "\n" +
-                                                                "Unidad\t\t\t:\t\t" + listaDetallePedido.get(position).getUndMedida() + "\n" +
-                                                                "Cantidad\t\t:\t\t" + listaDetallePedido.get(position).getCantidad() + "\n" +
-                                                                "Precio\t\t\t\t:\t\tS/ " + formateador.format((double) Aux1) + "\n" +
-                                                                "Subtotal\t\t\t:\t\tS/ " + formateador.format((double) Aux))
-                                                .setNegativeButton("Aceptar", null)
-                                                .create()
-                                                .show();
+                                            .setMessage(
+                                                "Codigo\t\t\t:\t\t" + listaDetallePedido.get(position).getCodArticulo() + "\n" +
+                                                "Nombre\t\t\t:\t\t" + listaDetallePedido.get(position).getArticulo() + "\n" +
+                                                "Unidad\t\t\t:\t\t" + listaDetallePedido.get(position).getUndMedida() + "\n" +
+                                                "Cantidad\t\t:\t\t" + listaDetallePedido.get(position).getCantidad() + "\n" +
+                                                "Precio\t\t\t\t:\t\t"+monedaPedido+" " + formateador.format((double) Aux1) + "\n" +
+                                                "Subtotal\t\t\t:\t\t"+monedaPedido+" " + formateador.format((double) Aux))
+                                            .setNegativeButton("Aceptar", null)
+                                            .create()
+                                            .show();
                                     }
                                 });
                             }else {

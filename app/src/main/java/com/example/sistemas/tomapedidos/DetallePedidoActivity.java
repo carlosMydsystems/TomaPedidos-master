@@ -32,6 +32,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
+
 public class DetallePedidoActivity extends AppCompatActivity {
 
     ImageButton ibregresarpendientemain;
@@ -88,7 +90,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS_PEN&variables=%27"+userid.trim()+"%27";
 
         listaPedidos = new ArrayList<>();
@@ -162,7 +164,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS_TRAMA&variables=%27"+idPedido+"%27";
 
         listaproductoselegidos = new ArrayList<>();

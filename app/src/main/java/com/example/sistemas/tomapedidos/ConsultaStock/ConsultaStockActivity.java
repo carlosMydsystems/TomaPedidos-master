@@ -1,4 +1,4 @@
-package com.example.sistemas.tomapedidos;
+package com.example.sistemas.tomapedidos.ConsultaStock;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -22,6 +22,8 @@ import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Stock;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.ListadoAlmacenActivity;
+import com.example.sistemas.tomapedidos.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +32,8 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 
 public class ConsultaStockActivity extends AppCompatActivity {
 
@@ -49,9 +53,8 @@ public class ConsultaStockActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consulta_stock);
 
-        productos = (Productos)getIntent().getSerializableExtra("Producto");
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
-
+        productos = (Productos)getIntent().getSerializableExtra("Producto");
         lvStock = findViewById(R.id.lvStock);
         tvTituloCodAlamcen = findViewById(R.id.tvTitulocodalmacen);
         tvTituloStock = findViewById(R.id.tvTituloStock);
@@ -59,20 +62,16 @@ public class ConsultaStockActivity extends AppCompatActivity {
         tvNombreStock = findViewById(R.id.tvNombreStock);
         tvMarcaStock = findViewById(R.id.tvMarcaStock);
         tvUnidadStock = findViewById(R.id.tvUnidadStock);
-
         tvCodigoStock.setText(productos.getCodigo());
         tvMarcaStock.setText(productos.getMarca());
         tvUnidadStock.setText(productos.getUnidad());
         tvNombreStock.setText(productos.getDescripcion());
-
-        productos = (Productos)getIntent().getSerializableExtra("Producto");
-
         buscarproducto(productos.getCodigo().toString());
         imgConsultaStockMenu = findViewById(R.id.imgPromocionElegida);
         imgConsultaStockMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ConsultaStockActivity.this,BuscarProductoStockActivity.class);
+                Intent intent = new Intent(ConsultaStockActivity.this, BuscarProductoStockActivity.class);
                 Bundle bundle1 = new Bundle();
                 bundle1.putSerializable("Usuario",usuario);
                 intent.putExtras(bundle1);
@@ -93,7 +92,8 @@ public class ConsultaStockActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
         numero = numero.trim();
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_STOCK&variables=%27"+numero+"%27";
+        url = ejecutaFuncionCursorTestMovil +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_STOCK&variables=%27"+numero+"%27";
 
         listaStock = new ArrayList<>();
         listaStockDisponible = new ArrayList<>();
@@ -157,7 +157,6 @@ public class ConsultaStockActivity extends AppCompatActivity {
 
                                     tvTituloCodAlamcen.setVisibility(View.VISIBLE);
                                     tvTituloStock.setVisibility(View.VISIBLE);
-
                                     ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
                                             CustomListAdapter(ConsultaStockActivity.this, R.layout.custom_list, listaStock);
                                     lvStock.setAdapter(listAdapter);
@@ -193,6 +192,4 @@ public class ConsultaStockActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
-
-
 }

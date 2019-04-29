@@ -13,13 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.FormaPago;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,6 +145,8 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
                 text.setBackgroundColor(color);
 
             }
+
+
 
             return mView;
         }

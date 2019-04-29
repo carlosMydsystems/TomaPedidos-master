@@ -1,8 +1,7 @@
-package com.example.sistemas.tomapedidos;
+package com.example.sistemas.tomapedidos.ConsultaPrecio;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +15,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,10 +28,15 @@ import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.ListadoAlmacenActivity;
+import com.example.sistemas.tomapedidos.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 
 public class BuscarProductoPrecioActivity extends AppCompatActivity {
 
@@ -43,10 +49,9 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
     ArrayList<String> listaProducto;
     Clientes cliente;
     EditText etproducto,etglosa;
-    String url,Tipobusqueda = "Nombre",validador;
+    String url,Tipobusqueda = "Nombre";
     ProgressDialog progressDialog;
     Usuario usuario;
-    Clientes clientes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +62,6 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
 
         listaProductos = new ArrayList<>();
-
         rggrupoproducto = findViewById(R.id.rgBuscarProducto);
         rbnombreproducto = findViewById(R.id.rbNombreProducto);
         rbcodigoproducto = findViewById(R.id.rbCodigoProducto);
@@ -65,7 +69,6 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
         lvProducto = findViewById(R.id.lvProducto);
         etproducto  = findViewById(R.id.etPrducto);
         etglosa = findViewById(R.id.etGlosa);
-
         btnregresarproducto = findViewById(R.id.btnRegresarProducto);
 
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -124,22 +127,17 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
                 cliente = new Clientes();
                 cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
 
-                Intent intent =  new Intent(BuscarProductoPrecioActivity.this,IntemedioDetalleProductoActivity.class);
-
+                Intent intent =  new Intent(BuscarProductoPrecioActivity.this, IntemedioDetalleProductoActivity.class);
                 producto =  listaProductos.get(position);
-
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Producto",producto);
                 intent.putExtras(bundle);
-
                 Bundle bundle1 = new Bundle();
                 bundle1.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle1);
-
                 Bundle bundle2 = new Bundle();
                 bundle2.putSerializable("Usuario",usuario);
                 intent.putExtras(bundle2);
-
                 startActivity(intent);
                 finish();
             }
@@ -177,9 +175,9 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
         numero = numero.replace("%","%25");
         numero = numero.toUpperCase(); // se convierten los caracteres a Mayusucla
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables=%27"+usuario.getCodAlmacen()+"|"+usuario.
-                getLugar()+"|"+etproducto.getText().toString().trim()+"||"+cliente.getCodCliente()+"|||1%27";
+                getLugar()+"|"+etproducto.getText().toString().trim().replace("%","%25").toUpperCase()+"||"+cliente.getCodCliente()+"|||1%27";
 
         listaProducto = new ArrayList<>();
 
@@ -231,6 +229,7 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
                                     listaProducto.clear();
                                     listaProductos.clear();
 
+
                                     for (int i = 0; i < jsonArray.length(); i++) {
 
                                         jsonObject = jsonArray.getJSONObject(i);
@@ -238,7 +237,13 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
                                         producto.setMarca(jsonObject.getString("DES_MARCA"));
                                         producto.setDescripcion(jsonObject.getString("DES_ARTICULO")); //
                                         producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
-                                        producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
+                                        if (usuario.getMoneda().equals("1")){
+
+                                            producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
+                                        }else {
+                                            producto.setPrecio(jsonObject.getString("PRECIO_DOLARES"));
+                                        }
+
                                         producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
                                         producto.setAlmacen(jsonObject.getString("COD_ALMACEN"));
                                         listaProductos.add(producto);
@@ -258,15 +263,12 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
                                         producto =  listaProductos.get(0);
                                         bundle.putSerializable("Producto",producto);
                                         intent.putExtras(bundle);
-
                                         Bundle bundle1 = new Bundle();
                                         bundle1.putSerializable("Cliente",cliente);
                                         intent.putExtras(bundle1);
-
                                         Bundle bundle2 = new Bundle();
                                         bundle2.putSerializable("Usuario",usuario);
                                         intent.putExtras(bundle2);
-
                                         startActivity(intent);
                                         finish();
 
@@ -282,7 +284,6 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
                                 }
 
                             }else {
-
                                 progressDialog.dismiss();
                                 listaProducto.clear();
                                 btnbuscarProducto.setVisibility(View.VISIBLE);
@@ -305,7 +306,6 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
                 error.printStackTrace();
             }
         });
-
         int socketTimeout = 30000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);

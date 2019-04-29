@@ -34,6 +34,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
+
 public class ListadoFormaPagoActivity extends AppCompatActivity {
 
     ListView lvtipopago;
@@ -59,7 +62,6 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
         listatipopago =  new ArrayList<>();
         listaAux = new ArrayList<>();
-        String fechaRegistro ;
 
         btnregresarformalistapago = findViewById(R.id.btnRegresarListaFormaPago);
 
@@ -80,14 +82,12 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
         id_pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
 
-        fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
-                "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
     }
 
     private void Consultartipopago(String COD_FPAGO_LIMITE,final ProgressDialog progressdialog) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url =  ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_FPAGO&variables='"+COD_FPAGO_LIMITE+"'";
         listatipopago = new ArrayList<>();
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
@@ -182,7 +182,6 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
                 LayoutInflater vi = (LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 mView = vi.inflate(id, null);
             }
-
             TextView text = (TextView) mView.findViewById(R.id.textView);
 
             if(items.get(position) != null)
@@ -213,7 +212,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         progressDialog.show();
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=" +
+        url =  ejecutaFuncionTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_COR_PEDIDO_MOVIL&variables=%27PWE%27,%27888%27,%27TH000%27";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,

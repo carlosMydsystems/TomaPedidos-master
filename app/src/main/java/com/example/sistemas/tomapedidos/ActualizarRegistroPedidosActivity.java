@@ -35,10 +35,16 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Dolares;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Soles;
+
 public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
     TextView tvcodprodelegido, tvnomprodelegido, tvalmprodelegido, tvstockelegido, tvprecioelegido,
-             tvtotalelegido, tvpreciorealelegido,tvunidadelegida,tvpreciorealjsonelegido,tvtasaelegida;
+             tvtotalelegido, tvpreciorealelegido,tvunidadelegida,tvpreciorealjsonelegido,tvtasaelegida,
+             textView7A,textView9A;
     Productos productos;
     Button   btndverificarproductoelegido,btnactualizarproductoelegido;
     Clientes cliente;
@@ -63,7 +69,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         listaproductoselegidos = new ArrayList<>();
         productos  = new Productos();
         listaProductos=new ArrayList<>();
-
         listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
         productos = (Productos) getIntent().getSerializableExtra("Producto");
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
@@ -72,13 +77,11 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         position =  getIntent().getStringExtra("position");
         Index =  getIntent().getStringExtra("Index");
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos");
-
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         id_pedido = getIntent().getStringExtra("id_pedido");
         etcantprodelegida.setText(productos.getCantidad());
         etcantprodelegida.requestFocus();
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
         tvcodprodelegido =  findViewById(R.id.tvCodProdElegido);
         tvnomprodelegido = findViewById(R.id.tvNomProdElegido);
         tvalmprodelegido = findViewById(R.id.tvAlmProdElegido);
@@ -88,19 +91,27 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         tvunidadelegida =  findViewById(R.id.tvUnidadElegida);
         tvpreciorealjsonelegido = findViewById(R.id.tvPrecioRealJsonElegido);
         tvtasaelegida = findViewById(R.id.tvTasaElegida);
-
+        textView7A = findViewById(R.id.textView7A);
+        textView9A = findViewById(R.id.textView9A);
+        if (usuario.getMoneda().toString().equals("1")){
+            textView7A.setText("Precio : " + Soles);
+            textView9A.setText("Total   :  " + Soles);
+        }else{
+            textView7A.setText("Precio : " + Dolares);
+            textView9A.setText("Total   :  " + Dolares);
+        }
         btndverificarproductoelegido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                btndverificarproductoelegido.setVisibility(View.GONE);
-                progressDialog =  new ProgressDialog(ActualizarRegistroPedidosActivity.this);
-                progressDialog.setCancelable(false);
-                progressDialog.setMessage("... Por favor esperar");
-                progressDialog.show();
-                if (etcantprodelegida.getText()==null || etcantprodelegida.getText().toString().equals("")){
-                }else{
-                    VerificarCantidad(etcantprodelegida.getText().toString());
-                }
+            btndverificarproductoelegido.setVisibility(View.GONE);
+            progressDialog =  new ProgressDialog(ActualizarRegistroPedidosActivity.this);
+            progressDialog.setCancelable(false);
+            progressDialog.setMessage("... Por favor esperar");
+            progressDialog.show();
+            if (etcantprodelegida.getText()==null || etcantprodelegida.getText().toString().equals("")){
+            }else{
+                VerificarCantidad(etcantprodelegida.getText().toString());
+            }
             }
         });
 
@@ -132,13 +143,9 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                     });
                     builder.create()
                            .show();
-
                 }else {
-
                     if (etcantprodelegida.getText().toString().equals("")) {
-
                     } else {
-
                         String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
                                     productos.getCodigo() + "|" + tvpreciorealjsonelegido.getText().toString().replace(",", "") +
                                     "|" + tvtasaelegida.getText().toString().trim() + "|" + productos.getNumPromocion().trim() + "|" + productos.getPresentacion() +
@@ -239,7 +246,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables=%27"+almacen+"|"+usuario.
                 getLugar()+"|"+productos.getCodigo()+"||"+cliente.getCodCliente()+"|||"+cantidad+"%27";
 
@@ -297,7 +304,17 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                         producto.setCodigo(jsonObject.getString("COD_ARTICULO"));//
                                         producto.setMarca(jsonObject.getString("DES_MARCA"));//
                                         producto.setDescripcion(jsonObject.getString("DES_ARTICULO"));//
-                                        producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
+
+                                        if (usuario.getMoneda().equals("1")){
+
+                                            producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
+
+                                        }else{
+
+                                            producto.setPrecio(jsonObject.getString("PRECIO_DOLARES"));
+                                        }
+
+                                        // producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
 
                                         precioDouble = Double.valueOf(jsonObject.getString("PRECIO_SOLES")) * (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO")) / 100);
                                         BigDecimal precioBig = new BigDecimal(precioDouble.toString());
@@ -321,32 +338,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                         tvtasaelegida.setText(jsonObject.getString("TASA_DESCUENTO"));
                                         producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
                                         producto.setAlmacen(almacen);
-
-//--------------------------------------------------------------------------------
-/*
-                                    producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
-
-                                    BigDecimal precioBig1 = new BigDecimal(producto.getPrecio());
-                                    precioBig1 = precioBig1.setScale(2,RoundingMode.HALF_EVEN);
-                                    Descuento = (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO"))/100  );
-                                    precioDouble = Double.valueOf(precioBig1.toString()) * Descuento *  Double.valueOf(etcantidadelegida.getText().toString());
-                                    precioBigTotal = new BigDecimal(precioDouble.toString());
-                                    precioBigTotal = precioBigTotal.setScale(2,RoundingMode.HALF_EVEN);
-                                    tvtotal.setText(""+precioBigTotal);
-                                    precioUnitarioDouble = Double.valueOf(producto.getPrecio()) * Descuento;
-                                    precioBigUnitario = new BigDecimal(precioUnitarioDouble.toString());
-                                    precioBigUnitario = precioBigUnitario.setScale(4,RoundingMode.HALF_EVEN);
-                                    tvprecio.setText(precioBigUnitario.toString());
-                                    tvpreciorealjson.setText(jsonObject.getString("PRECIO_SOLES"));
-                                    producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
-                                    producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
-                                    producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
-                                    producto.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
-                                    producto.setPresentacion(jsonObject.getString("COD_PRESENTACION"));
-                                    producto.setAlmacen(almacen);
-                                    tvtasa.setText(producto.getTasaDescuento());
-
-*/
 
                                         if (etcantprodelegida.getText().toString().equals("")) {
 
@@ -390,7 +381,8 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+        url =  ejecutaFuncionTestMovil +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {

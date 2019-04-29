@@ -1,4 +1,4 @@
-package com.example.sistemas.tomapedidos;
+package com.example.sistemas.tomapedidos.ConsultaPrecio;
 
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -22,14 +22,18 @@ import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.DctoxVolumen;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
-
+import com.example.sistemas.tomapedidos.ListadoAlmacenActivity;
+import com.example.sistemas.tomapedidos.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Dolares;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Soles;
 
 public class DetalleProductoPrecioActivity extends AppCompatActivity {
 
@@ -37,13 +41,13 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
     Usuario usuario;
     Clientes cliente;
     Productos producto;
-    String trama,url;
+    String trama,url,StrAux;
     ListView lvPrecioxVolumen;
     DctoxVolumen dctoxVolumen;
     ArrayList<DctoxVolumen> listaDctoxVolumen;
     ArrayList<String> listaDsctoxVolumenStr;
     ImageButton ibVolverDetalleProductoPrecio;
-
+    TextView tvResumenUnidades;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +60,26 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
         producto = (Productos) getIntent().getSerializableExtra("Producto");
         ibVolverDetalleProductoPrecio = findViewById(R.id.ibVolverDetalleProductoPrecio);
         trama = usuario.getLugar()+"|"+producto.getCodigo()+"|"+ cliente.getCodCliente()+"|"+producto.getPrecio();
-        Toast.makeText(this, "Cadena de Trama "+trama, Toast.LENGTH_SHORT).show();
         lvPrecioxVolumen = findViewById(R.id.lvPrecioxVolumen);
+        tvResumenUnidades = findViewById(R.id.tvResumenUnidades);
+
+        if (usuario.getMoneda().equals("1")){
+
+            StrAux = "DESCRIPCION : "+ producto.getDescripcion()+"\n UNIDAD : " + producto.getUnidad()+"\t\t\t\t\t PRECIO : "+Soles+" "+producto.getPrecio();
+        }else {
+
+            StrAux = "DESCRIPCION : "+ producto.getDescripcion()+"\n UNIDAD : " + producto.getUnidad()+"\t\t\t\t\t PRECIO : "+Dolares+" "+producto.getPrecio();
+        }
+
+
+        tvResumenUnidades.setText(StrAux);
 
         ConsultarPreciosVolumen(trama);
 
         ibVolverDetalleProductoPrecio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DetalleProductoPrecioActivity.this,IntemedioDetalleProductoActivity.class);
+                Intent intent = new Intent(DetalleProductoPrecioActivity.this, IntemedioDetalleProductoActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Producto",producto);
                 intent.putExtras(bundle);
@@ -86,8 +101,8 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
         listaDctoxVolumen = new ArrayList<>();
         listaDsctoxVolumenStr = new ArrayList<>();
 
-        Toast.makeText(this, ""+tramaConsultaPrecioVolumen, Toast.LENGTH_SHORT).show();
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_DSTO_VOLUMEN&variables='" + tramaConsultaPrecioVolumen + "'";
+            url = ejecutaFuncionCursorTestMovil +
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_DSTO_VOLUMEN&variables='" + tramaConsultaPrecioVolumen + "'";
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -108,12 +123,21 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
                                     dctoxVolumen.setDescuento(jsonObject.getString("DESCUENTO"));
                                     dctoxVolumen.setPrecio(jsonObject.getString("PRECIO"));
                                     listaDctoxVolumen.add(dctoxVolumen);
-                                    listaDsctoxVolumenStr.add("\t"+ " Desde :\t\t" +
-                                            formatoDecimal(dctoxVolumen.getDesde())+ " \t\t\t\tHasta :\t\t" + formatoDecimal(dctoxVolumen.getHasta()) +"\n"+
-                                            "\t"+" Dscto : "+formatoDecimal(dctoxVolumen.getDescuento()) + "  \t\t\t - \t\t\t  Precio : S/" + formatoDecimal(dctoxVolumen.getPrecio()));
+                                    if (usuario.getMoneda().equals("1")){
+
+                                        listaDsctoxVolumenStr.add("\t"+ " Desde :\t" + formatoDecimal(dctoxVolumen.getDesde())+
+                                                " \t\t\t\tHasta :\t" + formatoDecimal(dctoxVolumen.getHasta()) +"\n"+
+                                                "\t"+" Dscto : "+formatoDecimal(dctoxVolumen.getDescuento()) +
+                                                "%  \t\t\t - \t\t\t  Precio : "+Soles+" " + formatoDecimal(dctoxVolumen.getPrecio()));
+
+                                    }else {
+                                        listaDsctoxVolumenStr.add("\t" + " Desde :\t" + formatoDecimal(dctoxVolumen.getDesde()) +
+                                                " \t\t\t\tHasta :\t" + formatoDecimal(dctoxVolumen.getHasta()) + "\n" +
+                                                "\t" + " Dscto : " + formatoDecimal(dctoxVolumen.getDescuento()) +
+                                                "%  \t\t\t - \t\t\t  Precio : " + Dolares + " " + formatoDecimal(dctoxVolumen.getPrecio()));
+                                    }
                                 }
 
-                                Toast.makeText(DetalleProductoPrecioActivity.this, listaDsctoxVolumenStr.get(0).trim(), Toast.LENGTH_SHORT).show();
                                 ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
                                         CustomListAdapter(DetalleProductoPrecioActivity.this, R.layout.custom_list, listaDsctoxVolumenStr);
                                 lvPrecioxVolumen.setAdapter(listAdapter);

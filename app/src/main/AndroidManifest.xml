@@ -3,6 +3,7 @@
     package="com.example.sistemas.tomapedidos">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
@@ -16,16 +17,14 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".IntemedioDetalleProductoActivity"></activity>
-        <activity android:name=".DetalleProductoPrecioActivity" />
-        <activity android:name=".BuscarProductoPrecioActivity" />
-        <activity android:name=".ConsultaPrecioActivity" />
-        <activity android:name=".MostrarConsultaActivity" />
-        <activity android:name=".BuscarProductoStockActivity" />
-        <activity android:name=".PrecioActivity" />
-        <activity android:name=".ConsultarPromocionesActivity" />
-        <activity android:name=".EventoActivity" />
-        <activity android:name=".ConsultaStockActivity" />
+        <activity android:name=".ConsultaPrecio.IntemedioDetalleProductoActivity"></activity>
+        <activity android:name=".ConsultaPrecio.DetalleProductoPrecioActivity" />
+        <activity android:name=".ConsultaPrecio.BuscarProductoPrecioActivity" />
+        <activity android:name=".ConsultaPrecio.ConsultaPrecioActivity" />
+        <activity android:name=".ConsultaPromociones.MostrarConsultaActivity" />
+        <activity android:name=".ConsultaStock.BuscarProductoStockActivity" />
+        <activity android:name=".ConsultaPromociones.ConsultarPromocionesActivity" />
+        <activity android:name=".ConsultaStock.ConsultaStockActivity" />
         <activity android:name=".ProveedorActivity" />
         <activity
             android:name=".DetalleActivity"

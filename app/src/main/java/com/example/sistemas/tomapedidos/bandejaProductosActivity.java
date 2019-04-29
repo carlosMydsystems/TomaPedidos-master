@@ -31,6 +31,10 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Dolares;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Soles;
+
 public class bandejaProductosActivity extends AppCompatActivity {
 
     TextView tvtitulodinamico;
@@ -49,7 +53,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
     Boolean valida;
     ImageButton imgbtnregresar;
     ArrayList<ClienteSucursal> listaClienteSucursal;
-    String ValidarBtnTerminar;
+    String ValidarBtnTerminar, cadenaTituloAux;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,33 +72,23 @@ public class bandejaProductosActivity extends AppCompatActivity {
         retorno = getIntent().getStringExtra("retorno");
         Index = getIntent().getStringExtra("Index");
         check = getIntent().getStringExtra("Check");
-
         if (ValidarBtnTerminar == null){
-
             ValidarBtnTerminar = "true";
-
         }else{
-
             ValidarBtnTerminar = getIntent().getStringExtra("ValidarBtnTerminar");
-
         }
-
         listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
-
         if (check!=null){
             EliminaPromocion();
             check = null;
         }
-
         valida = Boolean.valueOf(validador);
         listabandejaproductoselegidos = new ArrayList<>();
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
-
         // SE llega a generar el calendario
-
         Calendar fecha = Calendar.getInstance();
         final Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
         final Integer mes = fecha.get(Calendar.MONTH) + 1;
@@ -102,12 +96,9 @@ public class bandejaProductosActivity extends AppCompatActivity {
         final Integer hora =  fecha.get(Calendar.HOUR_OF_DAY);
         final Integer minuto = fecha.get(Calendar.MINUTE);
         final Integer segundo = fecha.get(Calendar.SECOND);
-
         fechaRegistro =   formatonumerico(dia) + "/" + formatonumerico(mes) +"/"+ year.toString() +
                 "%20" + formatonumerico(hora)+":"+formatonumerico(minuto)+":"+formatonumerico(segundo);
-
         // valores para el sumarizado de la bandeja
-
         if (listaproductoselegidos != null) {
             for (int i = 0; i < listaproductoselegidos.size(); i++) {
                 // calcula numero de productos
@@ -130,11 +121,51 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     preciolista = Double.valueOf(listaproductoselegidos.get(i).getPrecio().replace(",",""));
                 }
 
-                listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo() + " - " +
-                        listaproductoselegidos.get(i).getDescripcion() + "\nCant: " + formateador.format(Double.valueOf(listaproductoselegidos.
-                        get(i).getCantidad())) + "                                             Unidad: " +
-                        listaproductoselegidos.get(i).getUnidad() + "\nPrecio: S/ " + formateador.format((double) preciolista) +
-                        "                  Subtotal: S/ " + formateador.format((double) Aux));
+
+                if (usuario.getMoneda().equals("1")) {
+
+                    if (listaproductoselegidos.get(i).getObservacion() == null) {
+
+                        listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo() + " - " +
+                                listaproductoselegidos.get(i).getDescripcion() + "\nCant: " + formateador.format(Double.valueOf(listaproductoselegidos.
+                                get(i).getCantidad())) + "                                    Unidad: " +
+                                listaproductoselegidos.get(i).getUnidad() + "\nPrecio: " + Soles + " " + formateador.format((double) preciolista) +
+                                "                  Subtotal: "+Soles+" " + formateador.format((double) Aux));
+
+                    } else {
+
+                        if (listaproductoselegidos.get(i).getObservacion().equals("S") || listaproductoselegidos.get(i).getObservacion().equals("T")) {
+                            listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo() + " - " +
+                                    listaproductoselegidos.get(i).getDescripcion() + "p - Cant: " + formateador.format(Double.valueOf(listaproductoselegidos.
+                                    get(i).getCantidad())) + "                                     Unidad: " +
+                                    listaproductoselegidos.get(i).getUnidad() + "\nPrecio: "+Soles+" " + formateador.format((double) preciolista) +
+                                    "                  Subtotal: "+Soles+" " + formateador.format((double) Aux));
+                        }
+                    }
+                }else{
+
+
+                    if (listaproductoselegidos.get(i).getObservacion() == null) {
+
+                        listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo() + " - " +
+                                listaproductoselegidos.get(i).getDescripcion() + "\nCant: " + formateador.format(Double.valueOf(listaproductoselegidos.
+                                get(i).getCantidad())) + "                                    Unidad: " +
+                                listaproductoselegidos.get(i).getUnidad() + "\nPrecio: " + Dolares + " " + formateador.format((double) preciolista) +
+                                "                  Subtotal: "+Dolares+" " + formateador.format((double) Aux));
+
+                    } else {
+
+                        if (listaproductoselegidos.get(i).getObservacion().equals("S") || listaproductoselegidos.get(i).getObservacion().equals("T")) {
+                            listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo() + " - " +
+                                    listaproductoselegidos.get(i).getDescripcion() + "p - Cant: " + formateador.format(Double.valueOf(listaproductoselegidos.
+                                    get(i).getCantidad())) + "                                     Unidad: " +
+                                    listaproductoselegidos.get(i).getUnidad() + "\nPrecio: "+Dolares+" " + formateador.format((double) preciolista) +
+                                    "                  Subtotal: "+Dolares+" " + formateador.format((double) Aux));
+                        }
+                    }
+
+
+                }
             }
 
             cantidad = String.valueOf(listaproductoselegidos.size());
@@ -158,7 +189,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 public void onClick(View v) {
              AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this)
                      .setCancelable(false)
-                     .setMessage("Esta seguro que desea regresar, Todos los cambios se perderan")
+                     .setMessage("Se perderán todos los cambios, ¿Esta seguro que desea regresar?")
                      .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -191,7 +222,16 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 }
             });
 
-            String cadenaTituloAux = "Productos : " + cantidad + "   |  Monto : S/ " + formateador.format(precio) + "";
+            if (usuario.getMoneda().equals("1")){
+
+                cadenaTituloAux = "Productos : " + cantidad + "   |  Monto : " +Soles + "\t"+ formateador.format(precio) + "";
+
+            }else{
+
+                cadenaTituloAux = "Productos : " + cantidad + "   |  Monto : " +Dolares + "\t"+ formateador.format(precio) + "";
+
+            }
+
             tvtitulodinamico.setText(cadenaTituloAux);
 
             if (retorno == null) {
@@ -371,7 +411,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                             break;
                                         }
 
-                                    case 1:
+                                    case 1: // Eliminar el Producto
 
                                         EliminaPromocion();
                                         if (listaproductoselegidos.get(position).getObservacion() == null) {
@@ -410,7 +450,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                             break;
                                         }
 
-                                    case 2:
+                                    case 2: // Cancela la accion pero elimina la promocion
 
                                         EliminaPromocion();
                                         salirlistview();
@@ -448,7 +488,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                     "Nombre\t\t\t:\t\t" + listaproductoselegidos.get(position).getDescripcion() + "\n" +
                                     "Unidad\t\t\t:\t\t" + listaproductoselegidos.get(position).getUnidad() + "\n" +
                                     "Cantidad\t\t:\t\t" + formateador.format(Double.valueOf(listaproductoselegidos.get(position).getCantidad())) + "\n" +
-                                    "Precio\t\t\t\t:\t\tS/ " + listaproductoselegidos.get(position).getPrecio() + "\n" +
+                                    "Precio\t\t\t\t:\t\t" + Soles + " " + listaproductoselegidos.get(position).getPrecio() + "\n" +
                                     "Subtotal\t\t\t:\t\tS/ " + formateador.format((double) Aux))
                             .setNegativeButton("Aceptar", null)
                             .create()
@@ -559,7 +599,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_TRAMA_MOVIL&variables='"+trama+"'";
+        url =  ejecutaFuncionTestMovil +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_TRAMA_MOVIL&variables='"+trama+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -587,7 +628,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_PEDIDO_TRAMA&variables='"+idpedido+"'";
+        url =  ejecutaFuncionTestMovil +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_PEDIDO_TRAMA&variables='"+idpedido+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {

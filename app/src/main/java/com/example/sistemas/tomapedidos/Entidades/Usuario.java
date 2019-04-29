@@ -16,6 +16,7 @@ public class Usuario implements Serializable {
 
     public Usuario(String nombre, String user, String fechaActual, String tipoCambio, String moneda,
                    String codVendedor, String codAlmacen, String codTienda, String lugar) {
+
         this.nombre = nombre;
         this.user = user;
         this.fechaActual = fechaActual;
@@ -25,6 +26,7 @@ public class Usuario implements Serializable {
         this.codAlmacen = codAlmacen;
         this.codTienda = codTienda;
         this.lugar = lugar;
+
     }
 
     public Usuario() {

@@ -1,4 +1,4 @@
-package com.example.sistemas.tomapedidos;
+package com.example.sistemas.tomapedidos.ConsultaPrecio;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -23,12 +23,18 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.ConsultasListadoActivity;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.ListadoAlmacenActivity;
+import com.example.sistemas.tomapedidos.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 
 public class ConsultaPrecioActivity extends AppCompatActivity {
 
@@ -65,7 +71,7 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent =  new Intent(ConsultaPrecioActivity.this,ConsultasListadoActivity.class);
+                Intent intent =  new Intent(ConsultaPrecioActivity.this, ConsultasListadoActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Usuario",usuario);
                 intent.putExtras(bundle);
@@ -104,7 +110,7 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 cliente = new Clientes();
                 cliente =  listaClientes.get(position);
-                Intent intent =  new Intent(ConsultaPrecioActivity.this,BuscarProductoPrecioActivity.class);
+                Intent intent =  new Intent(ConsultaPrecioActivity.this, BuscarProductoPrecioActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle);
@@ -136,7 +142,6 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
 
@@ -148,11 +153,11 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
 
         if (tipoConsulta == "Nombre") {
 
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+            url = ejecutaFuncionCursorTestMovil +
                     "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='" + numero + "||'";
         } else {
 
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+            url = ejecutaFuncionCursorTestMovil +
                     "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='||" + numero + "'";
         }
 

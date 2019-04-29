@@ -31,8 +31,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
+
 public class MostrarClienteActivity extends AppCompatActivity {
 
+    //private final static String[] opcionesDoc = { "Boleta", "Factura" };
     Button btnpedido,btnregresodetallecliente;
     Clientes cliente;
     TextView tvcodigo,tvNombre,tvDireccion,tvGiro,tvTipoCiente,tvDeuda,tvestado,
@@ -43,21 +46,16 @@ public class MostrarClienteActivity extends AppCompatActivity {
     String url;
     ArrayList<ClienteSucursal> listaClienteSucursal;
     ClienteSucursal clienteSucursal;
-
-
-    private final static String[] opcionesDoc = { "Boleta", "Factura" };
-    private final static String[] opcionesSucursal = { "Pricipal", "Sucursal" };
     List<String> opdoc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_cliente);
 
-
         cliente  = new Clientes();
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
         cliente.setTipoDocumento("FAC");
-
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
         tvcodigo = findViewById(R.id.tvCofigoProducto);
         tvNombre = findViewById(R.id.tvNombreCliente);
@@ -71,20 +69,17 @@ public class MostrarClienteActivity extends AppCompatActivity {
         spopcionesdocumento = findViewById(R.id.spTipoDocumento);
         spsucursal = findViewById(R.id.spSucursal);
         tvDireccionFiscalCliente = findViewById(R.id.tvDireccionFiscalCliente);
-
         tvcodigo.setText(cliente.getCodCliente());
         tvNombre.setText(cliente.getNombre());
         tvDireccion.setText(cliente.getDireccion());
 
-        ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item,opcionesDoc);
+        //ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item,opcionesDoc);
         opdoc = new ArrayList<String>();
         opdoc.add("FACTURA");
         opdoc.add("BOLETA");
         spopcionesdocumento.setAdapter(new SpinnerAdapter(this,opdoc));
 
         ListaSucursalesClientes(cliente.getCodCliente(),cliente);
-
-
         spopcionesdocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -143,7 +138,7 @@ public class MostrarClienteActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_SUC_CLIENTE&variables=%27"+codCliente+"%27";
 
         listaClienteSucursal = new ArrayList<ClienteSucursal>();
@@ -170,12 +165,10 @@ public class MostrarClienteActivity extends AppCompatActivity {
                                     clienteSucursal.setDepartamento(jsonObject.getString("DEPARTAMENTO"));
                                     clienteSucursal.setProvincia(jsonObject.getString("PROVINCIA"));
                                     clienteSucursal.setDistrito(jsonObject.getString("DISTRITO"));
-
                                     listaClienteSucursal.add(clienteSucursal);
                                 }
 
                                 progressDialog.dismiss();
-
                                 tvDireccionFiscalCliente.setText(cliente.getDireccionSucursal());
 
                                  spsucursal.setAdapter(new SpinnerAdapter(getApplicationContext(),opSucursal));
@@ -209,7 +202,6 @@ public class MostrarClienteActivity extends AppCompatActivity {
                                                 Bundle bundle1 = new Bundle();
                                                 bundle1.putSerializable("Cliente",cliente);
                                                 intent.putExtras(bundle1);
-                                                //intent.putExtra("fecha",fecha);
                                                 startActivity(intent);
                                                 finish();
                                             }

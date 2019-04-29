@@ -1,4 +1,4 @@
-package com.example.sistemas.tomapedidos;
+package com.example.sistemas.tomapedidos.ConsultaPromociones;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -26,6 +25,8 @@ import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.ConsultaPromocion;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.ListadoAlmacenActivity;
+import com.example.sistemas.tomapedidos.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +34,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 
 public class MostrarConsultaActivity extends AppCompatActivity {
 
@@ -64,7 +67,7 @@ public class MostrarConsultaActivity extends AppCompatActivity {
         imgPromocionElegida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MostrarConsultaActivity.this,ConsultarPromocionesActivity.class);
+                Intent intent = new Intent(MostrarConsultaActivity.this, ConsultarPromocionesActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("listaPromocionAux",listaPromocionAux);
                 intent.putExtras(bundle);
@@ -133,7 +136,8 @@ public class MostrarConsultaActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PROMOCIONES_DET&variables=%27"+nroPromocion+"%27";
+        url = ejecutaFuncionCursorTestMovil +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PROMOCIONES_DET&variables=%27"+nroPromocion+"%27";
 
         listaPromocionesObjetos = new ArrayList<>();
         listaPromocionAux = new ArrayList<>();
@@ -196,34 +200,25 @@ public class MostrarConsultaActivity extends AppCompatActivity {
                                         listaPromocionesObjetos.add(consultaPromocion);
                                         Double Aux1 = Double.valueOf(consultaPromocion.getCantidad().toString());
                                         consultaPromocion.setCantidad(formateador.format((double) Aux1) + "");
-                                        listaPromocionesStr.add(consultaPromocion.getCodArticulo() + "  -  " + consultaPromocion.getDescripcion()+"\n"
-                                                +  "MARCA\t: " + consultaPromocion.getDesMarca() +"\t\t\t\tUNIDAD : "+ consultaPromocion.getUndVenta()+"\n"
-                                                + "CANTIDAD \t : " + consultaPromocion.getCantidad());
-                                    }
 
+                                        // String[] list = consultaPromocion.getDescripcion().split(" ");
+
+                                        if (consultaPromocion.getFlgRegalo().trim().toString().equals("S")) {
+
+                                            listaPromocionesStr.add(consultaPromocion.getCodArticulo() + "  -  " + consultaPromocion.getDescripcion() + "\n"
+                                                    + "p - MARCA\t: " + consultaPromocion.getDesMarca() + "\t\t\t\tUNIDAD : " + consultaPromocion.getUndVenta() + "\n"
+                                                    + "CANTIDAD \t : " + consultaPromocion.getCantidad());
+                                        }else{
+
+                                            listaPromocionesStr.add(consultaPromocion.getCodArticulo() + "  -  " + consultaPromocion.getDescripcion() + "\n"
+                                                    + "MARCA\t: " + consultaPromocion.getDesMarca() + "\t\t\t\tUNIDAD : " + consultaPromocion.getUndVenta() + "\n"
+                                                    + "CANTIDAD \t : " + consultaPromocion.getCantidad());
+                                        }
+                                    }
                                     progressDialog.dismiss();
                                     ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
                                             CustomListAdapter(MostrarConsultaActivity.this, R.layout.custom_list, listaPromocionesStr);
                                     lvMuestraPromociones.setAdapter(listAdapter);
-                                    lvMuestraPromociones.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                        @Override
-                                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                                            Intent intent = new Intent(MostrarConsultaActivity.this,MostrarConsultaActivity.class);
-                                            intent.putExtra("nroPromocion",listaPromocionesObjetos.get(position).getNroPromocion());
-                                            Bundle bundle = new Bundle();
-                                            bundle.putSerializable("listaPromocionAux",listaPromocionAux);
-                                            intent.putExtras(bundle);
-                                            Bundle bundle1 = new Bundle();
-                                            bundle1.putSerializable("Cliente",clientes);
-                                            intent.putExtras(bundle1);
-                                            Bundle bundle2 = new Bundle();
-                                            bundle2.putSerializable("Usuario",usuario);
-                                            intent.putExtras(bundle2);
-                                            startActivity(intent);
-                                            finish();
-                                        }
-                                    });
                                 }
                             }else {
                                 progressDialog.dismiss();

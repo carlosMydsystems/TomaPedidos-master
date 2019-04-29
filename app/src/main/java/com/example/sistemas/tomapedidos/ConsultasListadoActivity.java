@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.sistemas.tomapedidos.ConsultaPrecio.ConsultaPrecioActivity;
+import com.example.sistemas.tomapedidos.ConsultaStock.BuscarProductoStockActivity;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,7 +26,6 @@ public class ConsultasListadoActivity extends AppCompatActivity {
     ListView lvConsultaTipo;
     ArrayList<String> listaTipoConsulta;
     ImageButton ibRetornoMenu;
-    String menuConsulta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,6 @@ public class ConsultasListadoActivity extends AppCompatActivity {
         ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
                                         CustomListAdapter(ConsultasListadoActivity.this, R.layout.custom_list, listaTipoConsulta);
             lvConsultaTipo.setAdapter(listAdapter);
-
             lvConsultaTipo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -98,7 +98,7 @@ public class ConsultasListadoActivity extends AppCompatActivity {
 
                     case 2:
 
-                        Intent intent = new Intent(ConsultasListadoActivity.this,BuscarProductoStockActivity.class);
+                        Intent intent = new Intent(ConsultasListadoActivity.this, BuscarProductoStockActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("Usuario",usuario);
                         intent.putExtras(bundle);
@@ -108,15 +108,13 @@ public class ConsultasListadoActivity extends AppCompatActivity {
 
                     case 3:
 
-                        Intent intent2 = new Intent(ConsultasListadoActivity.this,ConsultaPrecioActivity.class);
+                        Intent intent2 = new Intent(ConsultasListadoActivity.this, ConsultaPrecioActivity.class);
                         Bundle bundle2 = new Bundle();
                         bundle2.putSerializable("Usuario",usuario);
                         intent2.putExtras(bundle2);
                         startActivity(intent2);
                         finish();
-                        Toast.makeText(ConsultasListadoActivity.this, "ingreso", Toast.LENGTH_SHORT).show();
                         break;
-
                 }
                 }
             });

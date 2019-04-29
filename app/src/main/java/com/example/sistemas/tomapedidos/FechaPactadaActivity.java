@@ -1,13 +1,23 @@
 package com.example.sistemas.tomapedidos;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -32,15 +42,24 @@ import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Proveedor;
 import com.example.sistemas.tomapedidos.Entidades.SucursalProveedor;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Request.EnvioRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Dolares;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Soles;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.formatoFecha;
 
 public class FechaPactadaActivity extends AppCompatActivity {
 
@@ -49,8 +68,9 @@ public class FechaPactadaActivity extends AppCompatActivity {
     Clientes cliente;
     Usuario usuario;
     String almacen,tipoformapago,Ind,id_pedido,validador,retorno,Index,precio,cantidad,url,SucursalProveedor,
-            fechahabil,codProveedor,tvnombreproveedor,tvdireccionproveedor;
-    TextView tvCantidad,tvPrecio,tv22;
+            NombreProveedor,position,fechahabil,codProveedor,tvnombreproveedor,tvdireccionproveedor,
+            latitud, longitud, direccion, ubicacion;
+    TextView tvCantidad,tvPrecio,tv22,tvmuestra,tvlatitud,tvlongitud,tvdireccion;
     BigDecimal redondeado;
     DatePickerDialog datePickerDialog;
     int year,month,dayOfMonth;
@@ -65,8 +85,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
     ArrayList<SucursalProveedor> listaSucursalesProveedor;
     ImageButton ibRetornoFechaPactadaProveedores;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,16 +95,20 @@ public class FechaPactadaActivity extends AppCompatActivity {
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
 
+
+
         btnregistrafechapactada =  findViewById(R.id.btnRegistrarFechaPactada);
         ibRetornoFechaPactadaProveedores = findViewById(R.id.ibRetornoFechaPactadaProveedores);
-
         tvCantidad = findViewById(R.id.tvNumeroItem);
         tvPrecio = findViewById(R.id.tvMontoTotal);
         btnfechapactada = findViewById(R.id.btnfechaPactada);
         spfechashabiles = findViewById(R.id.spFechasHabiles);
         etComentario = findViewById(R.id.etComentario);
         tv22 = findViewById(R.id.textView22);
-
+        tvmuestra = findViewById(R.id.tvmuestra);
+        tvlatitud =  findViewById(R.id.tvlatitud);
+        tvlongitud =  findViewById(R.id.tvlongitud);;
+        tvdireccion = findViewById(R.id.tvdireccion);
         listaproductoselegidos = (ArrayList<Productos>) getIntent().getSerializableExtra("listaproductoselegidos"); //
         listaSucursalesProveedor = (ArrayList<SucursalProveedor>)getIntent().getSerializableExtra("listaSucursalesProveedor");
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
@@ -95,6 +117,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         Ind = getIntent().getStringExtra("indice");
+        position = getIntent().getStringExtra("position");
         id_pedido = getIntent().getStringExtra("id_pedido");
         validador = getIntent().getStringExtra("validador");
         retorno = getIntent().getStringExtra("retorno");
@@ -105,12 +128,29 @@ public class FechaPactadaActivity extends AppCompatActivity {
         tvdireccionproveedor = getIntent().getStringExtra("tvdireccionproveedor");
         codProveedor = getIntent().getStringExtra("codProveedor");
         SucursalProveedor = getIntent().getStringExtra("SucursalProveedor");
+        NombreProveedor = getIntent().getStringExtra("NombreProveedor");
         listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
         listaSucursalesProveedorStr  = (ArrayList<String>) getIntent().getSerializableExtra("listaSucursalesProveedorStr");
-
         tvCantidad.setText(cantidad);
         redondeado = new BigDecimal(precio).setScale(2, RoundingMode.HALF_EVEN);
-        tvPrecio.setText("S/ "+formateador.format(redondeado));
+
+        if (usuario.getMoneda().equals("1")){
+
+            tvPrecio.setText(Soles+" "+formateador.format(redondeado));
+
+        }else{
+
+            tvPrecio.setText(Dolares+" "+formateador.format(redondeado));
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+
+        } else {
+            locationStart();
+        }
 
         ibRetornoFechaPactadaProveedores.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +167,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 intent.putExtra("Cantidad", cantidad);
                 intent.putExtra("tvnombreproveedor", tvnombreproveedor);
                 intent.putExtra("tvdireccionproveedor", tvdireccionproveedor);
+                intent.putExtra("valida", "valida");
+                intent.putExtra("codProveedor", codProveedor);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
                 intent.putExtras(bundle);
@@ -153,7 +195,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
             }
         });
 
-
         btnfechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,8 +207,25 @@ public class FechaPactadaActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                                String trama = id_pedido+"|"+FormatoDiaMes(day) + "/" + FormatoDiaMes(month + 1) + "/" + year;
-                                VerificaFecha(trama);
+                                String trama = id_pedido+"|"+ formatoFecha(day) + "/" + formatoFecha(month + 1) + "/" + year;
+
+                                String fecha = formatoFecha(day) + "/" + formatoFecha(month + 1) + "/" + year;
+                                String fechaActual = formatoFecha(dayOfMonth) + "/" + formatoFecha(month+1) + "/"+formatoFecha(year);
+
+                                if(fecha.equals(fechaActual)){
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
+                                    builder.setCancelable(false);
+                                    builder.setTitle("Atencion !");
+                                    builder.setMessage("Debe elegir una fecha posterior al dia de Hoy");
+                                    builder.setNegativeButton("Aceptar",null);
+                                    builder.create().show();
+
+                                }else {
+
+                                    VerificaFecha(trama);
+                                }
+
                             }
                         }, year, month, dayOfMonth);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -185,24 +243,22 @@ public class FechaPactadaActivity extends AppCompatActivity {
                     moneda = " USD ";
                 }
 
-                String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
-                        getCodVendedor() + "|"+tipoformapago+"|"+cliente.getTipoDocumento()
-                        +"|"+usuario.getMoneda()+"|"+usuario.getUser().trim()+"|"+usuario.getCodTienda()+"|"+
-                        listaClienteSucursal.get(0).getCodSucursal()+"|"+codProveedor+"|"+
-                        listaSucursalesProveedor.get(0).getCodigoSucursalProveedor()+"|"+fechahabil+"|"+etComentario.getText();
+                Registro();
+
+                ubicacion = "Lat : " + tvlatitud.getText().toString() + "Long : " + tvlongitud.getText()
+                        .toString() + "Direccion : " + tvdireccion.getText().toString();
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
                         .setTitle("Fin del Pedido")
                         .setMessage("Cliente \t: " + cliente.getCodCliente() + " - " + cliente.getNombre() +  "\n" +
 
-                                    "Transportista \t: " + listaProveedores.get(0).getNombreProveedor() + "\n" +
-                                    "Suc Transportista\t: "  + listaSucursalesProveedor.get(0).getNombreSucursalProveedor()+"\n" +
-                                    "F.Pactada \t: " + fechahabil + "\n" +
-                                    "Almacen \t: " + almacen + "\n" +
-                                    "Importe \t: "+ moneda + redondeado + "\n" +
-                                    "Items  \t\t\t: " + cantidad)
+                            "Transportista \t: " + tvnombreproveedor + "\n" +
+                            "Suc Transportista\t: "  + SucursalProveedor+"\n" +
+                            "F.Pactada \t: " + fechahabil + "\n" +
+                            "Almacen \t: " + almacen + "\n" +
+                            "Importe \t: "+ moneda + redondeado + "\n" +
+                            "Items  \t\t\t: " + cantidad)
                         .setCancelable(false);
-
                 builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -214,20 +270,22 @@ public class FechaPactadaActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         int aux = 0;
                         if (aux==0){
-
+/*
                             String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
                                     getCodVendedor() + "|"+tipoformapago+"|"+cliente.getTipoDocumento()
                                     +"|"+usuario.getMoneda()+"|"+usuario.getUser().trim()+"|"+usuario.getCodTienda()+"|"+
                                     listaClienteSucursal.get(0).getCodSucursal()+"|"+codProveedor+"|"+
-                                    listaSucursalesProveedor.get(0).getCodigoSucursalProveedor()+"|"+fechahabil+"|"+etComentario.getText().toString().replace(" ","%20");
-/*
-                            String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
-                                    getCodVendedor() + "|"+tipoformapago+"|"+cliente.getTipoDocumento()
-                                    +"|"+usuario.getMoneda()+"|"+usuario.getUser().trim()+"|"+usuario.getCodTienda()+"||"+codProveedor+"|"+SucursalProveedor+"|"+fechahabil+"|";
-
+                                    SucursalProveedor+"|"+fechahabil+"|"+etComentario.getText().toString().replace(" ","%20");
 */
-                            ActualizarProducto(Trama);
+                            String Trama =  id_pedido + "|C|0|" + almacen + "|" + cliente.getCodCliente() +
+                                    "|" + usuario.getCodVendedor() + "|" + tipoformapago + "|" +
+                                    cliente.getTipoDocumento() + "|" + usuario.getMoneda() + "|" +
+                                    usuario.getUser().trim() + "|" + usuario.getCodTienda() + "|" +
+                                    listaClienteSucursal.get(0).getCodSucursal()+"|"+codProveedor+"|"+
+                                    SucursalProveedor + "|" + fechahabil + "|" + ubicacion;
 
+                            tvmuestra.setText(Trama);
+                            //ActualizarProducto(Trama);
                             aux++;
                         }
                     }
@@ -247,7 +305,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
         listadiaspactados = new ArrayList<DiasPactados>();
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_VAL_FECHA_PACTADA&variables=%27"+trama+"%27";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
@@ -290,9 +348,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                             .show();
                                 } else {
 
-
                                     listadiaspactados.clear();
-
                                     for (int i = 0; i < jsonArray.length(); i++) {
 
                                         diasPactados = new DiasPactados();
@@ -388,17 +444,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
         });
     }
 
-    private String FormatoDiaMes(Integer valor) {
-
-        String ValorString;
-
-        if (valor<=9){
-            ValorString = "0"+valor.toString();
-        }else{
-            ValorString = valor.toString();
-        }
-        return ValorString;
-    }
 
     private void RegistrarPedido(String id_pedido) {
 
@@ -410,7 +455,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url =  ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
@@ -509,23 +554,11 @@ public class FechaPactadaActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public void VerificaFechaDuro(String fecha, ArrayList<String> listaDiasFechasHabiles){
-
-        for (int i = 0; i<listaDiasFechasHabiles.size();i++){
-
-            if (fecha.equals(listaDiasFechasHabiles.get(i))){
-
-                Toast.makeText(this, "La fecha ingresada no es valida", Toast.LENGTH_SHORT).show();
-
-            }
-        }
-    }
-
     private void ActualizarProducto(String trama) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+        url =  ejecutaFuncionTestMovil +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
                     @Override
@@ -534,7 +567,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                         if (response.equals("OK")){
 
                             RegistrarPedido(id_pedido);
-
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -543,7 +575,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 error.printStackTrace();
             }
         });
-
         int socketTimeout = 30000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -551,5 +582,150 @@ public class FechaPactadaActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
+    /**++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
+
+    private void Registro() {
+
+        Response.Listener<String> responseListener = new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+
+                    JSONObject jsonresponse = new JSONObject(response);
+                    boolean success = jsonresponse.getBoolean("success");
+
+                    if (success){
+                        //Toast.makeText(FechaPactadaActivity.this, "Se hizo el registro de forma correcta", Toast.LENGTH_SHORT).show();
+
+                    }else{
+                        AlertDialog.Builder  builder = new AlertDialog.Builder(
+                                FechaPactadaActivity.this);
+                        builder.setMessage("No se encontraron registros")
+                                .setNegativeButton("Regresar",null)
+                                .create()
+                                .show();
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        latitud = tvlatitud.getText().toString();
+        longitud = tvlongitud.getText().toString();
+        direccion = tvdireccion.getText().toString();
+        String fechaRegistro="Hoy";
+        String horaRegistro="Ahora";
+        //placa = tvplaca.getText().toString();
+        String placa = "ABCDE";
+        EnvioRequest envioRequest = new EnvioRequest(latitud,longitud,direccion, fechaRegistro,horaRegistro,placa, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(FechaPactadaActivity.this);
+        queue.add(envioRequest);
+    }
+
+    private void locationStart() {
+        LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Localizacion Local = new Localizacion();
+        Local.setFechaPactadaActivity(this);
+        final boolean gpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!gpsEnabled) {
+            /*
+            Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(settingsIntent);
+            */
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
+            return;
+        }
+        mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 20, (LocationListener) Local);
+        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 20, (LocationListener) Local);
+        tvlatitud.setText("");
+        tvdireccion.setText("");
+    }
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == 1000) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                locationStart();
+                return;
+            }
+        }
+    }
+    public void setLocation(Location loc) {
+        //Obtener la direccion de la calle a partir de la latitud y la longitud
+        if (loc.getLatitude() != 0.0 && loc.getLongitude() != 0.0) {
+            try {
+                Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                List<Address> list = geocoder.getFromLocation(
+                        loc.getLatitude(), loc.getLongitude(), 1);
+                if (!list.isEmpty()) {
+                    Address DirCalle = list.get(0);
+                    tvdireccion.setText("" + DirCalle.getAddressLine(0));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /* Aqui empieza la Clase Localizacion */
+    public class Localizacion implements LocationListener {
+        FechaPactadaActivity fechaPactadaActivity;
+        public FechaPactadaActivity getFechaPactadaActivity() {
+
+            return fechaPactadaActivity;
+        }
+        public void setFechaPactadaActivity(FechaPactadaActivity fechaPactadaActivity) {
+            this.fechaPactadaActivity = fechaPactadaActivity;
+        }
+        @Override
+        public void onLocationChanged(Location loc) {
+            // Este metodo se ejecuta cada vez que el GPS recibe nuevas coordenadas
+            // debido a la deteccion de un cambio de ubicacion
+
+            loc.getLatitude();
+            loc.getLongitude();
+            String Text = loc.getLatitude()+"";
+
+            String longitudTxt = loc.getLongitude()+"";
+            tvlatitud.setText(Text);
+            tvlongitud.setText(longitudTxt);
+            this.fechaPactadaActivity.setLocation(loc);
+        }
+        @Override
+        public void onProviderDisabled(String provider) {
+            // Este metodo se ejecuta cuando el GPS es desactivado
+            tvlatitud.setText("GPS Desactivado");
+        }
+        @Override
+        public void onProviderEnabled(String provider) {
+            // Este metodo se ejecuta cuando el GPS es activado
+            tvlatitud.setText("GPS Activado");
+        }
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            switch (status) {
+                case LocationProvider.AVAILABLE:
+                    Log.d("debug", "LocationProvider.AVAILABLE");
+                    break;
+                case LocationProvider.OUT_OF_SERVICE:
+                    Log.d("debug", "LocationProvider.OUT_OF_SERVICE");
+                    break;
+                case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                    Log.d("debug", "LocationProvider.TEMPORARILY_UNAVAILABLE");
+                    break;
+            }
+        }
+    }
+
+
+
+
+
+    /**++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 }

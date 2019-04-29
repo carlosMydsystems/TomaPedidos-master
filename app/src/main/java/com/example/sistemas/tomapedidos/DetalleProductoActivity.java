@@ -27,6 +27,7 @@ import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,10 +37,15 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Dolares;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Soles;
+
 public class DetalleProductoActivity extends AppCompatActivity {
 
-    TextView tvcodigoproducto,tvnombreproducto,tvalmacenproducto,tvstock,tvprecio,
-            tvtotal,tvprecioreal,tvunidades,tvtasa,tvpreciorealjson,tvNroPromociones,tvPresetacion,tvEquivalencia;
+    TextView tvcodigoproducto,tvnombreproducto,tvalmacenproducto,tvstock,tvprecio,tvtotal,tvprecioreal,
+            tvunidades,tvtasa,tvpreciorealjson,tvNroPromociones,tvPresetacion,tvEquivalencia,textView7,textView9;
     Productos productos;
     Button btnguardaryrevisar, btnguardaryagregar, btndverificarproducto;
     Clientes cliente;
@@ -83,6 +89,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
         listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
 
         // Se referencia a todas las partes del XML asociado al ProveedorActivity
+
         tvcodigoproducto =  findViewById(R.id.tvCofigoProducto);
         tvnombreproducto = findViewById(R.id.tvNomProdElegido);
         tvalmacenproducto = findViewById(R.id.tvAlmProdElegido);
@@ -95,8 +102,18 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvNroPromociones = findViewById(R.id.tvNroPromociones);
         tvPresetacion = findViewById(R.id.tvPresetacion);
         tvEquivalencia = findViewById(R.id.tvEquivalencia);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        textView7 = findViewById(R.id.textView7A);
+        textView9 = findViewById(R.id.textView9A);
 
+        if (usuario.getMoneda().toString().equals("1")){
+            textView7.setText("Precio : " + Soles);
+            textView9.setText("Total   :  " + Soles);
+        }else{
+            textView7.setText("Precio : " + Dolares);
+            textView9.setText("Total   :  " + Dolares);
+        }
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
         btndverificarproducto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,9 +190,14 @@ else if (etcantidadelegida.getText()== null){
         });
 
         btnguardaryrevisar.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
 
+                progressDialog.setMessage("... Guardando");
+                progressDialog.setCancelable(false);
+                progressDialog.create();
+                progressDialog.show();
                 Double stockDouble = Double.valueOf(tvstock.getText().toString().replace(",",""));
                 Double cantidadElegida = Double.valueOf(etcantidadelegida.getText().toString());
 
@@ -232,6 +254,9 @@ else if (etcantidadelegida.getText()== null){
 
 
                     if (etcantidadelegida.getText().toString().equals("")) {
+                        btnguardaryrevisar.setVisibility(View.VISIBLE);
+
+
                     } else {
 
                         productos.setNumPromocion(tvNroPromociones.getText().toString());
@@ -256,9 +281,6 @@ else if (etcantidadelegida.getText()== null){
                             ActualizarProducto1(trama);
 
                         }
-
-
-
                 }
             }
             }
@@ -399,7 +421,7 @@ else if (etcantidadelegida.getText()== null){
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+            url = ejecutaFuncionCursorTestMovil+
                     "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables=%27"+almacen+"|"+usuario.
                     getLugar()+"|"+productos.getCodigo()+"||"+cliente.getCodCliente()+"|||"+cantidad+"%27";
 
@@ -453,9 +475,7 @@ else if (etcantidadelegida.getText()== null){
 
                                     Mensaje = "";
 
-
                                 }else {
-
 
                                     for (int i = 0; i < jsonArray.length(); i++) {
                                         producto = new Productos();
@@ -463,7 +483,15 @@ else if (etcantidadelegida.getText()== null){
                                         producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
                                         producto.setMarca(jsonObject.getString("DES_MARCA"));
                                         producto.setDescripcion(jsonObject.getString("DES_ARTICULO"));
-                                        producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
+                                        if (usuario.getMoneda().equals("1")){
+
+                                            producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
+
+                                        }else{
+
+                                            producto.setPrecio(jsonObject.getString("PRECIO_DOLARES"));
+                                        }
+
                                         BigDecimal precioBig1 = new BigDecimal(producto.getPrecio());
                                         precioBig1 = precioBig1.setScale(2, RoundingMode.HALF_EVEN);
                                         Descuento = (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO")) / 100);
@@ -475,7 +503,12 @@ else if (etcantidadelegida.getText()== null){
                                         precioBigUnitario = new BigDecimal(precioUnitarioDouble.toString());
                                         precioBigUnitario = precioBigUnitario.setScale(4, RoundingMode.HALF_EVEN);
                                         tvprecio.setText(precioBigUnitario.toString());
-                                        tvpreciorealjson.setText(jsonObject.getString("PRECIO_SOLES"));
+                                        if (usuario.getMoneda().equals("1")){
+
+                                            tvpreciorealjson.setText(jsonObject.getString("PRECIO_SOLES"));
+                                        }else {
+                                            tvpreciorealjson.setText(jsonObject.getString("PRECIO_DOLARES"));
+                                        }
                                         producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
                                         producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
                                         producto.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
@@ -499,10 +532,7 @@ else if (etcantidadelegida.getText()== null){
                                             tvstock.setText(formateador.format((double) Aux1) + " ");
                                         }
                                     }
-
-
                                 }
-
 
                             }else {
 
@@ -537,7 +567,8 @@ else if (etcantidadelegida.getText()== null){
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+        url =  ejecutaFuncionTestMovil +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -570,11 +601,8 @@ else if (etcantidadelegida.getText()== null){
                             builder.setTitle("Alerta !");
                             builder.setMessage(Mensaje);
                             builder.setNegativeButton("Aceptar",null);
-
                             builder.create().show();
-
                             Mensaje = "";
-
 
                         }else {
 
@@ -586,7 +614,6 @@ else if (etcantidadelegida.getText()== null){
                             productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
                             productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tene
                             productos.setIndice(Integer.valueOf(Index));
-
                             listaproductoselegidos.add(productos);
 
                             Intent intent = new Intent(DetalleProductoActivity.this, bandejaProductosActivity.class);
@@ -611,8 +638,6 @@ else if (etcantidadelegida.getText()== null){
                             intent.putExtras(bundle4);
                             startActivity(intent);
                             finish();
-
-
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -632,7 +657,8 @@ else if (etcantidadelegida.getText()== null){
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+        url =  ejecutaFuncionTestMovil +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -665,12 +691,9 @@ else if (etcantidadelegida.getText()== null){
                             builder.setTitle("Alerta !");
                             builder.setMessage(Mensaje);
                             builder.setNegativeButton("Aceptar",null);
-
                             builder.create().show();
 
                             Mensaje = "";
-
-
                         }else {
 
                             productos.setCantidad(etcantidadelegida.getText().toString());
@@ -704,8 +727,6 @@ else if (etcantidadelegida.getText()== null){
                             intent.putExtras(bundle4);
                             startActivity(intent);
                             finish();
-
-
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -721,5 +742,4 @@ else if (etcantidadelegida.getText()== null){
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
-
 }

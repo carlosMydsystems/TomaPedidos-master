@@ -35,20 +35,21 @@ import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Proveedor;
 import com.example.sistemas.tomapedidos.Entidades.SucursalProveedor;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
+
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 
 public class ProveedorActivity extends AppCompatActivity {
 
     Button btnBuscarProveedor,btnAceptarBuscarProveedor;
     String tipoformapago,Index,cantidad,precio,almacen,id_pedido,url,TipodeConsulta = "NombreProveedor",
-            validador,retorno,validadorRetornoFechaPactadaProveedor,direccionProveedor,nombreProveedor;
+            validador,retorno,validadorRetornoFechaPactadaProveedor,direccionProveedor,nombreProveedor,codProveedor,valida;
     Usuario usuario;
     Clientes cliente;
+
     ArrayList<Productos> listaproductoselegidos;
     ImageButton ibretornoMenuProveedor;
     RadioGroup rgBuscarProveedor;
@@ -88,7 +89,17 @@ public class ProveedorActivity extends AppCompatActivity {
         Index = getIntent().getStringExtra("Index");
         cantidad = getIntent().getStringExtra("Cantidad");
         precio = getIntent().getStringExtra("Precio");
+        codProveedor =  getIntent().getStringExtra("codProveedor");
+        valida = getIntent().getStringExtra("valida");
 
+        if (codProveedor == null){
+
+
+        }else {
+            proveedor = new Proveedor();
+
+            proveedor.setCodProveedor(codProveedor);
+        }
         direccionProveedor = getIntent().getStringExtra("tvdireccionproveedor");
         nombreProveedor = getIntent().getStringExtra("tvnombreproveedor");
         btnBuscarProveedor = findViewById(R.id.btnBuscarProveedor);
@@ -107,20 +118,14 @@ public class ProveedorActivity extends AppCompatActivity {
         lvProveedoresPrueba.setVisibility(View.GONE);
         btnAceptarBuscarProveedor = findViewById(R.id.btnAceptarBuscarProveedor);
         tvdireccionsucursalproveedor = findViewById(R.id.tvDireccionSucursal);
-
         if (validadorRetornoFechaPactadaProveedor == null){
-
             validadorRetornoFechaPactadaProveedor = "true";
-
         }else {
-
             validadorRetornoFechaPactadaProveedor = getIntent().getStringExtra("validadorRetornoFechaPactadaProveedor");
             LLMenuInferior.setVisibility(View.VISIBLE);
-
             tvdireccionproveedor.setText(direccionProveedor);
             tvnombreproveedor.setText(nombreProveedor);
             spsucursalproveedor.setAdapter(new SpinnerAdapter(getApplicationContext(),listaSucursalesProveedorStr));
-
             listaSucursalesProveedor.get(0).setCodigoSucursalProveedor(listaSucursalesProveedor.get(0).getCodigoSucursalProveedor());
             listaSucursalesProveedor.get(0).setNombreSucursalProveedor(listaSucursalesProveedor.get(0).getNombreSucursalProveedor());
             tvdireccionsucursalproveedor.setText(listaSucursalesProveedor.get(0).getDireccionSucursalProveedor());
@@ -128,13 +133,10 @@ public class ProveedorActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-
-
                     quitarTeclado(view);
                     listaSucursalesProveedor.get(0).setCodigoSucursalProveedor(listaSucursalesProveedor.get(position).getCodigoSucursalProveedor());
                     listaSucursalesProveedor.get(0).setNombreSucursalProveedor(listaSucursalesProveedor.get(position).getNombreSucursalProveedor());
                     tvdireccionsucursalproveedor.setText(listaSucursalesProveedor.get(position).getDireccionSucursalProveedor());
-
                     btnAceptarBuscarProveedor.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -148,7 +150,11 @@ public class ProveedorActivity extends AppCompatActivity {
                             intent.putExtra("Almacen", almacen);
                             intent.putExtra("id_pedido", id_pedido);
                             intent.putExtra("validador", "false");
-                            intent.putExtra("codProveedor", listaProveedores.get(0).getCodProveedor());
+                            if(valida.equals("valida")){
+                                intent.putExtra("codProveedor", codProveedor);
+                            }else {
+                                intent.putExtra("codProveedor", listaProveedores.get(0).getCodProveedor());
+                            }
                             intent.putExtra("SucursalProveedor",listaSucursalesProveedor.get(0).getCodigoSucursalProveedor());
                             intent.putExtra("tvnombreproveedor", tvnombreproveedor.getText().toString());
                             intent.putExtra("tvdireccionproveedor", tvdireccionproveedor.getText().toString());
@@ -185,7 +191,6 @@ public class ProveedorActivity extends AppCompatActivity {
 
                 }
             });
-
         }
 
         ibretornoMenuProveedor.setOnClickListener(new View.OnClickListener() {
@@ -236,17 +241,9 @@ public class ProveedorActivity extends AppCompatActivity {
                 }else if (rbCodigoProveedor.isChecked()){
                     etProveedor.setInputType(InputType.TYPE_CLASS_NUMBER);
                 }
+
             }
         });
-
-        /*
-            lvProveedoresPrueba.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        LLMenuInferior.setVisibility(View.VISIBLE);
-                }
-            });
-        */
 
         rgBuscarProveedor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -290,7 +287,6 @@ public class ProveedorActivity extends AppCompatActivity {
                     buscarproveedor(etProveedor.getText().toString().trim(),TipodeConsulta);
 
                 }
-
             }
         });
     }
@@ -312,12 +308,12 @@ public class ProveedorActivity extends AppCompatActivity {
 
         if (tipoConsulta.equals("NombreProveedor")) {
 
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+            url = ejecutaFuncionCursorTestMovil +
                     "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PROVEEDOR&variables='|"+numero+"'";
 
         }else {
 
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+            url = ejecutaFuncionCursorTestMovil +
                     "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PROVEEDOR&variables='"+numero+"|'";
         }
 
@@ -395,6 +391,7 @@ public class ProveedorActivity extends AppCompatActivity {
                                             tvnombreproveedor.setText(listaProveedores.get(position).getNombreProveedor());
                                             etProveedor.setInputType(InputType.TYPE_NULL);
                                             listarSucursalProveedores(listaProveedores.get(position).getCodProveedor());
+                                            proveedor.setCodProveedor(listaProveedores.get(position).getCodProveedor());
                                         }
                                     });
                                 }
@@ -437,7 +434,7 @@ public class ProveedorActivity extends AppCompatActivity {
         listaSucursalesProveedorStr = new ArrayList<>();
 
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_SUC_PROVEEDOR&variables=%27"+codProveedor+"%27";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
@@ -490,6 +487,7 @@ public class ProveedorActivity extends AppCompatActivity {
                                         listaSucursalesProveedorStr.add(sucursalProveedor.getNombreSucursalProveedor());
                                         listaSucursalesProveedor.add(sucursalProveedor);
                                     }
+
                                     // Se hace un llamado al adaptador personalizado asociado al SML custom_list
 
                                     spsucursalproveedor.setAdapter(new SpinnerAdapter(getApplicationContext(),listaSucursalesProveedorStr));
@@ -497,15 +495,15 @@ public class ProveedorActivity extends AppCompatActivity {
                                     listaSucursalesProveedor.get(0).setCodigoSucursalProveedor(listaSucursalesProveedor.get(0).getCodigoSucursalProveedor());
                                     listaSucursalesProveedor.get(0).setNombreSucursalProveedor(listaSucursalesProveedor.get(0).getNombreSucursalProveedor());
                                     tvdireccionsucursalproveedor.setText(listaSucursalesProveedor.get(0).getDireccionSucursalProveedor());
-
                                     spsucursalproveedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-
                                      @Override
-                                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                     public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
 
                                          quitarTeclado(view);
                                          listaSucursalesProveedor.get(0).setCodigoSucursalProveedor(listaSucursalesProveedor.get(position).getCodigoSucursalProveedor());
+
+
                                          listaSucursalesProveedor.get(0).setNombreSucursalProveedor(listaSucursalesProveedor.get(position).getNombreSucursalProveedor());
                                          tvdireccionsucursalproveedor.setText(listaSucursalesProveedor.get(position).getDireccionSucursalProveedor());
 
@@ -524,8 +522,10 @@ public class ProveedorActivity extends AppCompatActivity {
                                                  intent.putExtra("validador", "false");
                                                  intent.putExtra("codProveedor", proveedor.getCodProveedor());
                                                  intent.putExtra("SucursalProveedor",listaSucursalesProveedor.get(0).getCodigoSucursalProveedor());
+                                                 intent.putExtra("NombreProveedor",listaSucursalesProveedor.get(0).getNombreSucursalProveedor());
                                                  intent.putExtra("tvnombreproveedor", tvnombreproveedor.getText().toString());
                                                  intent.putExtra("tvdireccionproveedor", tvdireccionproveedor.getText().toString());
+                                                 intent.putExtra("position",position);
 
                                                  Bundle bundle = new Bundle();
                                                  Bundle bundle2 = new Bundle();

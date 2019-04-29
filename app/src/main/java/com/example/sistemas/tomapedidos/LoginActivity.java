@@ -35,13 +35,27 @@ public class LoginActivity extends AppCompatActivity {
     EditText etusuario, etclave;
     Button btnlogeo;
     Usuario usuario;
-    String url, Mensaje = "",imei = "";
+    String url, Mensaje = "",imei = "",puerto = "8494";
+    boolean validador = true;
     static final Integer PHONESTATS = 0x1;
+    public static String ejecutaFuncionCursorTestMovil;
+    public static String ejecutaFuncionTestMovil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (validador) {
+
+            ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=";
+            ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=";
+
+        }else{
+
+            ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:"+puerto+"/oracle/ejecutaFuncionCursorTestMovil.php?funcion=";
+            ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:"+puerto+"/oracle/ejecutaFuncionTestMovil.php?funcion=";
+        }
 
         usuario = new Usuario();
         etusuario = findViewById(R.id.etUsuario);
@@ -51,11 +65,12 @@ public class LoginActivity extends AppCompatActivity {
         btnlogeo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (etusuario.getText().equals("") || etclave.getText().equals("")) {
-                } else {
-                    verificarUsuario(etusuario.getText().toString().replace(" ", "").toUpperCase()
-                            , etclave.getText().toString().replace(" ", "").toUpperCase(),imei);
-                }
+
+            if (etusuario.getText().equals("") || etclave.getText().equals("")) {
+            } else {
+                verificarUsuario(etusuario.getText().toString().replace(" ", "").toUpperCase()
+                        , etclave.getText().toString().replace(" ", "").toUpperCase(),imei);
+            }
             }
         });
     }
@@ -69,8 +84,15 @@ public class LoginActivity extends AppCompatActivity {
         Mensaje = "";
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+/*
+        url =  ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|"+Imei+"'"; // se debe actalizar la URL
+
+*/
+
+        url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085543023'"; // se debe actalizar la URL
+
+
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
 
@@ -93,6 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Aux = Aux.replace("|","");
                                 Aux = Aux.replace(":"," ");
                                 String partes[] = Aux.split(" ");
+
                                 for (String palabras : partes){
                                     if (condicion){ Mensaje += palabras+" "; }
                                     if (palabras.equals("ERROR")){
@@ -100,6 +123,7 @@ public class LoginActivity extends AppCompatActivity {
                                         error = true;
                                     }
                                 }
+
                                 if (error) {
                                     android.support.v7.app.AlertDialog.Builder dialog = new android.support.v7.app.AlertDialog.Builder(
                                             LoginActivity.this);
@@ -130,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                                     startActivity(intent);
                                     finish();
                                 }
+
                             }else{
                                 AlertDialog.Builder build1 = new AlertDialog.Builder(LoginActivity.this);
                                 build1.setTitle("Usuario  o Clave incorrecta")
@@ -175,6 +200,7 @@ public class LoginActivity extends AppCompatActivity {
         switch (requestCode) {
             case 1: {
                 // Validamos si el usuario acepta el permiso para que la aplicación acceda a los datos internos del equipo, si no denegamos el acceso
+
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     imei = obtenerIMEI();
                 } else {
@@ -191,14 +217,12 @@ public class LoginActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             //Hacemos la validación de métodos, ya que el método getDeviceId() ya no se admite para android Oreo en adelante, debemos usar el método getImei()
-
             return telephonyManager.getImei();
-        }
-        else {
+
+        } else {
 
             return telephonyManager.getDeviceId();
 
         }
     }
-
 }

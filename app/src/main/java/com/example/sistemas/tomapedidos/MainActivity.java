@@ -28,9 +28,6 @@ public class MainActivity extends AppCompatActivity
     Bundle bundle;
     String userId;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +89,6 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
 
                 Intent intent = new Intent(MainActivity.this,ConsultasListadoActivity.class);
-
                 bundle.putSerializable("Usuario",usuario);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -107,8 +103,9 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                .setAction("Action", null).show();
             }
         });
 
@@ -144,12 +141,10 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 

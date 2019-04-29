@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 
 public class PromocionesActivity extends AppCompatActivity {
 
@@ -80,7 +80,6 @@ public class PromocionesActivity extends AppCompatActivity {
 
     private void placeOrder(ArrayList<Productos> listaproductoselegidos) // Captura el listado
     {
-
         productOrders.clear();
         listaTrama =  new ArrayList<>();
         for(int i=0;i<listAdapter.listProducts.size();i++)
@@ -116,7 +115,6 @@ public class PromocionesActivity extends AppCompatActivity {
                 productopromocion.setEquivalencia(listAdapter.listProducts.get(i).Equivalencia);
                 productopromocion.setPrecio(listAdapter.listProducts.get(i).PrecioUni);
                 listaproductoselegidos.add(productopromocion);
-
             }
         }
 
@@ -147,7 +145,8 @@ public class PromocionesActivity extends AppCompatActivity {
         Double valorcantidad;
 
         for (int i = 0 ; i <listaPromociones.size() ; i++) {
-            valorcantidad = Double.valueOf(listaPromociones.get(i).getEquivalencia()) * Double.valueOf(listaPromociones.get(i).getCantidadBonificada());
+            valorcantidad = Double.valueOf(listaPromociones.get(i).getEquivalencia()) *
+                    Double.valueOf(listaPromociones.get(i).getCantidadBonificada());
 
             products.add(new Product(
                 listaPromociones.get(i).getNumeroPromocion(),
@@ -177,7 +176,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url =  ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTA_PROMOCION&variables=%27"+identificador+"%27"; // se debe actalizar la URL
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
@@ -211,11 +210,15 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setFlgGraba(jsonObject.getString("FLG_GRABA"));
                                         promocion.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
                                         promocion.setCodPresentacion(jsonObject.getString("COD_PRESENTACION"));
-                                        promocion.setPrecioSoles(jsonObject.getString("PRECIO_SOLES"));
+                                        if (usuario.getMoneda().equals("1")){
+                                            promocion.setPrecioSoles(jsonObject.getString("PRECIO_SOLES"));
+                                        }else{
+                                            promocion.setPrecioSoles(jsonObject.getString("PRECIO_DOLARES"));
+                                        }
                                         promocion.setPrecioDolares(jsonObject.getString("PRECIO_DOLARES"));
                                         promocion.setStkDisponible(jsonObject.getString("STK_DISPONIBLE"));
                                         promocion.setStkFisico(jsonObject.getString("STK_FISICO"));
-                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_PEDIDA"));
+                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_BONIFICADA"));
                                         promocion.setFactor(jsonObject.getString("FACTOR"));
                                         promocion.setFormaPromocion(jsonObject.getString("FORMA_PROMOCION"));
                                         promocion.setCodDocumento(jsonObject.getString("COD_DOCUMENTO"));
@@ -237,11 +240,15 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setFlgGraba(jsonObject.getString("FLG_GRABA"));
                                         promocion.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
                                         promocion.setCodPresentacion(jsonObject.getString("COD_PRESENTACION"));
-                                        promocion.setPrecioSoles(jsonObject.getString("PRECIO_SOLES"));
+                                        if (usuario.getMoneda().equals("1")){
+                                            promocion.setPrecioSoles(jsonObject.getString("PRECIO_SOLES"));
+                                        }else{
+                                            promocion.setPrecioSoles(jsonObject.getString("PRECIO_DOLARES"));
+                                        }
                                         promocion.setPrecioDolares(jsonObject.getString("PRECIO_DOLARES"));
                                         promocion.setStkDisponible(jsonObject.getString("STK_DISPONIBLE"));
                                         promocion.setStkFisico(jsonObject.getString("STK_FISICO"));
-                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_PEDIDA"));
+                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_BONIFICADA"));
                                         promocion.setFactor(jsonObject.getString("FACTOR"));
                                         promocion.setFormaPromocion(jsonObject.getString("FORMA_PROMOCION"));
                                         promocion.setCodDocumento(jsonObject.getString("COD_DOCUMENTO"));
@@ -274,10 +281,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         productopromocion.setPrecioAcumulado("0.0");
                                         productopromocion.setObservacion("T");
                                         listaproductoselegidos.add(productopromocion);
-
                                     }
-
-                                    Toast.makeText(PromocionesActivity.this, "lista de productos elegidos 1 " + listaproductoselegidos.size(), Toast.LENGTH_SHORT).show();
                                 }
 
                                 getProduct(listaPromociones);
@@ -363,10 +367,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                                 startActivity(intent);
                                                 finish();
-
                                             }
-
-
                                     }else {
 
                                             Intent intent = new Intent(PromocionesActivity.this, IntermediaActivity.class);

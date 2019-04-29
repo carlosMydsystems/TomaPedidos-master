@@ -23,12 +23,14 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.ConsultaPromociones.ConsultarPromocionesActivity;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 
 public class BusquedaClienteActivity extends AppCompatActivity {
 
@@ -45,7 +47,6 @@ public class BusquedaClienteActivity extends AppCompatActivity {
     Usuario usuario;
     ImageButton ibregresomenuprincipal;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,11 +60,9 @@ public class BusquedaClienteActivity extends AppCompatActivity {
         btnbuscar = findViewById(R.id.btnBuscar);
         lvclientes = findViewById(R.id.lvCliente);
         etcliente = findViewById(R.id.etCliente);
-
         consultaPromociones = getIntent().getStringExtra("consultaPromociones");
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");  //Se pasa el parametro del usuario
         etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
-
 
         if (consultaPromociones==null){
 
@@ -76,7 +75,6 @@ public class BusquedaClienteActivity extends AppCompatActivity {
             }
 
             ibregresomenuprincipal = findViewById(R.id.ibRetornoMenuPrincipal);
-
             ibregresomenuprincipal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -206,7 +204,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
 
                     cliente = new Clientes();
                     cliente =  listaClientes.get(position);
-                    Intent intent =  new Intent(BusquedaClienteActivity.this,ConsultarPromocionesActivity.class);
+                    Intent intent =  new Intent(BusquedaClienteActivity.this, ConsultarPromocionesActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("Cliente",cliente);
                     intent.putExtras(bundle);
@@ -251,11 +249,11 @@ public class BusquedaClienteActivity extends AppCompatActivity {
 
         if (tipoConsulta == "Nombre") {
 
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+            url = ejecutaFuncionCursorTestMovil +
                     "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='" + numero + "||'";
         } else {
 
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+            url = ejecutaFuncionCursorTestMovil +
                     "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='||" + numero + "'";
         }
 

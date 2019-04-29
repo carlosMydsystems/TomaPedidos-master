@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -27,6 +30,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
+
 public class ConsutlasActivity extends AppCompatActivity {
 
     Usuario usuario;
@@ -36,6 +41,8 @@ public class ConsutlasActivity extends AppCompatActivity {
     ListView lvlistapedidosrealizados;
     ArrayList<String> listaPedidosMostrado;
     ImageButton ibRetornoMain;
+    TextView tvtituloPedidos2;
+    String clienteduro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,8 @@ public class ConsutlasActivity extends AppCompatActivity {
         fecha = getIntent().getStringExtra("fecha");
         lvlistapedidosrealizados = findViewById(R.id.lvListaPedidosRealizados);
         ibRetornoMain = findViewById(R.id.ibRetornoMain);
+        tvtituloPedidos2 = findViewById(R.id.tvtituloPedidos2);
+        tvtituloPedidos2.setText("Pedidos - " + fecha);
         ibRetornoMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,9 +68,8 @@ public class ConsutlasActivity extends AppCompatActivity {
 
             }
         });
-
         listaPedidosConsulta = new ArrayList<>();
-        ListarPedidos(usuario.getUser().toString().trim(),fecha);
+        ListarPedidos(usuario.getUser().trim(),fecha);
     }
 
     private void ListarPedidos(final String usuariost, String fechaingresada) {
@@ -70,6 +78,9 @@ public class ConsutlasActivity extends AppCompatActivity {
         progressDialog.setMessage("... Cargando");
         progressDialog.setCancelable(false);
         progressDialog.show();
+
+        // Permite hacer un cambio en el formato decimal
+
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
@@ -78,7 +89,7 @@ public class ConsutlasActivity extends AppCompatActivity {
         listaPedidosMostrado = new ArrayList<>();
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS&variables=%27"+usuariost+"|"+fechaingresada+"%27";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
@@ -102,30 +113,41 @@ public class ConsutlasActivity extends AppCompatActivity {
                                     pedidosconsulta.setTotalImporte(jsonObject.getString("TOTAL_IMPORTE"));
                                     pedidosconsulta.setItems(jsonObject.getString("ITEMS"));
                                     pedidosconsulta.setEstado(jsonObject.getString("ESTADO"));
-                                    listaPedidosMostrado.add(pedidosconsulta.getNroPedido()+"  -  "+pedidosconsulta.getCliente()+"\n Items : "+
-                                            pedidosconsulta.getItems() + "\t\t\t\t\t\tTotal Importe : S/ "+ pedidosconsulta.getTotalImporte());
-                                    listaPedidosConsulta.add(pedidosconsulta);
 
+                                    int indice = pedidosconsulta.getCliente().length();
+                                    if(indice > 31){
+
+                                        clienteduro = pedidosconsulta.getCliente().substring(0,31);
+                                    }else {
+
+                                        clienteduro = pedidosconsulta.getCliente();
+
+                                    }
+
+                                    listaPedidosMostrado.add(pedidosconsulta.getNroPedido()+"  -  "+clienteduro +"\t\t\t\tEstado : \t"+ pedidosconsulta.getEstado()+ "\n Items : "+
+                                            pedidosconsulta.getItems() + "\t\t\t\t\tTotal Importe : "+pedidosconsulta.getMoneda()+" "+ formateador.format(Double.valueOf(pedidosconsulta.getTotalImporte())));
+                                    listaPedidosConsulta.add(pedidosconsulta);
                                 }
 
                                 progressDialog.dismiss();
-
                                 ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
                                         CustomListAdapter(ConsutlasActivity.this, R.layout.custom_list, listaPedidosMostrado);
                                 lvlistapedidosrealizados.setAdapter(listAdapter);
                                 lvlistapedidosrealizados.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    String numeroPedido = listaPedidosConsulta.get(position).getNroPedido();
+                                    String monedaPedido = listaPedidosConsulta.get(position).getMoneda();
+                                    Intent intent = new Intent(ConsutlasActivity.this,DetalleActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putSerializable("Usuario",usuario);
+                                    intent.putExtras(bundle);
+                                    intent.putExtra("NroPedido",numeroPedido);
+                                    intent.putExtra("monedaPedido",monedaPedido);
+                                    intent.putExtra("fecha",fecha);
+                                    startActivity(intent);
+                                    finish();
 
-                                        String numeroPedido = listaPedidosConsulta.get(position).getNroPedido();
-                                        Intent intent = new Intent(ConsutlasActivity.this,DetalleActivity.class);
-                                        Bundle bundle = new Bundle();
-                                        bundle.putSerializable("Usuario",usuario);
-                                        intent.putExtras(bundle);
-                                        intent.putExtra("NroPedido",numeroPedido);
-                                        intent.putExtra("fecha",fecha);
-                                        startActivity(intent);
-                                        finish();
                                     }
                                 });
 

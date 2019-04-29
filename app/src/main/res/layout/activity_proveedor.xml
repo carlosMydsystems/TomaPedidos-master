@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".ProveedorActivity">
 
-
     <RadioGroup
         android:id="@+id/rgBuscarProveedor"
         android:layout_width="match_parent"
@@ -219,6 +218,4 @@
             app:layout_constraintTop_toBottomOf="@+id/spSucursalProveedor" />
 
     </android.support.constraint.ConstraintLayout>
-
-
 </android.support.constraint.ConstraintLayout>

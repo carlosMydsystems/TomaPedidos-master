@@ -25,6 +25,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.Adaptadores.ConsultaPromociones.CustomListAdapter;
 import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
@@ -33,6 +34,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
+
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
 
 public class BuscarProductoActivity extends AppCompatActivity {
 
@@ -313,14 +317,11 @@ public class BuscarProductoActivity extends AppCompatActivity {
             numero = numero.replace("%","%25");
             numero = numero.toUpperCase(); // se convierten los caracteres a Mayusucla
         if (tipoConsulta.equals("Nombre")) {
-
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO_S&variables='"+alma+"||"+numero+"'";
-
+            url = ejecutaFuncionCursorTestMovil +
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO_S&variables='"+alma+"||"+numero.toUpperCase()+"'";
         }else {
-
-            url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
-                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO_S&variables='"+alma+"|"+numero+"|'";
+            url = ejecutaFuncionCursorTestMovil +
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO_S&variables='"+alma+"|"+numero.toUpperCase()+"|'";
         }
 
         listaProducto = new ArrayList<>();
@@ -425,9 +426,12 @@ public class BuscarProductoActivity extends AppCompatActivity {
                                             progressDialog.dismiss();
                                             btnbuscarProducto.setVisibility(View.VISIBLE);
                                             btnregresarproducto.setVisibility(View.VISIBLE);
+                                            CustomListAdapter.CustomListAdapter1 listAdapter1 = new CustomListAdapter.CustomListAdapter1(BuscarProductoActivity.
+                                                    this,R.layout.custom_list,listaProducto);
                                             ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
                                                     CustomListAdapter(BuscarProductoActivity.this, R.layout.custom_list, listaProducto);
-                                            lvProducto.setAdapter(listAdapter);
+                                            //lvProducto.setAdapter(listAdapter);
+                                            lvProducto.setAdapter(listAdapter1);
                                         }
                                 }
 
@@ -466,7 +470,8 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
+        url =  ejecutaFuncionTestMovil +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -494,7 +499,8 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_PEDIDO_TRAMA&variables='"+idpedido+"'";
+        url =  ejecutaFuncionTestMovil +
+                "PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_PEDIDO_TRAMA&variables='"+idpedido+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {

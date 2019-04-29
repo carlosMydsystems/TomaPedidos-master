@@ -1,4 +1,4 @@
-package com.example.sistemas.tomapedidos;
+package com.example.sistemas.tomapedidos.ConsultaPromociones;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -18,15 +18,21 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.BusquedaClienteActivity;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.ConsultaPromocion;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.ListadoAlmacenActivity;
+import com.example.sistemas.tomapedidos.R;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+
+import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 
 public class ConsultarPromocionesActivity extends AppCompatActivity {
 
@@ -55,7 +61,7 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
         ibRetornoMenuConsultaPromocion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ConsultarPromocionesActivity.this,BusquedaClienteActivity.class);
+                Intent intent = new Intent(ConsultarPromocionesActivity.this, BusquedaClienteActivity.class);
                 intent.putExtra("consultaPromociones","true");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Usuario",usuario);
@@ -79,7 +85,7 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-        url = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=" +
+        url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PROMOCIONES_CAB&variables=%27"+trama+"%27";
 
         listaPromocionesStr = new ArrayList<>();
@@ -142,7 +148,6 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
                                         consultaPromocion.setFechaFinVigencia(jsonObject.getString("FECHA_FIN_VIGENCIA"));
                                         consultaPromocion.setFormaPromocion(jsonObject.getString("FORMA_PROMOCION"));
                                         consultaPromocion.setImportecantidad(jsonObject.getString("IMPORTE_CANTIDAD_MINIMO"));
-
                                         listaPromocionesObjetos.add(consultaPromocion);
 
                                             listaPromocionesStr.add(consultaPromocion.getNroPromocion() + "  -  " + consultaPromocion.getGlosa()+"\n"
@@ -152,7 +157,6 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
                                     }
 
                                     progressDialog.dismiss();
-
                                     ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
                                             CustomListAdapter(ConsultarPromocionesActivity.this, R.layout.custom_list, listaPromocionesStr);
                                     lvmuestrapromociones.setAdapter(listAdapter);
@@ -160,7 +164,7 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
                                         @Override
                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                                            Intent intent = new Intent(ConsultarPromocionesActivity.this,MostrarConsultaActivity.class);
+                                            Intent intent = new Intent(ConsultarPromocionesActivity.this, MostrarConsultaActivity.class);
                                             Bundle bundle = new Bundle();
                                             intent.putExtra("position",""+position);
                                             bundle.putSerializable("listaPromocionesObjetos",listaPromocionesObjetos);
@@ -173,14 +177,12 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
                                             intent.putExtras(bundle2);
                                             startActivity(intent);
                                             finish();
-
                                         }
                                     });
                                 }
                             }else {
                                 progressDialog.dismiss();
                                 listaPromocionesStr.clear();
-
                                 final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
                                         , R.layout.support_simple_spinner_dropdown_item,listaPromocionesStr);
                                 lvmuestrapromociones.setAdapter(adapter);
