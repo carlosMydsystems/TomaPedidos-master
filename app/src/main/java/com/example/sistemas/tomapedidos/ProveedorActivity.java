@@ -21,6 +21,8 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -252,14 +254,16 @@ public class ProveedorActivity extends AppCompatActivity {
                     case R.id.rbNombreProveedor:
                         etProveedor.setFilters(new InputFilter[] {new InputFilter.LengthFilter(80)});
                         etProveedor.setInputType(1);
+                        etProveedor.setText("");
                         TipodeConsulta = "NombreProveedor";
 
                         break;
                     case R.id.rbCodigoProveedor:
                         etProveedor.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
                         etProveedor.setInputType(2);
+                        etProveedor.requestFocus();
+                        etProveedor.append("10027462");
                         TipodeConsulta = "CodigoProveedor";
-
                         break;
                 }
             }

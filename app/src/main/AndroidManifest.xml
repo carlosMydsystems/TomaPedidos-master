@@ -17,15 +17,28 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ConsultaPrecio.IntemedioDetalleProductoActivity"></activity>
-        <activity android:name=".ConsultaPrecio.DetalleProductoPrecioActivity" />
-        <activity android:name=".ConsultaPrecio.BuscarProductoPrecioActivity" />
-        <activity android:name=".ConsultaPrecio.ConsultaPrecioActivity" />
-        <activity android:name=".ConsultaPromociones.MostrarConsultaActivity" />
-        <activity android:name=".ConsultaStock.BuscarProductoStockActivity" />
-        <activity android:name=".ConsultaPromociones.ConsultarPromocionesActivity" />
-        <activity android:name=".ConsultaStock.ConsultaStockActivity" />
-        <activity android:name=".ProveedorActivity" />
+        <activity android:name=".ConsultaPrecio.IntemedioDetalleProductoActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ConsultaPrecio.DetalleProductoPrecioActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ConsultaPrecio.BuscarProductoPrecioActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ConsultaPrecio.ConsultaPrecioActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ConsultaPromociones.MostrarConsultaActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ConsultaStock.BuscarProductoStockActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ConsultaPromociones.ConsultarPromocionesActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ConsultaStock.ConsultaStockActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".ProveedorActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".DetalleActivity"
             android:screenOrientation="portrait" />

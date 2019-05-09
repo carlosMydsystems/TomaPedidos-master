@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -95,8 +96,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,###.00",simbolos); // Se crea el formato del numero con los simbolo
 
-
-
         btnregistrafechapactada =  findViewById(R.id.btnRegistrarFechaPactada);
         ibRetornoFechaPactadaProveedores = findViewById(R.id.ibRetornoFechaPactadaProveedores);
         tvCantidad = findViewById(R.id.tvNumeroItem);
@@ -135,18 +134,14 @@ public class FechaPactadaActivity extends AppCompatActivity {
         redondeado = new BigDecimal(precio).setScale(2, RoundingMode.HALF_EVEN);
 
         if (usuario.getMoneda().equals("1")){
-
             tvPrecio.setText(Soles+" "+formateador.format(redondeado));
-
         }else{
-
             tvPrecio.setText(Dolares+" "+formateador.format(redondeado));
         }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
                 (this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
 
         } else {
             locationStart();
@@ -208,10 +203,9 @@ public class FechaPactadaActivity extends AppCompatActivity {
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                                 String trama = id_pedido+"|"+ formatoFecha(day) + "/" + formatoFecha(month + 1) + "/" + year;
-
                                 String fecha = formatoFecha(day) + "/" + formatoFecha(month + 1) + "/" + year;
                                 String fechaActual = formatoFecha(dayOfMonth) + "/" + formatoFecha(month+1) + "/"+formatoFecha(year);
-
+/*
                                 if(fecha.equals(fechaActual)){
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
@@ -221,11 +215,9 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     builder.setNegativeButton("Aceptar",null);
                                     builder.create().show();
 
-                                }else {
-
+                                }else {*/
                                     VerificaFecha(trama);
-                                }
-
+                                //}
                             }
                         }, year, month, dayOfMonth);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -245,8 +237,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
                 Registro();
 
-                ubicacion = "Lat : " + tvlatitud.getText().toString() + "Long : " + tvlongitud.getText()
-                        .toString() + "Direccion : " + tvdireccion.getText().toString();
+                ubicacion = tvlatitud.getText().toString() + "|" + tvlongitud.getText()
+                        .toString() + "|"+ tvdireccion.getText().toString().replace(" ","%20");
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
                         .setTitle("Fin del Pedido")
@@ -270,22 +262,21 @@ public class FechaPactadaActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         int aux = 0;
                         if (aux==0){
-/*
+
                             String Trama =  id_pedido+"|C|0|"+almacen +"|" +cliente.getCodCliente()+"|" +usuario.
                                     getCodVendedor() + "|"+tipoformapago+"|"+cliente.getTipoDocumento()
                                     +"|"+usuario.getMoneda()+"|"+usuario.getUser().trim()+"|"+usuario.getCodTienda()+"|"+
                                     listaClienteSucursal.get(0).getCodSucursal()+"|"+codProveedor+"|"+
-                                    SucursalProveedor+"|"+fechahabil+"|"+etComentario.getText().toString().replace(" ","%20");
-*/
+                                    SucursalProveedor+"|"+fechahabil+"|"+etComentario.getText().toString().replace(" ","%20")+"|"+ubicacion;
+/*
                             String Trama =  id_pedido + "|C|0|" + almacen + "|" + cliente.getCodCliente() +
                                     "|" + usuario.getCodVendedor() + "|" + tipoformapago + "|" +
                                     cliente.getTipoDocumento() + "|" + usuario.getMoneda() + "|" +
                                     usuario.getUser().trim() + "|" + usuario.getCodTienda() + "|" +
                                     listaClienteSucursal.get(0).getCodSucursal()+"|"+codProveedor+"|"+
                                     SucursalProveedor + "|" + fechahabil + "|" + ubicacion;
-
-                            tvmuestra.setText(Trama);
-                            //ActualizarProducto(Trama);
+*/
+                            ActualizarProducto(Trama);
                             aux++;
                         }
                     }
@@ -369,7 +360,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     progressDialog.dismiss();
 
                                     verificaPesosporfecha(listadiaspactados);
-
                                 }
                             }else {
 
@@ -428,7 +418,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
         spfechashabiles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
 
                 fechahabil = listadiasvalidos.get(position);
                 tv22.setVisibility(View.VISIBLE);
@@ -582,9 +571,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    /**++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
-
-
     private void Registro() {
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
@@ -632,10 +618,16 @@ public class FechaPactadaActivity extends AppCompatActivity {
         Local.setFechaPactadaActivity(this);
         final boolean gpsEnabled = mlocManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!gpsEnabled) {
+
+
+            /**  Se hace la habilitacion del GPS, si se descomenta esta parte del codigo*/
+
             /*
             Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(settingsIntent);
             */
+
+
         }
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -723,9 +715,4 @@ public class FechaPactadaActivity extends AppCompatActivity {
         }
     }
 
-
-
-
-
-    /**++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 }

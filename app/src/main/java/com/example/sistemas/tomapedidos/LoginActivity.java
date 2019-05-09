@@ -26,9 +26,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.PHONESTATS;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -37,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     Usuario usuario;
     String url, Mensaje = "",imei = "",puerto = "8494";
     boolean validador = true;
-    static final Integer PHONESTATS = 0x1;
+
     public static String ejecutaFuncionCursorTestMovil;
     public static String ejecutaFuncionTestMovil;
 
@@ -89,10 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|"+Imei+"'"; // se debe actalizar la URL
 
 */
-
         url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085543023'"; // se debe actalizar la URL
-
-
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
 

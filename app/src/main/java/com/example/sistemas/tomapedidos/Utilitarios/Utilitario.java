@@ -7,6 +7,7 @@ public class Utilitario {
     public static String webServiceCursormovil =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=";
     public static String webServicemovil =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=";
 
+    public static final Integer PHONESTATS = 0x1;
 
     public static String formatoFecha(Integer dateTime){
 

@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -53,6 +54,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     Usuario usuario;
     ArrayList<ClienteSucursal> listaClienteSucursal;
+    ImageButton ibRetornoMenu2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +80,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
         lvProducto = findViewById(R.id.lvProducto);
         etproducto  = findViewById(R.id.etPrducto);
         etglosa = findViewById(R.id.etGlosa);
-
-
-
+        ibRetornoMenu2 = findViewById(R.id.ibRetornoMenu2);
         btnregresarproducto = findViewById(R.id.btnRegresarProducto);
 
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -111,6 +111,32 @@ public class BuscarProductoActivity extends AppCompatActivity {
                     intent.putExtras(bundle3);
                     startActivity(intent);
                     finish();
+            }
+        });
+
+        ibRetornoMenu2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BuscarProductoActivity.this, bandejaProductosActivity.class);
+                intent.putExtra("TipoPago", tipoPago);
+                intent.putExtra("id_pedido", id_pedido                                                                                                                                                                                                                                                                                          );
+                intent.putExtra("Almacen", almacen);
+                intent.putExtra("Index", Index);
+                intent.putExtra("retorno", "retorno");
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Cliente", cliente);
+                intent.putExtras(bundle);
+                Bundle bundle1 = new Bundle();
+                bundle1.putSerializable("Usuario", usuario);
+                intent.putExtras(bundle1);
+                Bundle bundle2 = new Bundle();
+                bundle2.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                intent.putExtras(bundle2);
+                Bundle bundle3 = new Bundle();
+                bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                intent.putExtras(bundle3);
+                startActivity(intent);
+                finish();
             }
         });
         }else {
@@ -148,6 +174,43 @@ public class BuscarProductoActivity extends AppCompatActivity {
                     intent.putExtras(bundle3);
                     startActivity(intent);
                     finish();
+                    }
+                });
+                builder.create()
+                        .show();
+            }
+        });
+        ibRetornoMenu2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
+                        .setCancelable(false)
+                        .setMessage("Esta seguro que desea regresar, a la lista de formas de pago ")
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        EliminarProductoporIdpedido(id_pedido);
+                        Intent intent =  new Intent(BuscarProductoActivity.this,ListadoFormaPagoActivity.class);
+                        intent.putExtra("Almacen",almacen);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Cliente",cliente);
+                        intent.putExtras(bundle);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putSerializable("Usuario",usuario);
+                        intent.putExtras(bundle1);
+                        Bundle bundle3 = new Bundle();
+                        bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                        intent.putExtras(bundle3);
+                        startActivity(intent);
+                        finish();
                     }
                 });
                 builder.create()

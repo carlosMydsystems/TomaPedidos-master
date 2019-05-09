@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -52,6 +53,7 @@ public class BuscarProductoStockActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     Usuario usuario;
     ArrayList<ClienteSucursal> listaClienteSucursal;
+    ImageButton ibRetornoMenu2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +80,31 @@ public class BuscarProductoStockActivity extends AppCompatActivity {
         etproducto  = findViewById(R.id.etPrducto);
         etglosa = findViewById(R.id.etGlosa);
         btnregresarproducto = findViewById(R.id.btnRegresarProducto);
+        ibRetornoMenu2 = findViewById(R.id.ibRetornoMenu2);
 
         InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(btnbuscarProducto.getWindowToken(), 0);
+
+        ibRetornoMenu2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent =  new Intent(BuscarProductoStockActivity.this, ConsultasListadoActivity.class);
+                intent.putExtra("Almacen",almacen);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Cliente",cliente);
+                intent.putExtras(bundle);
+                Bundle bundle1 = new Bundle();
+                bundle1.putSerializable("Usuario",usuario);
+                intent.putExtras(bundle1);
+                Bundle bundle3 = new Bundle();
+                bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                intent.putExtras(bundle3);
+                startActivity(intent);
+                finish();
+
+            }
+        });
 
         btnregresarproducto.setOnClickListener(new View.OnClickListener() {
             @Override

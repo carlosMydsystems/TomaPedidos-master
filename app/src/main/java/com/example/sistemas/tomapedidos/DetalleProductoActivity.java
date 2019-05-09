@@ -45,7 +45,8 @@ import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Soles;
 public class DetalleProductoActivity extends AppCompatActivity {
 
     TextView tvcodigoproducto,tvnombreproducto,tvalmacenproducto,tvstock,tvprecio,tvtotal,tvprecioreal,
-            tvunidades,tvtasa,tvpreciorealjson,tvNroPromociones,tvPresetacion,tvEquivalencia,textView7,textView9;
+            tvunidades,tvtasa,tvpreciorealjson,tvNroPromociones,tvPresetacion,tvEquivalencia,textView7,
+            textView9;
     Productos productos;
     Button btnguardaryrevisar, btnguardaryagregar, btndverificarproducto;
     Clientes cliente;
@@ -60,7 +61,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
     BigDecimal redondeado, precioBigTotal , precioBigUnitario;
     ImageButton imgbtnvolverdetalleproducto;
     ArrayList<ClienteSucursal> listaClienteSucursal;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,17 +119,17 @@ public class DetalleProductoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                btndverificarproducto.setVisibility(View.GONE);
-                progressDialog =  new ProgressDialog(DetalleProductoActivity.this);
-                progressDialog.setMessage("... Por favor esperar");
-                progressDialog.setCancelable(false);
-                progressDialog.show();
-                if(etcantidadelegida.getText().toString().equals("")|| etcantidadelegida.getText().toString().equals("0")){
-                    progressDialog.dismiss();
-                    Toast.makeText(DetalleProductoActivity.this, "Por favor ingrese una cantidad valida", Toast.LENGTH_SHORT).show();
-                }else {
-                    VerificarCantidad(etcantidadelegida.getText().toString());
-                }
+            btndverificarproducto.setVisibility(View.GONE);
+            progressDialog =  new ProgressDialog(DetalleProductoActivity.this);
+            progressDialog.setMessage("... Por favor esperar");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+            if(etcantidadelegida.getText().toString().equals("")|| etcantidadelegida.getText().toString().equals("0")){
+                progressDialog.dismiss();
+                Toast.makeText(DetalleProductoActivity.this, "Por favor ingrese una cantidad valida", Toast.LENGTH_SHORT).show();
+            }else {
+                VerificarCantidad(etcantidadelegida.getText().toString());
+            }
             }
         });
 
@@ -171,18 +171,22 @@ else if (etcantidadelegida.getText()== null){
                 intent.putExtra("Almacen",almacen);
                 intent.putExtra("Index",Index);
                 intent.putExtra("id_pedido",id_pedido);
+
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
                 intent.putExtras(bundle);
+
                 Bundle bundle1 = new Bundle();
                 bundle1.putSerializable("listaproductoselegidos",listaproductoselegidos);
                 intent.putExtras(bundle1);
+
+                Bundle bundle2 = new Bundle();
+                bundle2.putSerializable("Usuario",usuario);
+                intent.putExtras(bundle2);
+
                 Bundle bundle3 = new Bundle();
-                bundle3.putSerializable("Usuario",usuario);
+                bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
                 intent.putExtras(bundle3);
-                Bundle bundle4 = new Bundle();
-                bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                intent.putExtras(bundle4);
                 startActivity(intent);
                 finish();
 
@@ -203,17 +207,19 @@ else if (etcantidadelegida.getText()== null){
 
                     validarStock = stockDouble - cantidadElegida;
 
-                //if (validarStock < 0) {
-                if (false) {
+                if (validarStock < 0) {
+                //if (false) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
                             .setCancelable(false)
                             .setMessage("El Stock es insuficiente, desea elegir otro articulo");
 
+
                     if (stockDouble >0.0){
                     builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                progressDialog.dismiss();
                                 dialog.dismiss();
                             }
                         });
@@ -252,17 +258,14 @@ else if (etcantidadelegida.getText()== null){
 
                 } else {
 
-
                     if (etcantidadelegida.getText().toString().equals("")) {
                         btnguardaryrevisar.setVisibility(View.VISIBLE);
-
 
                     } else {
 
                         productos.setNumPromocion(tvNroPromociones.getText().toString());
                         productos.setPresentacion(tvPresetacion.getText().toString());
                         productos.setEquivalencia(tvEquivalencia.getText().toString());
-
 
                         if (productos.getNumPromocion().trim().equals("null")){
 
@@ -294,9 +297,8 @@ else if (etcantidadelegida.getText()== null){
                 Double cantidadElegida = Double.valueOf(etcantidadelegida.getText().toString());
                 validarStock = stockDouble - cantidadElegida;
                 
-                //if (validarStock < 0) {
-                if (false) {
-
+                if (validarStock < 0) {
+                //if (false) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this)
                             .setCancelable(false)
@@ -366,8 +368,6 @@ else if (etcantidadelegida.getText()== null){
                                     "|" + productos.getEquivalencia() + "|N";  // Tasas
                             ActualizarProducto(trama);
                         }
-
-
                     }
                 }
             }

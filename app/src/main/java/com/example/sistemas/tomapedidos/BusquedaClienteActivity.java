@@ -243,6 +243,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
 
     private void buscarCliente(String numero, String tipoConsulta,Usuario usuario) {
 
+
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
         // la Url del servicio Web // Se hace la validacion del tipo de consulta
@@ -258,6 +259,8 @@ public class BusquedaClienteActivity extends AppCompatActivity {
         }
 
         listaCliente = new ArrayList<>();
+        listaCliente.clear();
+        listaClientes.clear();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
