@@ -352,7 +352,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
                  etproducto.setInputType(2);   // envia el teclado de tipo numerico
                  Tipobusqueda = "Codigo";
                  etproducto.setText("");
-                 etproducto.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
+                 etproducto.setFilters(new InputFilter[] {new InputFilter.LengthFilter(6)});
 
          }
         });

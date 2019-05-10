@@ -193,9 +193,12 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
         numero = numero.replace("%","%25");
         numero = numero.toUpperCase(); // se convierten los caracteres a Mayusucla
 
+
         url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables=%27"+usuario.getCodAlmacen()+"|"+usuario.
                 getLugar()+"|"+etproducto.getText().toString().trim().replace("%","%25").toUpperCase()+"||"+cliente.getCodCliente()+"|||1%27";
+
+
 
         listaProducto = new ArrayList<>();
 
@@ -324,7 +327,7 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
                 error.printStackTrace();
             }
         });
-        int socketTimeout = 30000;
+        int socketTimeout = 10000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
