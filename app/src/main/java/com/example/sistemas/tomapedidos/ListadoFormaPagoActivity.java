@@ -68,10 +68,8 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
         Calendar fecha = Calendar.getInstance();
         final Integer dia = fecha.get(Calendar.DAY_OF_MONTH);
         final Integer mes = fecha.get(Calendar.MONTH) + 1;
-        Integer year = fecha.get(Calendar.YEAR);
         final Integer hora =  fecha.get(Calendar.HOUR_OF_DAY);
         final Integer minuto = fecha.get(Calendar.MINUTE);
-        final Integer segundo = fecha.get(Calendar.SECOND);
 
         // Donde se va a colocar el nuevo id del pedido
 
@@ -213,7 +211,7 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
         url =  ejecutaFuncionTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_COR_PEDIDO_MOVIL&variables=%27PWE%27,%27888%27,%27TH000%27";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_COR_PEDIDO_MOVIL&variables='PWE%27,%27888%27,%27TH000'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {

@@ -85,7 +85,7 @@ public class DetalleActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url = ejecutaFuncionCursorTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_DET_PEDIDO&variables=%27"+numeroPedido+"%27";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_DET_PEDIDO&variables='"+numeroPedido+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {

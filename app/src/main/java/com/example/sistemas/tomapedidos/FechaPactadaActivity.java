@@ -13,7 +13,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +26,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -297,7 +295,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
         listadiaspactados = new ArrayList<DiasPactados>();
 
         url = ejecutaFuncionCursorTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_VAL_FECHA_PACTADA&variables=%27"+trama+"%27";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_VAL_FECHA_PACTADA&variables='"+trama+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -423,7 +421,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 tv22.setVisibility(View.VISIBLE);
                 etComentario.setVisibility(View.VISIBLE);
                 btnregistrafechapactada.setVisibility(View.VISIBLE);
-
             }
 
             @Override
@@ -432,7 +429,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void RegistrarPedido(String id_pedido) {
 
@@ -517,7 +513,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                             builder.create()
                                                     .show();
                                 }
-
                             }else {
 
                                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
@@ -627,12 +622,14 @@ public class FechaPactadaActivity extends AppCompatActivity {
             startActivity(settingsIntent);
             */
 
-
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
             return;
+
         }
         mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 20, (LocationListener) Local);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 20, (LocationListener) Local);

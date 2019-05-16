@@ -125,13 +125,11 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 if (usuario.getMoneda().equals("1")) {
 
                     if (listaproductoselegidos.get(i).getObservacion() == null) {
-
                         listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo() + " - " +
                                 listaproductoselegidos.get(i).getDescripcion() + "\nCant: " + formateador.format(Double.valueOf(listaproductoselegidos.
                                 get(i).getCantidad())) + "                                    Unidad: " +
                                 listaproductoselegidos.get(i).getUnidad() + "\nPrecio: " + Soles + " " + formateador.format((double) preciolista) +
                                 "                  Subtotal: "+Soles+" " + formateador.format((double) Aux));
-
                     } else {
 
                         if (listaproductoselegidos.get(i).getObservacion().equals("S") || listaproductoselegidos.get(i).getObservacion().equals("T")) {
@@ -143,7 +141,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         }
                     }
                 }else{
-
 
                     if (listaproductoselegidos.get(i).getObservacion() == null) {
 
@@ -163,8 +160,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                     "                  Subtotal: "+Dolares+" " + formateador.format((double) Aux));
                         }
                     }
-
-
                 }
             }
 

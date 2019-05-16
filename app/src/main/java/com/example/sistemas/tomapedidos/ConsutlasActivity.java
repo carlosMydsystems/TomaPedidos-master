@@ -11,8 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -90,7 +88,7 @@ public class ConsutlasActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url = ejecutaFuncionCursorTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS&variables=%27"+usuariost+"|"+fechaingresada+"%27";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS&variables='"+usuariost+"|"+fechaingresada+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {

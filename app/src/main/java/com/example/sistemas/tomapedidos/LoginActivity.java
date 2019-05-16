@@ -16,6 +16,7 @@ import android.telephony.TelephonyManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -41,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     Usuario usuario;
     String url, Mensaje = "",imei = "",puerto = "8494";
     boolean validador = true;
+    TextView tvVersion;
 
     public static String ejecutaFuncionCursorTestMovil;
     public static String ejecutaFuncionTestMovil;
@@ -65,6 +67,8 @@ public class LoginActivity extends AppCompatActivity {
         etusuario = findViewById(R.id.etUsuario);
         etclave = findViewById(R.id.etClave);
         btnlogeo = findViewById(R.id.btnLogin);
+        tvVersion = findViewById(R.id.tvVersion);
+        tvVersion.setText(Utilitario.Version);
         consultarPermiso(Manifest.permission.READ_PHONE_STATE, PHONESTATS);
         btnlogeo.setOnClickListener(new View.OnClickListener() {
             @Override

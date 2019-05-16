@@ -126,7 +126,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
             progressDialog.show();
             if(etcantidadelegida.getText().toString().equals("")|| etcantidadelegida.getText().toString().equals("0")){
                 progressDialog.dismiss();
-                Toast.makeText(DetalleProductoActivity.this, "Por favor ingrese una cantidad valida", Toast.LENGTH_SHORT).show();
             }else {
                 VerificarCantidad(etcantidadelegida.getText().toString());
             }
@@ -138,7 +137,6 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvstock  =findViewById(R.id.tvStockElegido);
         tvprecio = findViewById(R.id.tvPrecioElegido);
         tvtotal = findViewById(R.id.tvTotalElegido);
-
 
         tvstock.setText(productos.getStock());
 
@@ -197,7 +195,7 @@ else if (etcantidadelegida.getText()== null){
 
             @Override
             public void onClick(View v) {
-
+            try{
                 progressDialog.setMessage("... Guardando");
                 progressDialog.setCancelable(false);
                 progressDialog.create();
@@ -214,7 +212,6 @@ else if (etcantidadelegida.getText()== null){
                             .setCancelable(false)
                             .setMessage("El Stock es insuficiente, desea elegir otro articulo");
 
-
                     if (stockDouble >0.0){
                     builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             @Override
@@ -230,21 +227,24 @@ else if (etcantidadelegida.getText()== null){
                         public void onClick(DialogInterface dialog, int which) {
 
                             Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
-
                             intent.putExtra("TipoPago",tipoPago);
                             intent.putExtra("validador","false");
                             intent.putExtra("Almacen",almacen);
                             intent.putExtra("Index",Index);
                             intent.putExtra("id_pedido",id_pedido);
+
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("Cliente",cliente);
                             intent.putExtras(bundle);
+
                             Bundle bundle1 = new Bundle();
                             bundle1.putSerializable("listaproductoselegidos",listaproductoselegidos);
                             intent.putExtras(bundle1);
+
                             Bundle bundle3 = new Bundle();
                             bundle3.putSerializable("Usuario",usuario);
                             intent.putExtras(bundle3);
+
                             Bundle bundle4 = new Bundle();
                             bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
                             intent.putExtras(bundle4);
@@ -286,12 +286,18 @@ else if (etcantidadelegida.getText()== null){
                         }
                 }
             }
+            }catch (Exception e){
+                progressDialog.dismiss();
+                //Toast.makeText(DetalleProductoActivity.this, "Esta intentando ingresar un valor no valido1", Toast.LENGTH_SHORT).show();
+}
             }
         });
         btnguardaryagregar.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                try {
+
 
                 Double stockDouble = Double.valueOf(tvstock.getText().toString().replace(",",""));
                 Double cantidadElegida = Double.valueOf(etcantidadelegida.getText().toString());
@@ -370,7 +376,15 @@ else if (etcantidadelegida.getText()== null){
                         }
                     }
                 }
+            }catch (Exception e){
+
+                progressDialog.dismiss();
+                    //Toast.makeText(DetalleProductoActivity.this, "Esta intentando ingresar un valor no valido2", Toast.LENGTH_SHORT).show();
+                }
+
             }
+
+
         });
 
          tvcodigoproducto.setText(productos.getCodigo());
@@ -380,36 +394,38 @@ else if (etcantidadelegida.getText()== null){
             tvalmacenproducto.setText(almacen);
 
             final TextWatcher textWatcher = new TextWatcher() {
-             @Override
-             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-             }
+                }
 
-             @Override
-             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                 btndverificarproducto.setVisibility(View.VISIBLE);
-                 btnguardaryagregar.setVisibility(View.GONE);
-                 btnguardaryrevisar.setVisibility(View.GONE);
-             }
+                    btndverificarproducto.setVisibility(View.VISIBLE);
+                    btnguardaryagregar.setVisibility(View.GONE);
+                    btnguardaryrevisar.setVisibility(View.GONE);
+                }
 
-             @Override
-             public void afterTextChanged(Editable s) {
+                @Override
+                public void afterTextChanged(Editable s) {
 
-                 if (etcantidadelegida.getText().toString().equals("") || etcantidadelegida.getText().toString().equals("0")){
+                    if (etcantidadelegida.getText().toString().equals("") || etcantidadelegida.getText().toString().equals("0")) {
 
-                     btndverificarproducto.setEnabled(false);
-                     Aux = 0d;
-                     tvtotal.setText("");
-                     Toast.makeText(DetalleProductoActivity.this, "Por favor ingrese un valor valido", Toast.LENGTH_SHORT).show();
+                        btndverificarproducto.setEnabled(false);
+                        Aux = 0d;
+                        tvtotal.setText("");
+                        Toast.makeText(DetalleProductoActivity.this, "Por favor ingrese un valor valido", Toast.LENGTH_SHORT).show();
 
-                 }else {
-                     btndverificarproducto.setEnabled(true);
-                 }
-             }
+                    } else {
+                        btndverificarproducto.setEnabled(true);
+                    }
+                }
+
          };
 
         etcantidadelegida.addTextChangedListener(textWatcher);
+
     }
 
     private void VerificarCantidad(String cantidad) {
@@ -422,8 +438,8 @@ else if (etcantidadelegida.getText()== null){
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
             url = ejecutaFuncionCursorTestMovil+
-                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables=%27"+almacen+"|"+usuario.
-                    getLugar()+"|"+productos.getCodigo()+"||"+cliente.getCodCliente()+"|||"+cantidad+"%27";
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables='"+almacen+"|"+usuario.
+                    getLugar()+"|"+productos.getCodigo()+"||"+cliente.getCodCliente()+"|||"+cantidad+"'";
 
         listaProducto = new ArrayList<>();
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
@@ -574,72 +590,79 @@ else if (etcantidadelegida.getText()== null){
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        try {
+                            response = response.trim();
+                            Boolean condicion = false, error = false;
 
-                        response = response.trim();
-                        Boolean condicion = false,error = false;
+                            String Aux = response.replace("{", "|");
+                            Aux = Aux.replace("}", "|");
+                            Aux = Aux.replace("[", "|");
+                            Aux = Aux.replace("]", "|");
+                            Aux = Aux.replace("\"", "|");
+                            Aux = Aux.replace(",", " ");
+                            Aux = Aux.replace("|", "");
+                            Aux = Aux.replace(":", " ");
+                            String partes[] = Aux.split(" ");
 
-                        String Aux = response.replace("{","|");
-                        Aux = Aux.replace("}","|");
-                        Aux = Aux.replace("[","|");
-                        Aux = Aux.replace("]","|");
-                        Aux = Aux.replace("\"","|");
-                        Aux = Aux.replace(","," ");
-                        Aux = Aux.replace("|","");
-                        Aux = Aux.replace(":"," ");
-                        String partes[] = Aux.split(" ");
-
-                        for (String palabras : partes){
-                            if (condicion){ Mensaje += palabras+" "; }
-                            if (palabras.equals("ERROR")){
-                                condicion = true;
-                                error = true;
+                            for (String palabras : partes) {
+                                if (condicion) {
+                                    Mensaje += palabras + " ";
+                                }
+                                if (palabras.equals("ERROR")) {
+                                    condicion = true;
+                                    error = true;
+                                }
                             }
+                            if (error) {
+
+                                AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
+                                builder.setTitle("Alerta !");
+                                builder.setMessage(Mensaje);
+                                builder.setNegativeButton("Aceptar", null);
+                                builder.create().show();
+                                Mensaje = "";
+
+                            } else {
+
+                                productos.setCantidad(etcantidadelegida.getText().toString());
+                                preciounitario = Double.valueOf(tvprecio.getText().toString().replace(",", ""));
+                                cantidad = Double.valueOf(etcantidadelegida.getText().toString());   // Cambio
+                                redondeado = new BigDecimal(preciounitario).setScale(2, RoundingMode.HALF_EVEN);
+                                productos.setPrecio("" + redondeado);
+                                productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
+                                productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tene
+                                productos.setIndice(Integer.valueOf(Index));
+                                listaproductoselegidos.add(productos);
+
+                                Intent intent = new Intent(DetalleProductoActivity.this, bandejaProductosActivity.class);
+                                intent.putExtra("TipoPago", tipoPago);
+                                intent.putExtra("validador", "true");
+                                intent.putExtra("Index", Index);
+                                intent.putExtra("id_pedido", id_pedido);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                                intent.putExtras(bundle);
+                                Bundle bundle1 = new Bundle();
+                                bundle1.putSerializable("Cliente", cliente);
+                                intent.putExtras(bundle1);
+                                Bundle bundle2 = new Bundle();
+                                bundle2.putSerializable("Usuario", usuario);
+                                intent.putExtras(bundle2);
+                                Bundle bundle3 = new Bundle();
+                                bundle3.putSerializable("Almacen", almacen);
+                                intent.putExtras(bundle3);
+                                Bundle bundle4 = new Bundle();
+                                bundle4.putSerializable("listaClienteSucursal", listaClienteSucursal);
+                                intent.putExtras(bundle4);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }catch (Exception e){
+                            progressDialog.dismiss();
+                            //Toast.makeText(DetalleProductoActivity.this, "Esta intentando ingresar un valor no valido3", Toast.LENGTH_SHORT).show();
                         }
-                        if (error) {
-
-                            AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
-                            builder.setTitle("Alerta !");
-                            builder.setMessage(Mensaje);
-                            builder.setNegativeButton("Aceptar",null);
-                            builder.create().show();
-                            Mensaje = "";
-
-                        }else {
-
-                            productos.setCantidad(etcantidadelegida.getText().toString());
-                            preciounitario = Double.valueOf(tvprecio.getText().toString().replace(",",""));
-                            cantidad = Double.valueOf(etcantidadelegida.getText().toString());   // Cambio
-                            redondeado = new BigDecimal(preciounitario).setScale(2, RoundingMode.HALF_EVEN);
-                            productos.setPrecio(""+redondeado);
-                            productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
-                            productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tene
-                            productos.setIndice(Integer.valueOf(Index));
-                            listaproductoselegidos.add(productos);
-
-                            Intent intent = new Intent(DetalleProductoActivity.this, bandejaProductosActivity.class);
-                            intent.putExtra("TipoPago", tipoPago);
-                            intent.putExtra("validador", "true");
-                            intent.putExtra("Index", Index);
-                            intent.putExtra("id_pedido", id_pedido);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                            intent.putExtras(bundle);
-                            Bundle bundle1 = new Bundle();
-                            bundle1.putSerializable("Cliente", cliente);
-                            intent.putExtras(bundle1);
-                            Bundle bundle2 = new Bundle();
-                            bundle2.putSerializable("Usuario", usuario);
-                            intent.putExtras(bundle2);
-                            Bundle bundle3 = new Bundle();
-                            bundle3.putSerializable("Almacen", almacen);
-                            intent.putExtras(bundle3);
-                            Bundle bundle4 = new Bundle();
-                            bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                            intent.putExtras(bundle4);
-                            startActivity(intent);
-                            finish();
                         }
-                    }
+
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -664,69 +687,77 @@ else if (etcantidadelegida.getText()== null){
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        try {
+                            response = response.trim();
+                            Boolean condicion = false, error = false;
 
-                        response = response.trim();
-                        Boolean condicion = false,error = false;
+                            String Aux = response.replace("{", "|");
+                            Aux = Aux.replace("}", "|");
+                            Aux = Aux.replace("[", "|");
+                            Aux = Aux.replace("]", "|");
+                            Aux = Aux.replace("\"", "|");
+                            Aux = Aux.replace(",", " ");
+                            Aux = Aux.replace("|", "");
+                            Aux = Aux.replace(":", " ");
+                            String partes[] = Aux.split(" ");
 
-                        String Aux = response.replace("{","|");
-                        Aux = Aux.replace("}","|");
-                        Aux = Aux.replace("[","|");
-                        Aux = Aux.replace("]","|");
-                        Aux = Aux.replace("\"","|");
-                        Aux = Aux.replace(","," ");
-                        Aux = Aux.replace("|","");
-                        Aux = Aux.replace(":"," ");
-                        String partes[] = Aux.split(" ");
-
-                        for (String palabras : partes){
-                            if (condicion){ Mensaje += palabras+" "; }
-                            if (palabras.equals("ERROR")){
-                                condicion = true;
-                                error = true;
+                            for (String palabras : partes) {
+                                if (condicion) {
+                                    Mensaje += palabras + " ";
+                                }
+                                if (palabras.equals("ERROR")) {
+                                    condicion = true;
+                                    error = true;
+                                }
                             }
-                        }
-                        if (error) {
+                            if (error) {
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
-                            builder.setTitle("Alerta !");
-                            builder.setMessage(Mensaje);
-                            builder.setNegativeButton("Aceptar",null);
-                            builder.create().show();
+                                AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
+                                builder.setTitle("Alerta !");
+                                builder.setMessage(Mensaje);
+                                builder.setNegativeButton("Aceptar", null);
+                                builder.create().show();
 
-                            Mensaje = "";
-                        }else {
+                                Mensaje = "";
+                            } else {
 
-                            productos.setCantidad(etcantidadelegida.getText().toString());
-                            preciounitario = Double.valueOf(producto.getPrecio());
-                            cantidad = Double.valueOf(etcantidadelegida.getText().toString());
-                            productos.setPrecio(tvprecio.getText().toString());
-                            productos.setIndice(Integer.valueOf(Index));
-                            productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
-                            productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
-                            listaproductoselegidos.add(productos);
-                            Index = String.valueOf(Integer.valueOf(Index)+1);
-                            Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
-                            intent.putExtra("TipoPago", tipoPago);
-                            intent.putExtra("validador", "true");
-                            intent.putExtra("Index",Index);
-                            intent.putExtra("id_pedido",id_pedido);
-                            Bundle bundle = new Bundle();
-                            bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
-                            intent.putExtras(bundle);
-                            Bundle bundle1 = new Bundle();
-                            bundle1.putSerializable("Cliente", cliente);
-                            intent.putExtras(bundle1);
-                            Bundle bundle2 = new Bundle();
-                            bundle2.putSerializable("Usuario", usuario);
-                            intent.putExtras(bundle2);
-                            Bundle bundle3 = new Bundle();
-                            bundle3.putSerializable("Almacen", almacen);
-                            intent.putExtras(bundle3);
-                            Bundle bundle4 = new Bundle();
-                            bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                            intent.putExtras(bundle4);
-                            startActivity(intent);
-                            finish();
+                                productos.setCantidad(etcantidadelegida.getText().toString());
+                                preciounitario = Double.valueOf(producto.getPrecio());
+                                cantidad = Double.valueOf(etcantidadelegida.getText().toString());
+                                productos.setPrecio(tvprecio.getText().toString());
+                                productos.setIndice(Integer.valueOf(Index));
+                                productos.setPrecioAcumulado(tvtotal.getText().toString()); // Se hace la definicion del precio que se va ha acumular
+                                productos.setEstado(String.valueOf(cantidad)); // Se define la cantidad que se debe de tener
+                                listaproductoselegidos.add(productos);
+                                Index = String.valueOf(Integer.valueOf(Index) + 1);
+                                Intent intent = new Intent(DetalleProductoActivity.this, BuscarProductoActivity.class);
+                                intent.putExtra("TipoPago", tipoPago);
+                                intent.putExtra("validador", "true");
+                                intent.putExtra("Index", Index);
+                                intent.putExtra("id_pedido", id_pedido);
+                                Bundle bundle = new Bundle();
+                                bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
+                                intent.putExtras(bundle);
+                                Bundle bundle1 = new Bundle();
+                                bundle1.putSerializable("Cliente", cliente);
+                                intent.putExtras(bundle1);
+                                Bundle bundle2 = new Bundle();
+                                bundle2.putSerializable("Usuario", usuario);
+                                intent.putExtras(bundle2);
+                                Bundle bundle3 = new Bundle();
+                                bundle3.putSerializable("Almacen", almacen);
+                                intent.putExtras(bundle3);
+                                Bundle bundle4 = new Bundle();
+                                bundle4.putSerializable("listaClienteSucursal", listaClienteSucursal);
+                                intent.putExtras(bundle4);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }catch (Exception e){
+
+                            progressDialog.dismiss();
+                            //Toast.makeText(DetalleProductoActivity.this, "Esta intentando ingresar un valor no valido4", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(DetalleProductoActivity.this, "Ingrese un valor valido", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }, new Response.ErrorListener() {

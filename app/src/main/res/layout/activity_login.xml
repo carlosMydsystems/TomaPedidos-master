@@ -90,7 +90,7 @@
         android:layout_height="15dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:text="Versión 1.0.1"
+        android:text="Versión 1.0.4"
         android:textColor="#014284"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

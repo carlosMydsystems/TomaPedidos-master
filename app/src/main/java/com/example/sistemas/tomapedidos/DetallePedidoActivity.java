@@ -91,7 +91,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url = ejecutaFuncionCursorTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS_PEN&variables=%27"+userid.trim()+"%27";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS_PEN&variables='"+userid.trim()+"'";
 
         listaPedidos = new ArrayList<>();
         lista = new ArrayList<>();
@@ -165,7 +165,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url = ejecutaFuncionCursorTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS_TRAMA&variables=%27"+idPedido+"%27";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS_TRAMA&variables='"+idPedido+"'";
 
         listaproductoselegidos = new ArrayList<>();
 

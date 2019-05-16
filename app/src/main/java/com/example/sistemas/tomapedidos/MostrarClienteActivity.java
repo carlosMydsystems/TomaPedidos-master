@@ -73,8 +73,7 @@ public class MostrarClienteActivity extends AppCompatActivity {
         tvNombre.setText(cliente.getNombre());
         tvDireccion.setText(cliente.getDireccion());
 
-        //ArrayAdapter adapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.support_simple_spinner_dropdown_item,opcionesDoc);
-        opdoc = new ArrayList<String>();
+        opdoc = new ArrayList<>();
         opdoc.add("FACTURA");
         opdoc.add("BOLETA");
         spopcionesdocumento.setAdapter(new SpinnerAdapter(this,opdoc));
@@ -139,7 +138,7 @@ public class MostrarClienteActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url = ejecutaFuncionCursorTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_SUC_CLIENTE&variables=%27"+codCliente+"%27";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_SUC_CLIENTE&variables='"+codCliente+"'";
 
         listaClienteSucursal = new ArrayList<ClienteSucursal>();
 

@@ -176,17 +176,12 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
 
             if(items.get(position) != null )
             {
-
                 text.setTextColor(Color.BLACK);
                 text.setText(items.get(position));
                 text.setTextSize(15);
                 int color = Color.argb(10, 0, 20, 255);
                 text.setBackgroundColor(color);
-
             }
-
-
-
             return mView;
         }
     }

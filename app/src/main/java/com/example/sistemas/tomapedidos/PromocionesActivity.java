@@ -177,7 +177,7 @@ public class PromocionesActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url =  ejecutaFuncionCursorTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTA_PROMOCION&variables=%27"+identificador+"%27"; // se debe actalizar la URL
+                "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTA_PROMOCION&variables='"+identificador+"'"; // se debe actalizar la URL
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
