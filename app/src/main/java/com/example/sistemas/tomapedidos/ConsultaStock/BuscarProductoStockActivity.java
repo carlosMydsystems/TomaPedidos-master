@@ -24,6 +24,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.ConsultaPrecio.ConsultaPrecioActivity;
 import com.example.sistemas.tomapedidos.ConsultasListadoActivity;
 import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
@@ -216,149 +217,177 @@ public class BuscarProductoStockActivity extends AppCompatActivity {
         progressDialog.show();
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-        numero = numero.replace("%","%25");
-        numero = numero.toUpperCase(); // se convierten los caracteres a Mayusucla
-        if (tipoConsulta.equals("Nombre")) {
-            url = ejecutaFuncionCursorTestMovil +
-                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO_S&variables='"+user.getCodAlmacen()+"||"+numero.toUpperCase()+"'";
+        if (numero.length()<6 && !Tipobusqueda.equals("Codigo")){
+
+            progressDialog.dismiss();
+            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoStockActivity.this);
+            builder.setCancelable(false);
+            builder.setNegativeButton("Aceptar",null);
+            builder.setTitle("Atención...!");
+            builder.setMessage("Se debe de ingresar un mínimo de 6 caracteres");
+            builder.create().show();
+            btnbuscarProducto.setVisibility(View.VISIBLE);
+            btnregresarproducto.setVisibility(View.VISIBLE);
+
+        }else if(numero.contains("%%")) {
+
+            progressDialog.dismiss();
+            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoStockActivity.this);
+            builder.setCancelable(false);
+            builder.setTitle("Atención...!");
+            builder.setMessage("No debe ingresar de forma consecutiva el \"%\"");
+            builder.setNegativeButton("Aceptar",null);
+            builder.create().show();
+            btnbuscarProducto.setVisibility(View.VISIBLE);
+            btnregresarproducto.setVisibility(View.VISIBLE);
         }else {
-            url = ejecutaFuncionCursorTestMovil +
-                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO_S&variables='"+user.getCodAlmacen()+"|"+numero+"|'";
-        }
 
-        listaProducto = new ArrayList<>();
+            numero = numero.replace("%", "%25");
+            numero = numero.toUpperCase(); // se convierten los caracteres a Mayusucla
+            if (tipoConsulta.equals("Nombre")) {
+                url = ejecutaFuncionCursorTestMovil +
+                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO_S&variables='" + user.getCodAlmacen() + "||" + numero.toUpperCase() + "'";
+            } else {
+                url = ejecutaFuncionCursorTestMovil +
+                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO_S&variables='" + user.getCodAlmacen() + "|" + numero + "|'";
+            }
 
-        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        String Mensaje = "";
+            listaProducto = new ArrayList<>();
+
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            String Mensaje = "";
 
 
-                        try {
-                            JSONObject jsonObject=new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
-                            Boolean condicion = false,error = false;
-                            if (success) {
-                                String Aux = response.replace("{", "|");
-                                Aux = Aux.replace("}", "|");
-                                Aux = Aux.replace("[", "|");
-                                Aux = Aux.replace("]", "|");
-                                Aux = Aux.replace("\"", "|");
-                                Aux = Aux.replace(",", " ");
-                                Aux = Aux.replace("|", "");
-                                Aux = Aux.replace(":", " ");
-                                String partes[] = Aux.split(" ");
-                                for (String palabras : partes) {
-                                    if (condicion) {
-                                        Mensaje += palabras + " ";
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                boolean success = jsonObject.getBoolean("success");
+                                JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                                Boolean condicion = false, error = false;
+                                if (success) {
+                                    String Aux = response.replace("{", "|");
+                                    Aux = Aux.replace("}", "|");
+                                    Aux = Aux.replace("[", "|");
+                                    Aux = Aux.replace("]", "|");
+                                    Aux = Aux.replace("\"", "|");
+                                    Aux = Aux.replace(",", " ");
+                                    Aux = Aux.replace("|", "");
+                                    Aux = Aux.replace(":", " ");
+                                    String partes[] = Aux.split(" ");
+                                    for (String palabras : partes) {
+                                        if (condicion) {
+                                            Mensaje += palabras + " ";
+                                        }
+                                        if (palabras.equals("ERROR")) {
+                                            condicion = true;
+                                            error = true;
+                                        }
                                     }
-                                    if (palabras.equals("ERROR")) {
-                                        condicion = true;
-                                        error = true;
-                                    }
-                                }
-                                if (error) {
+                                    if (error) {
 
-                                    AlertDialog.Builder dialog = new AlertDialog.Builder(
-                                            BuscarProductoStockActivity.this);
-                                    dialog.setMessage(Mensaje)
-                                            .setNegativeButton("Regresar", null)
+                                        AlertDialog.Builder dialog = new AlertDialog.Builder(
+                                                BuscarProductoStockActivity.this);
+                                        dialog.setMessage(Mensaje)
+                                                .setNegativeButton("Regresar", null)
+                                                .create()
+                                                .show();
+                                        progressDialog.dismiss();
+                                        btnregresarproducto.setVisibility(View.VISIBLE);
+                                        btnbuscarProducto.setVisibility(View.VISIBLE);
+                                    } else {
+
+                                        listaProducto.clear();
+                                        listaProductos.clear();
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            jsonObject = jsonArray.getJSONObject(i);
+                                            producto = new Productos();
+                                            producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
+                                            producto.setMarca(jsonObject.getString("DES_MARCA"));
+                                            producto.setDescripcion(jsonObject.getString("DES_ARTICULO")); //
+                                            producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
+                                            producto.setAlmacen(almacen);
+                                            listaProductos.add(producto);
+                                            listaProducto.add(producto.getCodigo() + " - " + producto.getDescripcion());
+                                        }
+
+                                        // Se hace un llamado al adaptador personalizado asociado al SML custom_list
+
+                                        if (listaProductos.size() <= 1) {
+
+                                            producto = new Productos();
+                                            cliente = new Clientes();
+                                            cliente = (Clientes) getIntent().getSerializableExtra("Cliente");
+
+                                            Intent intent = new Intent(BuscarProductoStockActivity.this, ConsultaStockActivity.class);
+                                            intent.putExtra("TipoPago", tipoPago);
+                                            intent.putExtra("Almacen", almacen);
+                                            intent.putExtra("id_pedido", id_pedido);
+                                            intent.putExtra("Index", Index);
+
+                                            Bundle bundle = new Bundle();
+                                            producto = listaProductos.get(0);
+                                            bundle.putSerializable("Producto", producto);
+                                            intent.putExtras(bundle);
+                                            Bundle bundle1 = new Bundle();
+                                            bundle1.putSerializable("Cliente", cliente);
+                                            intent.putExtras(bundle1);
+                                            Bundle bundle2 = new Bundle();
+                                            bundle2.putSerializable("listaproductoselegidos", listaproductoselegidos);
+                                            intent.putExtras(bundle2);
+                                            Bundle bundle3 = new Bundle();
+                                            bundle3.putSerializable("Usuario", usuario);
+                                            intent.putExtras(bundle3);
+                                            Bundle bundle4 = new Bundle();
+                                            bundle4.putSerializable("listaClienteSucursal", listaClienteSucursal);
+                                            intent.putExtras(bundle4);
+
+                                            startActivity(intent);
+                                            finish();
+
+                                        } else {
+                                            progressDialog.dismiss();
+                                            btnbuscarProducto.setVisibility(View.VISIBLE);
+                                            btnregresarproducto.setVisibility(View.VISIBLE);
+                                            ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
+                                                    CustomListAdapter(BuscarProductoStockActivity.this, R.layout.custom_list, listaProducto);
+                                            lvProducto.setAdapter(listAdapter);
+                                        }
+                                    }
+
+                                } else {
+                                    progressDialog.dismiss();
+                                    listaProducto.clear();
+                                    btnbuscarProducto.setVisibility(View.VISIBLE);
+                                    btnregresarproducto.setVisibility(View.VISIBLE);
+                                    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
+                                            , R.layout.support_simple_spinner_dropdown_item, listaProducto);
+                                    lvProducto.setAdapter(adapter);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoStockActivity.this);
+                                    builder.setMessage("No se llego a encontrar el registro")
+                                            .setNegativeButton("Aceptar", null)
                                             .create()
                                             .show();
-                                    progressDialog.dismiss();
-                                    btnregresarproducto.setVisibility(View.VISIBLE);
-                                    btnbuscarProducto.setVisibility(View.VISIBLE);
-                                } else {
-
-                                    listaProducto.clear();
-                                    listaProductos.clear();
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        jsonObject = jsonArray.getJSONObject(i);
-                                        producto = new Productos();
-                                        producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
-                                        producto.setMarca(jsonObject.getString("DES_MARCA"));
-                                        producto.setDescripcion(jsonObject.getString("DES_ARTICULO")); //
-                                        producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
-                                        producto.setAlmacen(almacen);
-                                        listaProductos.add(producto);
-                                        listaProducto.add(producto.getCodigo() + " - " + producto.getDescripcion());
-                                    }
-
-                                    // Se hace un llamado al adaptador personalizado asociado al SML custom_list
-
-                                    if (listaProductos.size()<=1){
-
-                                        producto = new Productos();
-                                        cliente = new Clientes();
-                                        cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
-
-                                        Intent intent =  new Intent(BuscarProductoStockActivity.this,ConsultaStockActivity.class);
-                                        intent.putExtra("TipoPago",tipoPago);
-                                        intent.putExtra("Almacen",almacen);
-                                        intent.putExtra("id_pedido",id_pedido);
-                                        intent.putExtra("Index",Index);
-
-                                        Bundle bundle = new Bundle();
-                                        producto =  listaProductos.get(0);
-                                        bundle.putSerializable("Producto",producto);
-                                        intent.putExtras(bundle);
-                                        Bundle bundle1 = new Bundle();
-                                        bundle1.putSerializable("Cliente",cliente);
-                                        intent.putExtras(bundle1);
-                                        Bundle bundle2 = new Bundle();
-                                        bundle2.putSerializable("listaproductoselegidos",listaproductoselegidos);
-                                        intent.putExtras(bundle2);
-                                        Bundle bundle3 = new Bundle();
-                                        bundle3.putSerializable("Usuario",usuario);
-                                        intent.putExtras(bundle3);
-                                        Bundle bundle4 = new Bundle();
-                                        bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                                        intent.putExtras(bundle4);
-
-                                        startActivity(intent);
-                                        finish();
-
-                                    }else {
-                                        progressDialog.dismiss();
-                                        btnbuscarProducto.setVisibility(View.VISIBLE);
-                                        btnregresarproducto.setVisibility(View.VISIBLE);
-                                        ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
-                                                CustomListAdapter(BuscarProductoStockActivity.this, R.layout.custom_list, listaProducto);
-                                        lvProducto.setAdapter(listAdapter);
-                                    }
                                 }
 
-                            }else {
-                                progressDialog.dismiss();
-                                listaProducto.clear();
-                                btnbuscarProducto.setVisibility(View.VISIBLE);
-                                btnregresarproducto.setVisibility(View.VISIBLE);
-                                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
-                                        , R.layout.support_simple_spinner_dropdown_item,listaProducto);
-                                lvProducto.setAdapter(adapter);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoStockActivity.this);
-                                builder.setMessage("No se llego a encontrar el registro")
-                                        .setNegativeButton("Aceptar",null)
-                                        .create()
-                                        .show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            });
 
-                        } catch (JSONException e) { e.printStackTrace(); }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
-
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
+            int socketTimeout = 30000;
+            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            stringRequest.setRetryPolicy(policy);
+            requestQueue.add(stringRequest);
+        }
     }
 
     private void ActualizarProducto(String trama) {

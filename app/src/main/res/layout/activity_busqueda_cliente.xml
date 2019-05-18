@@ -23,12 +23,19 @@
 
         <RadioButton
             android:id="@+id/rbNombre"
+            android:layout_width="86dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Código" />
+
+        <RadioButton
+            android:id="@+id/rbrazon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20sp"
             android:layout_weight="1"
             android:checked="true"
-            android:text="Cod Cliente" />
+            android:inputType="text"
+            android:text="Nombre" />
 
         <RadioButton
             android:id="@+id/rbCodigo"
@@ -36,6 +43,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="RUC / DNI" />
+
+
 
     </RadioGroup>
 

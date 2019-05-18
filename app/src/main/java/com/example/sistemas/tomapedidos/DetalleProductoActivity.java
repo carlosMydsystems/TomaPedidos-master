@@ -297,7 +297,10 @@ else if (etcantidadelegida.getText()== null){
             @Override
             public void onClick(View v) {
                 try {
-
+                progressDialog.setMessage("... Guardando");
+                progressDialog.setCancelable(false);
+                progressDialog.create();
+                progressDialog.show();
 
                 Double stockDouble = Double.valueOf(tvstock.getText().toString().replace(",",""));
                 Double cantidadElegida = Double.valueOf(etcantidadelegida.getText().toString());
@@ -311,6 +314,7 @@ else if (etcantidadelegida.getText()== null){
                             .setMessage("El Stock es insuficiente, desea elegir otro articulo");
 
                     if (stockDouble > 0.0) {
+                        progressDialog.dismiss();
                         builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

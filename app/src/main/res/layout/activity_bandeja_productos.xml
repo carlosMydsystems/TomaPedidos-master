@@ -34,10 +34,12 @@
     <ListView
         android:id="@+id/lvbandejaProductos"
         android:layout_width="0dp"
-        android:layout_height="397dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -64,51 +66,51 @@
         android:layout_width="150dp"
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="#014284"
         android:text="Producto"
         android:textColor="#fff"
         android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvbandejaProductos" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnterminar"
         android:layout_width="150dp"
         android:layout_height="60dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="#014284"
         android:text="TERMINAR"
         android:textColor="#fff"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvbandejaProductos" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/btnRegresarBandejaPedidos"
         android:layout_width="150dp"
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="#014284"
         android:text="REGRESAR"
         android:textColor="#fff"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvbandejaProductos" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnValidarPromociones"
         android:layout_width="150dp"
         android:layout_height="60dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:background="#014284"
         android:text="GRABAR"
         android:textColor="#fff"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lvbandejaProductos" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

@@ -15,6 +15,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -60,9 +62,11 @@ public class BusquedaClienteActivity extends AppCompatActivity {
         btnbuscar = findViewById(R.id.btnBuscar);
         lvclientes = findViewById(R.id.lvCliente);
         etcliente = findViewById(R.id.etCliente);
+        etcliente.setInputType(1);
+        tipoConsulta = "Razon";
         consultaPromociones = getIntent().getStringExtra("consultaPromociones");
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");  //Se pasa el parametro del usuario
-        etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
+        //etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
 
         if (consultaPromociones==null){
 
@@ -150,6 +154,11 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                             etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(11)});
                             tipoConsulta = "Codigo";
                             break;
+                        case R.id.rbrazon:
+                            etcliente.setInputType(1);
+                            etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(80)});
+                            tipoConsulta = "Razon";
+                            break;
                     }
                 }
             });
@@ -185,6 +194,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                             .setNegativeButton("Aceptar",null)
                             .create()
                             .show();
+
                 }else {
                     progressDialog = new ProgressDialog(BusquedaClienteActivity.this);
                     progressDialog.setMessage("Cargando...");
@@ -233,6 +243,11 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                             etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(11)});
                             tipoConsulta = "Codigo";
                             break;
+                        case R.id.rbrazon:
+                            etcliente.setInputType(1);
+                            etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(80)});
+                            tipoConsulta = "Razon";
+                            break;
                     }
                 }
             });
@@ -246,16 +261,48 @@ public class BusquedaClienteActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
+        if (numero.length()<6){
+
+            progressDialog.dismiss();
+            AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
+            builder.setCancelable(false);
+            builder.setNegativeButton("Aceptar",null);
+            builder.setTitle("Atención...!");
+            builder.setMessage("Se debe de ingresar un mínimo de 6 caracteres");
+            builder.create().show();
+            btnbuscar.setVisibility(View.VISIBLE);
+
+        }else if(numero.contains("%%")) {
+
+            progressDialog.dismiss();
+            AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
+            builder.setCancelable(false);
+            builder.setTitle("Atención...!");
+            builder.setMessage("No debe ingresar de forma consecutiva el \"%\"");
+            builder.setNegativeButton("Aceptar",null);
+            builder.create().show();
+            btnbuscar.setVisibility(View.VISIBLE);
+        }else{
+
         // la Url del servicio Web // Se hace la validacion del tipo de consulta
 
         if (tipoConsulta == "Nombre") {
 
             url = ejecutaFuncionCursorTestMovil +
                     "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='" + numero + "||'";
-        } else {
+        } else if(tipoConsulta == "Codigo"){
 
             url = ejecutaFuncionCursorTestMovil +
                     "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='||" + numero + "'";
+        }else if(tipoConsulta == "Razon"){
+
+            url = ejecutaFuncionCursorTestMovil +
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='|"+ numero.trim().replace("%","%25").toUpperCase() +"|'";
+
+        }
+        else {
+
+            Toast.makeText(this, "Se produjo un error", Toast.LENGTH_SHORT).show();
         }
 
         listaCliente = new ArrayList<>();
@@ -317,5 +364,6 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
+        }
     }
 }

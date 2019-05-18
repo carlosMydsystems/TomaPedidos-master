@@ -377,6 +377,33 @@ public class BuscarProductoActivity extends AppCompatActivity {
         progressDialog.show();
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
+        if (numero.length()<6 && !Tipobusqueda.equals("Codigo")){
+
+            progressDialog.dismiss();
+            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this);
+            builder.setCancelable(false);
+            builder.setNegativeButton("Aceptar",null);
+            builder.setTitle("Atención...!");
+            builder.setMessage("Se debe de ingresar un mínimo de 6 caracteres");
+            builder.create().show();
+            btnbuscarProducto.setVisibility(View.VISIBLE);
+            btnregresarproducto.setVisibility(View.VISIBLE);
+
+        }else if(numero.contains("%%")) {
+
+            progressDialog.dismiss();
+            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this);
+            builder.setCancelable(false);
+            builder.setTitle("Atención...!");
+            builder.setMessage("No debe ingresar de forma consecutiva el \"%\"");
+            builder.setNegativeButton("Aceptar",null);
+            builder.create().show();
+            btnbuscarProducto.setVisibility(View.VISIBLE);
+            btnregresarproducto.setVisibility(View.VISIBLE);
+        }else{
+
+
             numero = numero.replace("%","%25");
             numero = numero.toUpperCase(); // se convierten los caracteres a Mayusucla
         if (tipoConsulta.equals("Nombre")) {
@@ -527,6 +554,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
+        }
     }
 
     private void ActualizarProducto(String trama) {

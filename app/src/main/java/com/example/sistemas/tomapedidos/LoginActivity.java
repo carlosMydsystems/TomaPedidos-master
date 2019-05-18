@@ -43,7 +43,6 @@ public class LoginActivity extends AppCompatActivity {
     String url, Mensaje = "",imei = "",puerto = "8494";
     boolean validador = true;
     TextView tvVersion;
-
     public static String ejecutaFuncionCursorTestMovil;
     public static String ejecutaFuncionTestMovil;
 
@@ -91,14 +90,20 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.show();
         Mensaje = "";
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
+/*
 
         url =  ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|"+Imei+"'"; // se debe actalizar la URL
 
-/*
+
         url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085543023'"; // se debe actalizar la URL
+
+
+        url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085551935'";357014075227793
 */
+
+        url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085551935'";
+
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
 
                 new Response.Listener<String>() {

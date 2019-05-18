@@ -97,27 +97,27 @@
 
     <Button
         android:id="@+id/btnGuardarrevisar"
-        android:layout_width="150dp"
+        android:layout_width="144dp"
         android:layout_height="50dp"
         android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:background="#014284"
         android:text="Guardar y Revisar"
         android:textColor="#fff"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnVerificar" />
 
     <Button
         android:id="@+id/btnGuardaryagregar"
-        android:layout_width="150dp"
+        android:layout_width="144dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:background="#014284"
         android:text="Guardar y agregar"
         android:textColor="#fff"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnVerificar" />
 
@@ -222,7 +222,7 @@
         android:background="#014284"
         android:text="VERIFICAR"
         android:textColor="#fff"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.631"
         app:layout_constraintStart_toStartOf="parent"

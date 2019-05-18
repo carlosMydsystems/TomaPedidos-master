@@ -23,6 +23,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.sistemas.tomapedidos.BusquedaClienteActivity;
 import com.example.sistemas.tomapedidos.ConsultasListadoActivity;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
@@ -67,6 +68,7 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");  //Se pasa el parametro del usuario
         ibregresomenuprincipal = findViewById(R.id.ibRetornoMenuPrincipal);
         etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
+        etcliente.setInputType(1);
         ibregresomenuprincipal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,6 +141,11 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
                         etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(11)});
                         tipoConsulta = "Codigo";
                         break;
+                    case R.id.rbrazon:
+                        etcliente.setInputType(1);
+                        etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(80)});
+                        tipoConsulta = "Razon";
+                        break;
                 }
             }
         });
@@ -151,72 +158,121 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
 
         // la Url del servicio Web // Se hace la validacion del tipo de consulta
 
-        if (tipoConsulta == "Nombre") {
+        if (numero.length()<6){
 
-            url = ejecutaFuncionCursorTestMovil +
-                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='" + numero + "||'";
-        } else {
+            progressDialog.dismiss();
+            AlertDialog.Builder builder = new AlertDialog.Builder(ConsultaPrecioActivity.this);
+            builder.setCancelable(false);
+            builder.setNegativeButton("Aceptar",null);
+            builder.setTitle("Atención...!");
+            builder.setMessage("Se debe de ingresar un mínimo de 6 caracteres");
+            builder.create().show();
+            btnbuscar.setVisibility(View.VISIBLE);
 
-            url = ejecutaFuncionCursorTestMovil +
-                    "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='||" + numero + "'";
-        }
+        }else if(numero.contains("%%")) {
 
-        listaCliente = new ArrayList<>();
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            progressDialog.dismiss();
-                            btnbuscar.setVisibility(View.VISIBLE);
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
-                            if (success) {
-                                for (int i = 0; i < jsonArray.length(); i++) {
-                                    cliente = new Clientes();
-                                    jsonObject = jsonArray.getJSONObject(i);
-                                    cliente.setCodCliente(jsonObject.getString("COD_CLIENTE"));
-                                    cliente.setNombre(jsonObject.getString("CLIENTE"));
-                                    cliente.setDireccion(jsonObject.getString("DIRECCION"));
-                                    cliente.setCodFPago(jsonObject.getString("COD_FPAGO_LIMITE"));
-                                    cliente.setFormaPago(jsonObject.getString("FORMA_PAGO"));
-                                    listaClientes.add(cliente);
-                                    listaCliente.add(cliente.getCodCliente() + " - " + cliente.getNombre());
-                                }
+            progressDialog.dismiss();
+            AlertDialog.Builder builder = new AlertDialog.Builder(ConsultaPrecioActivity.this);
+            builder.setCancelable(false);
+            builder.setTitle("Atención...!");
+            builder.setMessage("No debe ingresar de forma consecutiva el \"%\"");
+            builder.setNegativeButton("Aceptar",null);
+            builder.create().show();
+            btnbuscar.setVisibility(View.VISIBLE);
+        }else {
 
-                                ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
-                                        CustomListAdapter(ConsultaPrecioActivity.this, R.layout.custom_list, listaCliente);
-                                lvclientes.setAdapter(listAdapter);
+            /*
+            if (tipoConsulta == "Nombre") {
 
-                            } else {
-                                listaCliente.clear();
-                                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
-                                        , R.layout.support_simple_spinner_dropdown_item, listaCliente);
+                url = ejecutaFuncionCursorTestMovil +
+                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='" + numero + "||'";
+            } else if(tipoConsulta == "Codigo"){
 
-                                lvclientes.setAdapter(adapter);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(ConsultaPrecioActivity.this);
-                                builder.setCancelable(false);
-                                builder.setMessage("No se llego a encontrar el registro")
-                                        .setNegativeButton("Aceptar", null)
-                                        .create()
-                                        .show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
+                url = ejecutaFuncionCursorTestMovil +
+                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='||" + numero + "'";
+            }else if(tipoConsulta == "Razon"){
+
+                url = ejecutaFuncionCursorTestMovil +
+                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='|"+ numero +"|'";
             }
-        });
 
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
+*/
+
+            if (tipoConsulta == "Nombre") {
+
+                url = ejecutaFuncionCursorTestMovil +
+                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='" + numero + "||'";
+            } else if(tipoConsulta == "Codigo"){
+
+                url = ejecutaFuncionCursorTestMovil +
+                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='||" + numero + "'";
+            }else if(tipoConsulta == "Razon"){
+
+                url = ejecutaFuncionCursorTestMovil +
+                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='|"+ numero.trim().replace("%","%25").toUpperCase() +"|'";
+
+            }
+
+
+
+
+            listaCliente = new ArrayList<>();
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                progressDialog.dismiss();
+                                btnbuscar.setVisibility(View.VISIBLE);
+                                JSONObject jsonObject = new JSONObject(response);
+                                boolean success = jsonObject.getBoolean("success");
+                                JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                                if (success) {
+                                    for (int i = 0; i < jsonArray.length(); i++) {
+                                        cliente = new Clientes();
+                                        jsonObject = jsonArray.getJSONObject(i);
+                                        cliente.setCodCliente(jsonObject.getString("COD_CLIENTE"));
+                                        cliente.setNombre(jsonObject.getString("CLIENTE"));
+                                        cliente.setDireccion(jsonObject.getString("DIRECCION"));
+                                        cliente.setCodFPago(jsonObject.getString("COD_FPAGO_LIMITE"));
+                                        cliente.setFormaPago(jsonObject.getString("FORMA_PAGO"));
+                                        listaClientes.add(cliente);
+                                        listaCliente.add(cliente.getCodCliente() + " - " + cliente.getNombre());
+                                    }
+
+                                    ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
+                                            CustomListAdapter(ConsultaPrecioActivity.this, R.layout.custom_list, listaCliente);
+                                    lvclientes.setAdapter(listAdapter);
+
+                                } else {
+                                    listaCliente.clear();
+                                    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
+                                            , R.layout.support_simple_spinner_dropdown_item, listaCliente);
+
+                                    lvclientes.setAdapter(adapter);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(ConsultaPrecioActivity.this);
+                                    builder.setCancelable(false);
+                                    builder.setMessage("No se llego a encontrar el registro")
+                                            .setNegativeButton("Aceptar", null)
+                                            .create()
+                                            .show();
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                }
+            });
+
+            int socketTimeout = 30000;
+            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            stringRequest.setRetryPolicy(policy);
+            requestQueue.add(stringRequest);
+        }
     }
 }
