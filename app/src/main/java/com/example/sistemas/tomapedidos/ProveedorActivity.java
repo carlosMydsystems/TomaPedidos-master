@@ -48,7 +48,8 @@ public class ProveedorActivity extends AppCompatActivity {
 
     Button btnBuscarProveedor,btnAceptarBuscarProveedor;
     String tipoformapago,Index,cantidad,precio,almacen,id_pedido,url,TipodeConsulta = "NombreProveedor",
-            validador,retorno,validadorRetornoFechaPactadaProveedor,direccionProveedor,nombreProveedor,codProveedor,valida;
+            validador,retorno,validadorRetornoFechaPactadaProveedor,direccionProveedor,nombreProveedor,
+            codProveedor,valida,NombreProveedor;
     Usuario usuario;
     Clientes cliente;
 
@@ -92,14 +93,14 @@ public class ProveedorActivity extends AppCompatActivity {
         cantidad = getIntent().getStringExtra("Cantidad");
         precio = getIntent().getStringExtra("Precio");
         codProveedor =  getIntent().getStringExtra("codProveedor");
+        NombreProveedor =  getIntent().getStringExtra("NombreProveedor");
+        Toast.makeText(this, NombreProveedor, Toast.LENGTH_SHORT).show();
         valida = getIntent().getStringExtra("valida");
 
         if (codProveedor == null){
 
-
         }else {
             proveedor = new Proveedor();
-
             proveedor.setCodProveedor(codProveedor);
         }
         direccionProveedor = getIntent().getStringExtra("tvdireccionproveedor");
@@ -497,7 +498,6 @@ public class ProveedorActivity extends AppCompatActivity {
                                     spsucursalproveedor.setAdapter(new SpinnerAdapter(getApplicationContext(),listaSucursalesProveedorStr));
 
                                     listaSucursalesProveedor.get(0).setCodigoSucursalProveedor(listaSucursalesProveedor.get(0).getCodigoSucursalProveedor());
-                                    listaSucursalesProveedor.get(0).setNombreSucursalProveedor(listaSucursalesProveedor.get(0).getNombreSucursalProveedor());
                                     tvdireccionsucursalproveedor.setText(listaSucursalesProveedor.get(0).getDireccionSucursalProveedor());
                                     spsucursalproveedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -508,8 +508,11 @@ public class ProveedorActivity extends AppCompatActivity {
                                          listaSucursalesProveedor.get(0).setCodigoSucursalProveedor(listaSucursalesProveedor.get(position).getCodigoSucursalProveedor());
 
 
-                                         listaSucursalesProveedor.get(0).setNombreSucursalProveedor(listaSucursalesProveedor.get(position).getNombreSucursalProveedor());
+                                         NombreProveedor = listaSucursalesProveedor.get(position).getNombreSucursalProveedor();
+                                         Toast.makeText(getApplicationContext(), NombreProveedor, Toast.LENGTH_SHORT).show();
+
                                          tvdireccionsucursalproveedor.setText(listaSucursalesProveedor.get(position).getDireccionSucursalProveedor());
+                                         Toast.makeText(ProveedorActivity.this, ""+NombreProveedor, Toast.LENGTH_SHORT).show();
 
                                          btnAceptarBuscarProveedor.setOnClickListener(new View.OnClickListener() {
                                              @Override
@@ -526,7 +529,7 @@ public class ProveedorActivity extends AppCompatActivity {
                                                  intent.putExtra("validador", "false");
                                                  intent.putExtra("codProveedor", proveedor.getCodProveedor());
                                                  intent.putExtra("SucursalProveedor",listaSucursalesProveedor.get(0).getCodigoSucursalProveedor());
-                                                 intent.putExtra("NombreProveedor",listaSucursalesProveedor.get(0).getNombreSucursalProveedor());
+                                                 intent.putExtra("NombreProveedor",NombreProveedor);
                                                  intent.putExtra("tvnombreproveedor", tvnombreproveedor.getText().toString());
                                                  intent.putExtra("tvdireccionproveedor", tvdireccionproveedor.getText().toString());
                                                  intent.putExtra("position",position);

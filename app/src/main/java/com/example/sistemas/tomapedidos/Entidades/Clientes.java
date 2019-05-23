@@ -8,6 +8,7 @@ public class Clientes implements Serializable {
     private String nombre;
     private String codCliente;
     private String direccion;
+    private String documentoCliente;
     private String giro;
     private String tipoCliente;
     private String deuda;
@@ -22,17 +23,18 @@ public class Clientes implements Serializable {
     private String distrito;
     private String provincia;
     private String departamento;
+    private String documentoSeleccionado;
 
-    public Clientes(String idCliente, String nombre, String codCliente, String direccion, String giro,
-                    String tipoCliente, String deuda, String estado, String fechaultpedido,
-                    String usuarioultpedido, String tipoDocumento, String detalleCliente, String codFPago,
-                    String formaPago, String direccionSucursal, String distrito, String provincia,
-                    String departamento) {
-
+    public Clientes(String idCliente, String nombre, String codCliente, String direccion,
+                    String documentoCliente, String giro, String tipoCliente, String deuda,
+                    String estado, String fechaultpedido, String usuarioultpedido, String tipoDocumento,
+                    String detalleCliente, String codFPago, String formaPago, String direccionSucursal,
+                    String distrito, String provincia, String departamento, String documentoSeleccionado) {
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.codCliente = codCliente;
         this.direccion = direccion;
+        this.documentoCliente = documentoCliente;
         this.giro = giro;
         this.tipoCliente = tipoCliente;
         this.deuda = deuda;
@@ -47,10 +49,19 @@ public class Clientes implements Serializable {
         this.distrito = distrito;
         this.provincia = provincia;
         this.departamento = departamento;
+        this.documentoSeleccionado = documentoSeleccionado;
     }
 
     public Clientes() {
     }
+
+    public String getDocumentoSeleccionado() { return documentoSeleccionado; }
+
+    public void setDocumentoSeleccionado(String documentoSeleccionado) { this.documentoSeleccionado = documentoSeleccionado; }
+
+    public String getDocumentoCliente() { return documentoCliente; }
+
+    public void setDocumentoCliente(String documentoCliente) { this.documentoCliente = documentoCliente; }
 
     public String getDireccionSucursal() { return direccionSucursal; }
 

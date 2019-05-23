@@ -22,23 +22,17 @@ public class SucursalProveedor implements Serializable {
         return codigoSucursalProveedor;
     }
 
-    public void setCodigoSucursalProveedor(String codigoSucursalProveedor) {
-        this.codigoSucursalProveedor = codigoSucursalProveedor;
-    }
+    public void setCodigoSucursalProveedor(String codigoSucursalProveedor) { this.codigoSucursalProveedor = codigoSucursalProveedor; }
 
     public String getNombreSucursalProveedor() {
         return nombreSucursalProveedor;
     }
 
-    public void setNombreSucursalProveedor(String nombreSucursalProveedor) {
-        this.nombreSucursalProveedor = nombreSucursalProveedor;
-    }
+    public void setNombreSucursalProveedor(String nombreSucursalProveedor) { this.nombreSucursalProveedor = nombreSucursalProveedor; }
 
     public String getDireccionSucursalProveedor() {
         return direccionSucursalProveedor;
     }
 
-    public void setDireccionSucursalProveedor(String direccionSucursalProveedor) {
-        this.direccionSucursalProveedor = direccionSucursalProveedor;
-    }
+    public void setDireccionSucursalProveedor(String direccionSucursalProveedor) { this.direccionSucursalProveedor = direccionSucursalProveedor; }
 }

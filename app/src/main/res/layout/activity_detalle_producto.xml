@@ -104,7 +104,7 @@
         android:background="#014284"
         android:text="Guardar y Revisar"
         android:textColor="#fff"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnVerificar" />
 
@@ -117,7 +117,7 @@
         android:background="#014284"
         android:text="Guardar y agregar"
         android:textColor="#fff"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btnVerificar" />
 
@@ -222,7 +222,7 @@
         android:background="#014284"
         android:text="VERIFICAR"
         android:textColor="#fff"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.631"
         app:layout_constraintStart_toStartOf="parent"

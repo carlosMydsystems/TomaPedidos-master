@@ -72,10 +72,20 @@ public class MostrarClienteActivity extends AppCompatActivity {
         tvcodigo.setText(cliente.getCodCliente());
         tvNombre.setText(cliente.getNombre());
         tvDireccion.setText(cliente.getDireccion());
-
         opdoc = new ArrayList<>();
-        opdoc.add("FACTURA");
-        opdoc.add("BOLETA");
+
+        if (cliente.getDocumentoCliente().length() == 11){
+
+            opdoc.add("FACTURA");
+            opdoc.add("BOLETA");
+
+        }else if(cliente.getDocumentoCliente().length() == 8){
+
+            opdoc.add("BOLETA");
+
+        }
+
+
         spopcionesdocumento.setAdapter(new SpinnerAdapter(this,opdoc));
 
         ListaSucursalesClientes(cliente.getCodCliente(),cliente);
@@ -160,10 +170,12 @@ public class MostrarClienteActivity extends AppCompatActivity {
                                     clienteSucursal = new ClienteSucursal();
                                     opSucursal.add(jsonObject.getString("NOMBRE"));
                                     clienteSucursal.setCodSucursal(jsonObject.getString("COD_SUCCLIE"));
+                                    clienteSucursal.setNombreSucursal(jsonObject.getString("NOMBRE"));
                                     clienteSucursal.setDireccionSucursal(jsonObject.getString("DIRECCION"));
                                     clienteSucursal.setDepartamento(jsonObject.getString("DEPARTAMENTO"));
                                     clienteSucursal.setProvincia(jsonObject.getString("PROVINCIA"));
                                     clienteSucursal.setDistrito(jsonObject.getString("DISTRITO"));
+
                                     listaClienteSucursal.add(clienteSucursal);
                                 }
 
@@ -178,6 +190,7 @@ public class MostrarClienteActivity extends AppCompatActivity {
                                      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                                          tvDireccionFiscalCliente.setText(listaClienteSucursal.get(position).getDireccionSucursal());
                                          listaClienteSucursal.get(0).setCodSucursal(listaClienteSucursal.get(position).getCodSucursal());
+                                         listaClienteSucursal.get(0).setNombreSucursal(listaClienteSucursal.get(position).getNombreSucursal());
                                      }
 
                                      @Override

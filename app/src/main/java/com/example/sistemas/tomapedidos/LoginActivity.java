@@ -52,12 +52,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         if (validador) {
-
             ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=";
             ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=";
-
         }else{
-
             ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:"+puerto+"/oracle/ejecutaFuncionCursorTestMovil.php?funcion=";
             ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:"+puerto+"/oracle/ejecutaFuncionTestMovil.php?funcion=";
         }
@@ -74,8 +71,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
             if (etusuario.getText().equals("") || etclave.getText().equals("")) {
-            } else {
-                verificarUsuario(etusuario.getText().toString().replace(" ", "").toUpperCase()
+            } else { verificarUsuario(etusuario.getText().toString().replace(" ", "").toUpperCase()
                         , etclave.getText().toString().replace(" ", "").toUpperCase(),imei);
             }
             }
@@ -90,22 +86,25 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.show();
         Mensaje = "";
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-/*
+
 
         url =  ejecutaFuncionCursorTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|"+Imei+"'"; // se debe actalizar la URL
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"
+                +Contraseña_usuario.toUpperCase()+"|"+Imei+"'"; // se debe actalizar la URL
+/*
+        url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"
+        +Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085543023'"; // se debe actalizar la URL
+
+        url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"
+        +Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085551935'";357014075227793
 
 
-        url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085543023'"; // se debe actalizar la URL
 
+        url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+
+                Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|357014075227793'";
 
-        url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085551935'";357014075227793
 */
-
-        url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085551935'";
-
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response1) {
@@ -144,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }else {
 
                                     for (int i = 0; i < jsonArray.length(); i++) {
+
                                         usuario = new Usuario();
                                         jsonObject = jsonArray.getJSONObject(i);
                                         usuario.setCodAlmacen(jsonObject.getString("COD_ALMACEN"));
@@ -155,6 +155,7 @@ public class LoginActivity extends AppCompatActivity {
                                         usuario.setTipoCambio(jsonObject.getString("TIPO_CAMBIO"));
                                         usuario.setLugar(jsonObject.getString("COD_TIPO_LISTAPRE")); // Se usa en la busqueda de producto
                                         usuario.setUser(etusuario.getText().toString().toUpperCase().trim());
+
                                     }
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                     intent.putExtra("userId", etusuario.getText().toString());
@@ -209,8 +210,8 @@ public class LoginActivity extends AppCompatActivity {
     {
         switch (requestCode) {
             case 1: {
-                // Validamos si el usuario acepta el permiso para que la aplicación acceda a los datos internos del equipo, si no denegamos el acceso
 
+                // Validamos si el usuario acepta el permiso para que la aplicación acceda a los datos internos del equipo, si no denegamos el acceso
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     imei = obtenerIMEI();
                 } else {

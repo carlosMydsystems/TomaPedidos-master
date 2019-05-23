@@ -5,15 +5,16 @@ import java.io.Serializable;
 public class ClienteSucursal implements Serializable {
 
     private String codSucursal;
+    private String nombreSucursal;
     private String direccionSucursal;
     private String distrito;
     private String provincia;
     private String departamento;
 
-    public ClienteSucursal(String codSucursal, String direccionSucursal, String distrito, String provincia,
-                           String departamento) {
-
+    public ClienteSucursal(String codSucursal, String nombreSucursal, String direccionSucursal,
+                           String distrito, String provincia, String departamento) {
         this.codSucursal = codSucursal;
+        this.nombreSucursal = nombreSucursal;
         this.direccionSucursal = direccionSucursal;
         this.distrito = distrito;
         this.provincia = provincia;
@@ -22,6 +23,10 @@ public class ClienteSucursal implements Serializable {
 
     public ClienteSucursal() {
     }
+
+    public String getNombreSucursal() { return nombreSucursal; }
+
+    public void setNombreSucursal(String nombreSucursal) { this.nombreSucursal = nombreSucursal; }
 
     public String getCodSucursal() {
         return codSucursal;
@@ -35,9 +40,7 @@ public class ClienteSucursal implements Serializable {
         return direccionSucursal;
     }
 
-    public void setDireccionSucursal(String direccionSucursal) {
-        this.direccionSucursal = direccionSucursal;
-    }
+    public void setDireccionSucursal(String direccionSucursal) { this.direccionSucursal = direccionSucursal; }
 
     public String getDistrito() {
         return distrito;

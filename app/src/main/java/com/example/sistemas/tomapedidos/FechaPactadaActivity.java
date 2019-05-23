@@ -26,6 +26,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -45,6 +47,8 @@ import com.example.sistemas.tomapedidos.Request.EnvioRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -126,10 +130,13 @@ public class FechaPactadaActivity extends AppCompatActivity {
         codProveedor = getIntent().getStringExtra("codProveedor");
         SucursalProveedor = getIntent().getStringExtra("SucursalProveedor");
         NombreProveedor = getIntent().getStringExtra("NombreProveedor");
+        Toast.makeText(this, "segunda instancia"+NombreProveedor, Toast.LENGTH_SHORT).show();
         listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
         listaSucursalesProveedorStr  = (ArrayList<String>) getIntent().getSerializableExtra("listaSucursalesProveedorStr");
         tvCantidad.setText(cantidad);
         redondeado = new BigDecimal(precio).setScale(2, RoundingMode.HALF_EVEN);
+
+        Toast.makeText(this, ""+listaClienteSucursal.get(0).getCodSucursal()+"-"+listaClienteSucursal.get(0).getNombreSucursal(), Toast.LENGTH_SHORT).show();
 
         if (usuario.getMoneda().equals("1")){
             tvPrecio.setText(Soles+" "+formateador.format(redondeado));
@@ -162,6 +169,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 intent.putExtra("tvdireccionproveedor", tvdireccionproveedor);
                 intent.putExtra("valida", "valida");
                 intent.putExtra("codProveedor", codProveedor);
+                intent.putExtra("NombreProveedor", NombreProveedor);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
                 intent.putExtras(bundle);
@@ -241,9 +249,9 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
                         .setTitle("Fin del Pedido")
                         .setMessage("Cliente \t: " + cliente.getCodCliente() + " - " + cliente.getNombre() +  "\n" +
-
+                            "Suc Cliente \t: "+listaClienteSucursal.get(0).getCodSucursal()+"-"+listaClienteSucursal.get(0).getNombreSucursal()+"\n" +
                             "Transportista \t: " + tvnombreproveedor + "\n" +
-                            "Suc Transportista\t: "  + SucursalProveedor+"\n" +
+                            "Suc Transportista\t: "  + SucursalProveedor+"-" + NombreProveedor+"\n" +
                             "F.Pactada \t: " + fechahabil + "\n" +
                             "Almacen \t: " + almacen + "\n" +
                             "Importe \t: "+ moneda + redondeado + "\n" +
@@ -286,7 +294,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
     }
 
     private void VerificaFecha(String trama) {
-
+        Integer cola = 0;
         final ProgressDialog progressDialog = new ProgressDialog(FechaPactadaActivity.this);
         progressDialog.setMessage("... Cargando");
         progressDialog.setCancelable(false);
@@ -310,32 +318,32 @@ public class FechaPactadaActivity extends AppCompatActivity {
                             Boolean condicion = false,error = false;
                             if (success) {
                                 String Aux = response.replace("{", "|");
-                                Aux = Aux.replace("}", "|");
-                                Aux = Aux.replace("[", "|");
-                                Aux = Aux.replace("]", "|");
-                                Aux = Aux.replace("\"", "|");
-                                Aux = Aux.replace(",", " ");
-                                Aux = Aux.replace("|", "");
-                                Aux = Aux.replace(":", " ");
-                                String partes[] = Aux.split(" ");
-                                for (String palabras : partes) {
-                                    if (condicion) {
-                                        Mensaje += palabras + " ";
+                                    Aux = Aux.replace("}", "|");
+                                    Aux = Aux.replace("[", "|");
+                                    Aux = Aux.replace("]", "|");
+                                    Aux = Aux.replace("\"", "|");
+                                    Aux = Aux.replace(",", " ");
+                                    Aux = Aux.replace("|", "");
+                                    Aux = Aux.replace(":", " ");
+                                    String partes[] = Aux.split(" ");
+                                    for (String palabras : partes) {
+                                        if (condicion) {
+                                            Mensaje += palabras + " ";
+                                        }
+                                        if (palabras.equals("ERROR")) {
+                                            condicion = true;
+                                            error = true;
+                                        }
                                     }
-                                    if (palabras.equals("ERROR")) {
-                                        condicion = true;
-                                        error = true;
-                                    }
-                                }
-                                if (error) {
+                                    if (error) {
 
-                                    AlertDialog.Builder dialog = new AlertDialog.Builder(
-                                            FechaPactadaActivity.this);
-                                    dialog.setMessage(Mensaje)
-                                            .setNegativeButton("Regresar", null)
-                                            .create()
-                                            .show();
-                                } else {
+                                        AlertDialog.Builder dialog = new AlertDialog.Builder(
+                                                FechaPactadaActivity.this);
+                                        dialog.setMessage(Mensaje)
+                                                .setNegativeButton("Regresar", null)
+                                                .create()
+                                                .show();
+                                    } else {
 
                                     listadiaspactados.clear();
                                     for (int i = 0; i < jsonArray.length(); i++) {
@@ -380,7 +388,11 @@ public class FechaPactadaActivity extends AppCompatActivity {
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
+        if (cola<1) {
+
+            cola++;
+            requestQueue.add(stringRequest);
+        }
     }
 
     private void verificaPesosporfecha(ArrayList<DiasPactados> listadiaspactados) {
@@ -398,9 +410,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
         Double fecha9= Double.valueOf(listadiaspactados.get(1).getDia9()) - Double.valueOf(listadiaspactados.get(2).getDia9());
         Double fecha10= Double.valueOf(listadiaspactados.get(1).getDia10()) - Double.valueOf(listadiaspactados.get(2).getDia10());
 
-        if (fecha1>0){
-            listadiasvalidos.add(listadiaspactados.get(0).getDia1());
-        }
+        if (fecha1>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia1());}
         if (fecha2>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia2());}
         if (fecha3>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia3());}
         if (fecha4>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia4());}
@@ -410,7 +420,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
         if (fecha8>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia8());}
         if (fecha9>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia9());}
         if (fecha10>0){ listadiasvalidos.add(listadiaspactados.get(0).getDia10());}
-
 
         spfechashabiles.setAdapter(new SpinnerAdapter(getApplicationContext(),listadiasvalidos));
         spfechashabiles.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -432,6 +441,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
     private void RegistrarPedido(String id_pedido) {
 
+        Integer cola=0;
 
         final ProgressDialog progressDialog = new ProgressDialog(FechaPactadaActivity.this);
         progressDialog.setMessage("... Enviando");
@@ -450,6 +460,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                         String Mensaje = "";
 
                         try {
+
                             JSONObject jsonObject=new JSONObject(response);
                             boolean success = jsonObject.getBoolean("success");
                             JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
@@ -535,11 +546,15 @@ public class FechaPactadaActivity extends AppCompatActivity {
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
+        if (cola<1) {
+            cola++;
+            requestQueue.add(stringRequest);
+        }
     }
 
     private void ActualizarProducto(String trama) {
 
+        Integer cola=0;
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
         url =  ejecutaFuncionTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
@@ -551,6 +566,13 @@ public class FechaPactadaActivity extends AppCompatActivity {
                         if (response.equals("OK")){
 
                             RegistrarPedido(id_pedido);
+                        }else{
+
+                            AlertDialog.Builder builder = new  AlertDialog.Builder(FechaPactadaActivity.this);
+                            builder.setTitle("Atención !");
+                            builder.setMessage("Error"+response);
+                            builder.setNegativeButton("Aceptar",null);
+                            builder.create().show();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -563,11 +585,15 @@ public class FechaPactadaActivity extends AppCompatActivity {
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
+        if (cola<1) {
+            cola++;
+            requestQueue.add(stringRequest);
+        }
     }
 
     private void Registro() {
 
+        Integer cola=0;
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -578,7 +604,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                     boolean success = jsonresponse.getBoolean("success");
 
                     if (success){
-                        //Toast.makeText(FechaPactadaActivity.this, "Se hizo el registro de forma correcta", Toast.LENGTH_SHORT).show();
 
                     }else{
                         AlertDialog.Builder  builder = new AlertDialog.Builder(
@@ -615,7 +640,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
         if (!gpsEnabled) {
 
 
-            /**  Se hace la habilitacion del GPS, si se descomenta esta parte del codigo*/
+            /**  Se hace la habilitacion del GPS, si se descomenta esta parte del codigo */
 
             /*
             Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -633,8 +658,9 @@ public class FechaPactadaActivity extends AppCompatActivity {
         }
         mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 20, (LocationListener) Local);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 20, (LocationListener) Local);
-        tvlatitud.setText("");
-        tvdireccion.setText("");
+        tvlatitud.setText("ND");
+        tvdireccion.setText("ND");
+        tvlongitud.setText("ND");
     }
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == 1000) {
@@ -686,16 +712,19 @@ public class FechaPactadaActivity extends AppCompatActivity {
             tvlongitud.setText(longitudTxt);
             this.fechaPactadaActivity.setLocation(loc);
         }
+
         @Override
         public void onProviderDisabled(String provider) {
             // Este metodo se ejecuta cuando el GPS es desactivado
-            tvlatitud.setText("GPS Desactivado");
+            tvlatitud.setText("ND");
         }
+
         @Override
         public void onProviderEnabled(String provider) {
             // Este metodo se ejecuta cuando el GPS es activado
-            tvlatitud.setText("GPS Activado");
+            tvlatitud.setText("GPS%20Activado");
         }
+
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
             switch (status) {
@@ -711,5 +740,4 @@ public class FechaPactadaActivity extends AppCompatActivity {
             }
         }
     }
-
 }

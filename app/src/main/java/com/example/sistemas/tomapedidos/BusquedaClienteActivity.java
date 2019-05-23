@@ -327,6 +327,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                                     cliente.setDireccion(jsonObject.getString("DIRECCION"));
                                     cliente.setCodFPago(jsonObject.getString("COD_FPAGO_LIMITE"));
                                     cliente.setFormaPago(jsonObject.getString("FORMA_PAGO"));
+                                    cliente.setDocumentoCliente(jsonObject.getString("DOC_CLIENTE"));
                                     listaClientes.add(cliente);
                                     listaCliente.add(cliente.getCodCliente() + " - " + cliente.getNombre());
                                 }

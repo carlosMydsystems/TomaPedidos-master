@@ -373,7 +373,8 @@ public class BuscarProductoActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(BuscarProductoActivity.this);
         progressDialog.setMessage("Cargando...");
         progressDialog.setCancelable(false);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.create();
         progressDialog.show();
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
