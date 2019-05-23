@@ -26,7 +26,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -46,8 +45,6 @@ import com.example.sistemas.tomapedidos.Request.EnvioRequest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -129,13 +126,10 @@ public class FechaPactadaActivity extends AppCompatActivity {
         codProveedor = getIntent().getStringExtra("codProveedor");
         SucursalProveedor = getIntent().getStringExtra("SucursalProveedor");
         NombreProveedor = getIntent().getStringExtra("NombreProveedor");
-        Toast.makeText(this, "segunda instancia"+NombreProveedor, Toast.LENGTH_SHORT).show();
         listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
         listaSucursalesProveedorStr  = (ArrayList<String>) getIntent().getSerializableExtra("listaSucursalesProveedorStr");
         tvCantidad.setText(cantidad);
         redondeado = new BigDecimal(precio).setScale(2, RoundingMode.HALF_EVEN);
-
-        Toast.makeText(this, ""+listaClienteSucursal.get(0).getCodSucursal()+"-"+listaClienteSucursal.get(0).getNombreSucursal(), Toast.LENGTH_SHORT).show();
 
         if (usuario.getMoneda().equals("1")){
             tvPrecio.setText(Soles+" "+formateador.format(redondeado));

@@ -39,7 +39,7 @@ public class MostrarClienteActivity extends AppCompatActivity {
     Button btnpedido,btnregresodetallecliente;
     Clientes cliente;
     TextView tvcodigo,tvNombre,tvDireccion,tvGiro,tvTipoCiente,tvDeuda,tvestado,
-             tvUsuarioUltPedido,tvDireccionFiscalCliente;
+             tvUsuarioUltPedido,tvDireccionFiscalCliente,tvRucDni;
     Usuario usuario;
     Spinner spopcionesdocumento, spsucursal;
     List<String> opSucursal;
@@ -69,10 +69,12 @@ public class MostrarClienteActivity extends AppCompatActivity {
         spopcionesdocumento = findViewById(R.id.spTipoDocumento);
         spsucursal = findViewById(R.id.spSucursal);
         tvDireccionFiscalCliente = findViewById(R.id.tvDireccionFiscalCliente);
+        tvRucDni = findViewById(R.id.tvRucDni);
         tvcodigo.setText(cliente.getCodCliente());
         tvNombre.setText(cliente.getNombre());
         tvDireccion.setText(cliente.getDireccion());
         opdoc = new ArrayList<>();
+        tvRucDni.setText(cliente.getDocumentoCliente());
 
         if (cliente.getDocumentoCliente().length() == 11){
 

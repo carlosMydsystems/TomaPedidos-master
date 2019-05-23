@@ -21,8 +21,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -93,11 +91,9 @@ public class ProveedorActivity extends AppCompatActivity {
         cantidad = getIntent().getStringExtra("Cantidad");
         precio = getIntent().getStringExtra("Precio");
         SucursalProveedor = getIntent().getStringExtra("SucursalProveedor");
-        Toast.makeText(this, ""+SucursalProveedor, Toast.LENGTH_SHORT).show();
         codProveedor =  getIntent().getStringExtra("codProveedor");
         NombreProveedor =  getIntent().getStringExtra("NombreProveedor");
-        Toast.makeText(this, NombreProveedor, Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, NombreProveedor, Toast.LENGTH_SHORT).show();
+
         valida = getIntent().getStringExtra("valida");
 
         if (codProveedor == null){
@@ -139,12 +135,9 @@ public class ProveedorActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                    Toast.makeText(ProveedorActivity.this, "ingreso", Toast.LENGTH_SHORT).show();
                     quitarTeclado(view);
                     SucursalProveedor =listaSucursalesProveedor.get(position).getCodigoSucursalProveedor();
-                    Toast.makeText(ProveedorActivity.this, "codigo"+listaSucursalesProveedor.get(position).getCodigoSucursalProveedor(), Toast.LENGTH_SHORT).show();
                     NombreProveedor = listaSucursalesProveedor.get(position).getNombreSucursalProveedor();
-                    Toast.makeText(ProveedorActivity.this, ""+NombreProveedor, Toast.LENGTH_SHORT).show();
                     tvdireccionsucursalproveedor.setText(listaSucursalesProveedor.get(position).getDireccionSucursalProveedor());
                     btnAceptarBuscarProveedor.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -232,7 +225,6 @@ public class ProveedorActivity extends AppCompatActivity {
                 intent.putExtras(bundle4);
                 startActivity(intent);
                 finish();
-
             }
         });
 
@@ -251,7 +243,6 @@ public class ProveedorActivity extends AppCompatActivity {
                 }else if (rbCodigoProveedor.isChecked()){
                     etProveedor.setInputType(InputType.TYPE_CLASS_NUMBER);
                 }
-
             }
         });
 
@@ -513,14 +504,8 @@ public class ProveedorActivity extends AppCompatActivity {
 
                                          quitarTeclado(view);
                                          SucursalProveedor = listaSucursalesProveedor.get(position).getCodigoSucursalProveedor();
-
-                                         Toast.makeText(ProveedorActivity.this, ""+listaSucursalesProveedor.get(position).getCodigoSucursalProveedor(), Toast.LENGTH_SHORT).show();
-
                                          NombreProveedor = listaSucursalesProveedor.get(position).getNombreSucursalProveedor();
-                                         Toast.makeText(getApplicationContext(), NombreProveedor, Toast.LENGTH_SHORT).show();
-
                                          tvdireccionsucursalproveedor.setText(listaSucursalesProveedor.get(position).getDireccionSucursalProveedor());
-                                         Toast.makeText(ProveedorActivity.this, ""+NombreProveedor, Toast.LENGTH_SHORT).show();
 
                                          btnAceptarBuscarProveedor.setOnClickListener(new View.OnClickListener() {
                                              @Override
