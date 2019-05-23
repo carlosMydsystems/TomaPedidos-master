@@ -17,8 +17,6 @@ public class Product {
     public String ObservacionSeleccion;
     public String Stock;
 
-
-
     public Product(String productName, Double productPrice, String productImage,
                    String productIdArticulo, String unidadProducto, String tasaDescuento,
                    String presentacion, String equivalencia, String precioUni,

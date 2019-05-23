@@ -228,6 +228,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
         btnregistrafechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String moneda;
                 if (usuario.getMoneda().equals("1")){
                     moneda = " S/ ";
