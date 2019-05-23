@@ -49,7 +49,7 @@ public class ProveedorActivity extends AppCompatActivity {
     Button btnBuscarProveedor,btnAceptarBuscarProveedor;
     String tipoformapago,Index,cantidad,precio,almacen,id_pedido,url,TipodeConsulta = "NombreProveedor",
             validador,retorno,validadorRetornoFechaPactadaProveedor,direccionProveedor,nombreProveedor,
-            codProveedor,valida,NombreProveedor;
+            codProveedor,valida,NombreProveedor,SucursalProveedor;
     Usuario usuario;
     Clientes cliente;
 
@@ -92,8 +92,11 @@ public class ProveedorActivity extends AppCompatActivity {
         Index = getIntent().getStringExtra("Index");
         cantidad = getIntent().getStringExtra("Cantidad");
         precio = getIntent().getStringExtra("Precio");
+        SucursalProveedor = getIntent().getStringExtra("SucursalProveedor");
+        Toast.makeText(this, ""+SucursalProveedor, Toast.LENGTH_SHORT).show();
         codProveedor =  getIntent().getStringExtra("codProveedor");
         NombreProveedor =  getIntent().getStringExtra("NombreProveedor");
+        Toast.makeText(this, NombreProveedor, Toast.LENGTH_SHORT).show();
         Toast.makeText(this, NombreProveedor, Toast.LENGTH_SHORT).show();
         valida = getIntent().getStringExtra("valida");
 
@@ -136,9 +139,12 @@ public class ProveedorActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                    Toast.makeText(ProveedorActivity.this, "ingreso", Toast.LENGTH_SHORT).show();
                     quitarTeclado(view);
-                    listaSucursalesProveedor.get(0).setCodigoSucursalProveedor(listaSucursalesProveedor.get(position).getCodigoSucursalProveedor());
-                    listaSucursalesProveedor.get(0).setNombreSucursalProveedor(listaSucursalesProveedor.get(position).getNombreSucursalProveedor());
+                    SucursalProveedor =listaSucursalesProveedor.get(position).getCodigoSucursalProveedor();
+                    Toast.makeText(ProveedorActivity.this, "codigo"+listaSucursalesProveedor.get(position).getCodigoSucursalProveedor(), Toast.LENGTH_SHORT).show();
+                    NombreProveedor = listaSucursalesProveedor.get(position).getNombreSucursalProveedor();
+                    Toast.makeText(ProveedorActivity.this, ""+NombreProveedor, Toast.LENGTH_SHORT).show();
                     tvdireccionsucursalproveedor.setText(listaSucursalesProveedor.get(position).getDireccionSucursalProveedor());
                     btnAceptarBuscarProveedor.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -158,7 +164,8 @@ public class ProveedorActivity extends AppCompatActivity {
                             }else {
                                 intent.putExtra("codProveedor", listaProveedores.get(0).getCodProveedor());
                             }
-                            intent.putExtra("SucursalProveedor",listaSucursalesProveedor.get(0).getCodigoSucursalProveedor());
+                            intent.putExtra("SucursalProveedor",SucursalProveedor);
+                            intent.putExtra("NombreProveedor",NombreProveedor);
                             intent.putExtra("tvnombreproveedor", tvnombreproveedor.getText().toString());
                             intent.putExtra("tvdireccionproveedor", tvdireccionproveedor.getText().toString());
 
@@ -438,7 +445,6 @@ public class ProveedorActivity extends AppCompatActivity {
         listaSucursalesProveedor = new ArrayList<>();
         listaSucursalesProveedorStr = new ArrayList<>();
 
-
         url = ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_SUC_PROVEEDOR&variables=%27"+codProveedor+"%27";
 
@@ -497,7 +503,8 @@ public class ProveedorActivity extends AppCompatActivity {
 
                                     spsucursalproveedor.setAdapter(new SpinnerAdapter(getApplicationContext(),listaSucursalesProveedorStr));
 
-                                    listaSucursalesProveedor.get(0).setCodigoSucursalProveedor(listaSucursalesProveedor.get(0).getCodigoSucursalProveedor());
+                                    SucursalProveedor = listaSucursalesProveedor.get(0).getCodigoSucursalProveedor();
+
                                     tvdireccionsucursalproveedor.setText(listaSucursalesProveedor.get(0).getDireccionSucursalProveedor());
                                     spsucursalproveedor.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -505,8 +512,9 @@ public class ProveedorActivity extends AppCompatActivity {
                                      public void onItemSelected(AdapterView<?> parent, View view, final int position, long id) {
 
                                          quitarTeclado(view);
-                                         listaSucursalesProveedor.get(0).setCodigoSucursalProveedor(listaSucursalesProveedor.get(position).getCodigoSucursalProveedor());
+                                         SucursalProveedor = listaSucursalesProveedor.get(position).getCodigoSucursalProveedor();
 
+                                         Toast.makeText(ProveedorActivity.this, ""+listaSucursalesProveedor.get(position).getCodigoSucursalProveedor(), Toast.LENGTH_SHORT).show();
 
                                          NombreProveedor = listaSucursalesProveedor.get(position).getNombreSucursalProveedor();
                                          Toast.makeText(getApplicationContext(), NombreProveedor, Toast.LENGTH_SHORT).show();
@@ -528,7 +536,7 @@ public class ProveedorActivity extends AppCompatActivity {
                                                  intent.putExtra("id_pedido", id_pedido);
                                                  intent.putExtra("validador", "false");
                                                  intent.putExtra("codProveedor", proveedor.getCodProveedor());
-                                                 intent.putExtra("SucursalProveedor",listaSucursalesProveedor.get(0).getCodigoSucursalProveedor());
+                                                 intent.putExtra("SucursalProveedor",SucursalProveedor);
                                                  intent.putExtra("NombreProveedor",NombreProveedor);
                                                  intent.putExtra("tvnombreproveedor", tvnombreproveedor.getText().toString());
                                                  intent.putExtra("tvdireccionproveedor", tvdireccionproveedor.getText().toString());

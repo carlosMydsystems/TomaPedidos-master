@@ -27,7 +27,6 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -170,6 +169,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 intent.putExtra("valida", "valida");
                 intent.putExtra("codProveedor", codProveedor);
                 intent.putExtra("NombreProveedor", NombreProveedor);
+                intent.putExtra("SucursalProveedor", SucursalProveedor);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("listaproductoselegidos", listaproductoselegidos);
                 intent.putExtras(bundle);
@@ -254,6 +254,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                             "Suc Transportista\t: "  + SucursalProveedor+"-" + NombreProveedor+"\n" +
                             "F.Pactada \t: " + fechahabil + "\n" +
                             "Almacen \t: " + almacen + "\n" +
+                            "Tipo Documento \t: " + cliente.getDocumentoSeleccionado() + "\n" +
                             "Importe \t: "+ moneda + redondeado + "\n" +
                             "Items  \t\t\t: " + cantidad)
                         .setCancelable(false);
@@ -565,7 +566,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
                         if (response.equals("OK")){
 
-                            RegistrarPedido(id_pedido);
+                            //RegistrarPedido(id_pedido);
                         }else{
 
                             AlertDialog.Builder builder = new  AlertDialog.Builder(FechaPactadaActivity.this);
