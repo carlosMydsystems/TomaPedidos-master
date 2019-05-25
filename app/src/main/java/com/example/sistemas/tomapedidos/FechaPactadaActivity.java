@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -242,16 +243,16 @@ public class FechaPactadaActivity extends AppCompatActivity {
                         .toString() + "|"+ tvdireccion.getText().toString().replace(" ","%20");
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this)
-                        .setTitle("Fin del Pedido")
-                        .setMessage("Cliente \t: " + cliente.getCodCliente() + " - " + cliente.getNombre() +  "\n" +
-                            "Suc Cliente \t: "+listaClienteSucursal.get(0).getCodSucursal()+"-"+listaClienteSucursal.get(0).getNombreSucursal()+"\n" +
-                            "Transportista \t: " + tvnombreproveedor + "\n" +
-                            "Suc Transportista\t: "  + SucursalProveedor+"-" + NombreProveedor+"\n" +
-                            "F.Pactada \t: " + fechahabil + "\n" +
-                            "Almacen \t: " + almacen + "\n" +
-                            "Tipo Documento \t: " + cliente.getDocumentoSeleccionado() + "\n" +
-                            "Importe \t: "+ moneda + redondeado + "\n" +
-                            "Items  \t\t\t: " + cantidad)
+                        .setTitle("\t\t\t\t\t\t\tFin del Pedido")
+                        .setMessage(Html.fromHtml("<b>Cliente \t: </b>" + cliente.getCodCliente() + " - " + cliente.getNombre() +  "<br>" +
+                            "<b>Suc Cliente \t: </b>"+listaClienteSucursal.get(0).getCodSucursal()+"-"+listaClienteSucursal.get(0).getNombreSucursal()+"<br><br>" +
+                            "<b>Transportista \t: </b>" + tvnombreproveedor + "<br>" +
+                            "<b>Suc Transportista\t: </b>"  + SucursalProveedor+"-" + NombreProveedor+"<br><br>" +
+                            "<b>Fecha Pactada \t: </b>" + fechahabil + "<br>" +
+                            "<b>Almacen \t: </b>" + almacen + "<br><br>" +
+                            "<b>Tipo Documento \t: </b>" + cliente.getDocumentoSeleccionado() + "<br>" +
+                            "<b>Importe \t: </b>"+ moneda + redondeado + "<br>" +
+                            "<b>Items  \t\t\t: </b>" + cantidad))
                         .setCancelable(false);
                 builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
@@ -379,7 +380,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 error.printStackTrace();
             }
         });
-
         int socketTimeout = 30000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
@@ -561,7 +561,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
                         if (response.equals("OK")){
 
-                            //RegistrarPedido(id_pedido);
+                            RegistrarPedido(id_pedido);
                         }else{
 
                             AlertDialog.Builder builder = new  AlertDialog.Builder(FechaPactadaActivity.this);
