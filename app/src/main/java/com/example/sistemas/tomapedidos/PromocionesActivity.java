@@ -218,7 +218,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setPrecioDolares(jsonObject.getString("PRECIO_DOLARES"));
                                         promocion.setStkDisponible(jsonObject.getString("STK_DISPONIBLE"));
                                         promocion.setStkFisico(jsonObject.getString("STK_FISICO"));
-                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_BONIFICADA"));
+                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_PEDIDA"));
                                         promocion.setFactor(jsonObject.getString("FACTOR"));
                                         promocion.setFormaPromocion(jsonObject.getString("FORMA_PROMOCION"));
                                         promocion.setCodDocumento(jsonObject.getString("COD_DOCUMENTO"));
@@ -248,7 +248,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setPrecioDolares(jsonObject.getString("PRECIO_DOLARES"));
                                         promocion.setStkDisponible(jsonObject.getString("STK_DISPONIBLE"));
                                         promocion.setStkFisico(jsonObject.getString("STK_FISICO"));
-                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_BONIFICADA"));
+                                        promocion.setCantidadBonificada(jsonObject.getString("CANTIDAD_PEDIDA"));
                                         promocion.setFactor(jsonObject.getString("FACTOR"));
                                         promocion.setFormaPromocion(jsonObject.getString("FORMA_PROMOCION"));
                                         promocion.setCodDocumento(jsonObject.getString("COD_DOCUMENTO"));
@@ -367,6 +367,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                                 startActivity(intent);
                                                 finish();
+
                                             }
                                     }else {
 

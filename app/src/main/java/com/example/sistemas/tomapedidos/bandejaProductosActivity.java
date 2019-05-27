@@ -64,6 +64,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
         listaproductoselegidos = (ArrayList<Productos>) getIntent()
                 .getSerializableExtra("listaProductoselegidos");
         cliente = (Clientes)getIntent().getSerializableExtra("Cliente");   //
+        Toast.makeText(this, "cliente"+cliente.getDocumentoCliente(), Toast.LENGTH_SHORT).show();
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");    //
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");

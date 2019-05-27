@@ -551,6 +551,13 @@ public class FechaPactadaActivity extends AppCompatActivity {
     private void ActualizarProducto(String trama) {
 
         Integer cola=0;
+
+        final ProgressDialog progressDialog = new ProgressDialog(FechaPactadaActivity.this);
+        progressDialog.setMessage("... Enviando");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
         url =  ejecutaFuncionTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_REGISTRA_TRAMA_MOVIL&variables='"+trama+"'";
@@ -560,10 +567,12 @@ public class FechaPactadaActivity extends AppCompatActivity {
                     public void onResponse(String response) {
 
                         if (response.equals("OK")){
+                            //progressDialog.dismiss();
 
                             RegistrarPedido(id_pedido);
                         }else{
 
+                            progressDialog.dismiss();
                             AlertDialog.Builder builder = new  AlertDialog.Builder(FechaPactadaActivity.this);
                             builder.setTitle("Atención !");
                             builder.setMessage("Error"+response);
@@ -574,6 +583,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
                 error.printStackTrace();
             }
         });

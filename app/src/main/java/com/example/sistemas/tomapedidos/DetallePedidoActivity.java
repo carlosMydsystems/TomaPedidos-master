@@ -258,6 +258,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                         cliente.setCodFPago(jsonObject.getString("COD_FPAGO"));
                                         cliente.setDireccion(jsonObject.getString("DIRECCION"));
                                         cliente.setTipoDocumento(partesTrama[7]);
+                                        cliente.setDocumentoCliente("DOC_CLIENTE");
                                         usuario.setNombre(jsonObject.getString("VENDEDOR"));
                                         Index = index;
                                     }
@@ -268,6 +269,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                 intent.putExtra("validador", "true");
                                 intent.putExtra("Check", "Ok");
                                 intent.putExtra("Index", Index+"");
+
                                 intent.putExtra("id_pedido", listaproductoselegidos.get(0).getIdPedido());
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);

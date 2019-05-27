@@ -12,6 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -76,6 +78,7 @@ public class MostrarClienteActivity extends AppCompatActivity {
         opdoc = new ArrayList<>();
         tvRucDni.setText(cliente.getDocumentoCliente());
 
+        Toast.makeText(this, ""+cliente.getDocumentoCliente(), Toast.LENGTH_SHORT).show();
         if (cliente.getDocumentoCliente().length() == 11){
 
             opdoc.add("FACTURA");
