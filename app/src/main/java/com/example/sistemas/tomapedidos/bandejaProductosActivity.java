@@ -30,7 +30,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
 import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Dolares;
 import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Soles;
@@ -63,9 +62,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
         listaproductoselegidos = (ArrayList<Productos>) getIntent()
                 .getSerializableExtra("listaProductoselegidos");
-        cliente = (Clientes)getIntent().getSerializableExtra("Cliente");   //
-        Toast.makeText(this, "cliente"+cliente.getDocumentoCliente(), Toast.LENGTH_SHORT).show();
-        usuario = (Usuario)getIntent().getSerializableExtra("Usuario");    //
+        cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
+        usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         almacen =  getIntent().getStringExtra("Almacen");
         tipoformapago =  getIntent().getStringExtra("TipoPago");
         id_pedido = getIntent().getStringExtra("id_pedido");
@@ -73,16 +71,20 @@ public class bandejaProductosActivity extends AppCompatActivity {
         retorno = getIntent().getStringExtra("retorno");
         Index = getIntent().getStringExtra("Index");
         check = getIntent().getStringExtra("Check");
+
         if (ValidarBtnTerminar == null){
             ValidarBtnTerminar = "true";
         }else{
             ValidarBtnTerminar = getIntent().getStringExtra("ValidarBtnTerminar");
         }
+
         listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
+
         if (check!=null){
             EliminaPromocion();
             check = null;
         }
+
         valida = Boolean.valueOf(validador);
         listabandejaproductoselegidos = new ArrayList<>();
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
@@ -135,7 +137,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                         if (listaproductoselegidos.get(i).getObservacion().equals("S") || listaproductoselegidos.get(i).getObservacion().equals("T")) {
                             listabandejaproductoselegidos.add(listaproductoselegidos.get(i).getCodigo() + " - " +
-                                    listaproductoselegidos.get(i).getDescripcion() + "p - Cant: " + formateador.format(Double.valueOf(listaproductoselegidos.
+                                    listaproductoselegidos.get(i).getDescripcion() + "\np - Cant: " + formateador.format(Double.valueOf(listaproductoselegidos.
                                     get(i).getCantidad())) + "                                     Unidad: " +
                                     listaproductoselegidos.get(i).getUnidad() + "\nPrecio: "+Soles+" " + formateador.format((double) preciolista) +
                                     "                  Subtotal: "+Soles+" " + formateador.format((double) Aux));

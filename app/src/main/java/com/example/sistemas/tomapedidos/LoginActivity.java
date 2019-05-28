@@ -52,11 +52,15 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         if (validador) {
-            ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorDesaMovil.php?funcion=";
-            ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionDesaMovil.php?funcion=";
+
+            ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=";
+            ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=";
+
         }else{
+
             ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:"+puerto+"/oracle/ejecutaFuncionCursorTestMovil.php?funcion=";
             ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:"+puerto+"/oracle/ejecutaFuncionTestMovil.php?funcion=";
+
         }
 
         usuario = new Usuario();
@@ -87,23 +91,22 @@ public class LoginActivity extends AppCompatActivity {
         Mensaje = "";
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
-/*
+
         url =  ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"
                 +Contraseña_usuario.toUpperCase()+"|"+Imei+"'"; // se debe actalizar la URL
-
+/*
         url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"
         +Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085543023'"; // se debe actalizar la URL
 
         url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"
         +Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085551935'";357014075227793
 
-*/
 
         url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+
                 Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085551935'";
 
-
+*/
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
                     @Override

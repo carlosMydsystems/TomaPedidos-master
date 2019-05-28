@@ -4,7 +4,7 @@ public class Utilitario {
 
     public static String Soles = "S/"; // Cambio de moneda en Soles
     public static String Dolares = "USD";  // Cambio de moneda en Dólares
-    public static String Version = "Versión 1.0.8";  // Cambio de moneda en Dólares
+    public static String Version = "Versión 1.0.9";  // Cambio de moneda en Dólares
     public static String webServiceCursormovil =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=";
     public static String webServicemovil =  "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=";
 

@@ -542,10 +542,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
-        if (cola<1) {
-            cola++;
-            requestQueue.add(stringRequest);
-        }
+        requestQueue.add(stringRequest);
+
     }
 
     private void ActualizarProducto(String trama) {
@@ -568,7 +566,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
 
                         if (response.equals("OK")){
                             //progressDialog.dismiss();
-
                             RegistrarPedido(id_pedido);
                         }else{
 
@@ -591,10 +588,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
-        if (cola<1) {
-            cola++;
-            requestQueue.add(stringRequest);
-        }
+        requestQueue.add(stringRequest);
     }
 
     private void Registro() {

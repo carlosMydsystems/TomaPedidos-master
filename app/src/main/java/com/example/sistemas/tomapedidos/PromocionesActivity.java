@@ -210,11 +210,13 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setFlgGraba(jsonObject.getString("FLG_GRABA"));
                                         promocion.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
                                         promocion.setCodPresentacion(jsonObject.getString("COD_PRESENTACION"));
+
                                         if (usuario.getMoneda().equals("1")){
                                             promocion.setPrecioSoles(jsonObject.getString("PRECIO_SOLES"));
                                         }else{
                                             promocion.setPrecioSoles(jsonObject.getString("PRECIO_DOLARES"));
                                         }
+
                                         promocion.setPrecioDolares(jsonObject.getString("PRECIO_DOLARES"));
                                         promocion.setStkDisponible(jsonObject.getString("STK_DISPONIBLE"));
                                         promocion.setStkFisico(jsonObject.getString("STK_FISICO"));
@@ -227,6 +229,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setPrecioRegularDolares(jsonObject.getString("PRECIO_REGULAR_DOLARES"));
                                         promocion.setValido(jsonObject.getString("VALIDO"));
                                         promocion.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
+
                                         listaPromociones.add(promocion);
 
                                     }else if(jsonObject.getString("OPCION_SELECCION").equals("T")){
@@ -240,11 +243,13 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setFlgGraba(jsonObject.getString("FLG_GRABA"));
                                         promocion.setTasaDescuento(jsonObject.getString("TASA_DESCUENTO"));
                                         promocion.setCodPresentacion(jsonObject.getString("COD_PRESENTACION"));
+
                                         if (usuario.getMoneda().equals("1")){
                                             promocion.setPrecioSoles(jsonObject.getString("PRECIO_SOLES"));
                                         }else{
                                             promocion.setPrecioSoles(jsonObject.getString("PRECIO_DOLARES"));
                                         }
+
                                         promocion.setPrecioDolares(jsonObject.getString("PRECIO_DOLARES"));
                                         promocion.setStkDisponible(jsonObject.getString("STK_DISPONIBLE"));
                                         promocion.setStkFisico(jsonObject.getString("STK_FISICO"));
@@ -258,6 +263,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         promocion.setValido(jsonObject.getString("VALIDO"));
                                         promocion.setEquivalencia(jsonObject.getString("EQUIVALENCIA"));
                                         listaPromocionesTipoT.add(promocion);
+
                                     }
                                 }
 

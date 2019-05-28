@@ -231,7 +231,9 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                                 productos.setPrecioAcumulado(""+precioBigTotal);
 
                                             }else{
+
                                                 productos.setPrecioAcumulado("0.0");
+
                                             }
 
                                             listaproductoselegidos.add(productos);
@@ -241,7 +243,9 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                         }else {
 
                                             index = productos.getIndice() ;
+
                                         }
+
                                         Index = index;
 
                                     }else {
@@ -258,7 +262,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                         cliente.setCodFPago(jsonObject.getString("COD_FPAGO"));
                                         cliente.setDireccion(jsonObject.getString("DIRECCION"));
                                         cliente.setTipoDocumento(partesTrama[7]);
-                                        cliente.setDocumentoCliente("DOC_CLIENTE");
+                                        cliente.setDocumentoCliente(jsonObject.getString("DOC_CLIENTE"));
                                         usuario.setNombre(jsonObject.getString("VENDEDOR"));
                                         Index = index;
                                     }
