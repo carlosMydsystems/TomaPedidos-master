@@ -404,6 +404,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                             startActivity(intent);
                                             finish();
+
                                         }
                                     }
                                 });

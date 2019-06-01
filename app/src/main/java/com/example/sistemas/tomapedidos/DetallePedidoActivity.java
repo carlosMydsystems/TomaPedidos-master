@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -263,6 +265,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                         cliente.setDireccion(jsonObject.getString("DIRECCION"));
                                         cliente.setTipoDocumento(partesTrama[7]);
                                         cliente.setDocumentoCliente(jsonObject.getString("DOC_CLIENTE"));
+                                        Toast.makeText(DetallePedidoActivity.this, ""+cliente.getDocumentoCliente(), Toast.LENGTH_SHORT).show();
                                         usuario.setNombre(jsonObject.getString("VENDEDOR"));
                                         Index = index;
                                     }

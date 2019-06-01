@@ -216,7 +216,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     builder.setNegativeButton("Aceptar",null);
                                     builder.create().show();
 
-                                }else {*/
+                                }else {
+*/
                                     VerificaFecha(trama);
                                 //}
                             }
@@ -447,7 +448,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url =  ejecutaFuncionCursorTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"'";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -522,6 +523,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                 }
                             }else {
 
+                                progressDialog.dismiss();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
                                 builder.setMessage("No se llego a encontrar el registro")
                                         .setCancelable(false)
@@ -543,7 +545,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
-
     }
 
     private void ActualizarProducto(String trama) {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
@@ -37,7 +38,6 @@ import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Soles;
 
 public class DetalleProductoPrecioActivity extends AppCompatActivity {
 
-
     Usuario usuario;
     Clientes cliente;
     Productos producto;
@@ -47,13 +47,12 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
     ArrayList<DctoxVolumen> listaDctoxVolumen;
     ArrayList<String> listaDsctoxVolumenStr;
     ImageButton ibVolverDetalleProductoPrecio;
-    TextView tvResumenUnidades;
+    TextView tvResumenUnidades , tvUnidadDcto , tvPrecioDscto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalle_producto_precio);
-
 
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
         cliente = (Clientes) getIntent().getSerializableExtra("Cliente");
@@ -62,15 +61,20 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
         trama = usuario.getLugar()+"|"+producto.getCodigo()+"|"+ cliente.getCodCliente()+"|"+producto.getPrecio();
         lvPrecioxVolumen = findViewById(R.id.lvPrecioxVolumen);
         tvResumenUnidades = findViewById(R.id.tvResumenUnidades);
+        tvUnidadDcto = findViewById(R.id.tvUnidadDcto);
+        tvPrecioDscto = findViewById(R.id.tvPrecioDscto);
 
         if (usuario.getMoneda().equals("1")){
 
-            StrAux = "DESCRIPCION : "+ producto.getDescripcion()+"\n UNIDAD : " + producto.getUnidad()+"\t\t\t\t\t PRECIO : "+Soles+" "+producto.getPrecio();
+            StrAux = "DESCRIPCION : "+ producto.getDescripcion();
+            tvUnidadDcto.setText("UNIDAD : " + producto.getUnidad());
+            tvPrecioDscto.setText("PRECIO : "+Soles+" "+producto.getPrecio());
         }else {
 
-            StrAux = "DESCRIPCION : "+ producto.getDescripcion()+"\n UNIDAD : " + producto.getUnidad()+"\t\t\t\t\t PRECIO : "+Dolares+" "+producto.getPrecio();
+            StrAux = "DESCRIPCION : "+ producto.getDescripcion();
+            tvUnidadDcto.setText("UNIDAD : " + producto.getUnidad());
+            tvPrecioDscto.setText("PRECIO : "+Dolares+" "+producto.getPrecio());
         }
-
 
         tvResumenUnidades.setText(StrAux);
 
@@ -129,7 +133,6 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
                                                 " \t\t\t\tHasta :\t" + formatoDecimal(dctoxVolumen.getHasta()) +"\n"+
                                                 "\t"+" Dscto : "+formatoDecimal(dctoxVolumen.getDescuento()) +
                                                 "%  \t\t\t - \t\t\t  Precio : "+Soles+" " + formatoDecimal(dctoxVolumen.getPrecio()));
-
                                     }else {
                                         listaDsctoxVolumenStr.add("\t" + " Desde :\t" + formatoDecimal(dctoxVolumen.getDesde()) +
                                                 " \t\t\t\tHasta :\t" + formatoDecimal(dctoxVolumen.getHasta()) + "\n" +
@@ -137,7 +140,6 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
                                                 "%  \t\t\t - \t\t\t  Precio : " + Dolares + " " + formatoDecimal(dctoxVolumen.getPrecio()));
                                     }
                                 }
-
                                 ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
                                         CustomListAdapter(DetalleProductoPrecioActivity.this, R.layout.custom_list, listaDsctoxVolumenStr);
                                 lvPrecioxVolumen.setAdapter(listAdapter);
@@ -171,7 +173,6 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
-
     }
 
     private String formatoDecimal(String valor) {

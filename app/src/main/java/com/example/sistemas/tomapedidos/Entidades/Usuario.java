@@ -14,7 +14,6 @@ public class Usuario implements Serializable {
     private String codTienda;
     private String lugar;
 
-
     public Usuario(String nombre, String user, String fechaActual, String tipoCambio, String moneda,
                    String codVendedor, String codAlmacen, String codTienda, String lugar) {
 

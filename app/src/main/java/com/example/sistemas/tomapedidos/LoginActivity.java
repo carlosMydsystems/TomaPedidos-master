@@ -3,6 +3,7 @@ package com.example.sistemas.tomapedidos;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -34,15 +35,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.PHONESTATS;
-import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.ambiente;
-import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.puerto;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Version;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.VersionCode;
 
 public class LoginActivity extends AppCompatActivity {
 
     EditText etusuario, etclave;
     Button btnlogeo;
     Usuario usuario;
-    String url, Mensaje = "",imei = "";
+    String url, Mensaje = "",imei = "",puerto = "8494", versionName;
     boolean validador = true;
     TextView tvVersion;
     public static String ejecutaFuncionCursorTestMovil;
@@ -53,11 +54,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        if (validador) {
 
-        /** Permite el cambio de un ambiente de pruebas a uno de produccion */
+            ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=";
+            ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=";
 
-        ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:"+puerto+"/oracle/ejecutaFuncionCursor"+ambiente+"Movil.php?funcion=";
-        ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:"+puerto+"/oracle/ejecutaFuncion"+ambiente+"Movil.php?funcion=";
+        }else{
+
+            ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:"+puerto+"/oracle/ejecutaFuncionCursorTestMovil.php?funcion=";
+            ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:"+puerto+"/oracle/ejecutaFuncionTestMovil.php?funcion=";
+        }
 
         usuario = new Usuario();
         etusuario = findViewById(R.id.etUsuario);
@@ -71,15 +77,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
 
             if (etusuario.getText().equals("") || etclave.getText().equals("")) {
-
-
-
-            } else {
-
-                    verificarUsuario(etusuario.getText().toString().replace(" ", "").toUpperCase()
-                            , etclave.getText().toString().replace(" ", "").toUpperCase(),imei);
-
-                }
+            } else { verificarUsuario(etusuario.getText().toString().replace(" ", "").toUpperCase()
+                        , etclave.getText().toString().replace(" ", "").toUpperCase(),imei);
+            }
             }
         });
     }
@@ -98,10 +98,17 @@ public class LoginActivity extends AppCompatActivity {
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"
                 +Contraseña_usuario.toUpperCase()+"|"+Imei+"'"; // se debe actalizar la URL
 /*
+        url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"
+        +Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085543023'"; // se debe actalizar la URL
+
+        url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"
+        +Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085551935'";357014075227793
+
+
         url =  ejecutaFuncionCursorTestMovil + "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+
                 Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085551935'";
-*/
 
+*/
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
                     @Override

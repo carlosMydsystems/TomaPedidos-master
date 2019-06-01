@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -51,6 +54,7 @@ public class MostrarConsultaActivity extends AppCompatActivity {
     ConsultaPromocion consultaPromocion;
     ArrayList<String> listaPromocionesStr;
     Clientes clientes;
+    TextView textView30,tvTituloPromocion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +68,8 @@ public class MostrarConsultaActivity extends AppCompatActivity {
         position = getIntent().getStringExtra("position");
         lvMuestraPromociones = findViewById(R.id.lvMuestraPromociones);
         imgPromocionElegida = findViewById(R.id.imgPromocionElegida);
+        textView30 = findViewById(R.id.textView30);
+        tvTituloPromocion = findViewById(R.id.tvTituloPromocion);
         imgPromocionElegida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +87,8 @@ public class MostrarConsultaActivity extends AppCompatActivity {
                 finish();
             }
         });
+        textView30.setText("Promoción :"+listaPromocionesObjetos.get(Integer.valueOf(position)).getNroPromocion());
+        tvTituloPromocion.setText("POR "+listaPromocionesObjetos.get(Integer.valueOf(position)).getFormaPromocion()+" MÍNIMA : "+ listaPromocionesObjetos.get(Integer.valueOf(position)).getImportecantidad());
 
         listaPromociones = new ArrayList<>();
         BuscarDetallePromocion(listaPromocionesObjetos.get(Integer.valueOf(position)).getNroPromocion());
@@ -116,11 +124,26 @@ public class MostrarConsultaActivity extends AppCompatActivity {
 
             if(items.get(position) != null )
             {
-                text.setTextColor(Color.BLACK);
-                text.setText(items.get(position));
-                text.setTextSize(15);
-                int color = Color.argb(10, 0, 20, 255);
-                text.setBackgroundColor(color);
+
+
+
+                if (String.valueOf(items.get(position).charAt(0)).equals("*")){
+
+                    text.setTextColor(Color.RED);
+                    text.setText(items.get(position));
+                    text.setTextSize(15);
+                    int color = Color.argb(70,255, 255, 0);
+                    text.setBackgroundColor(color);
+
+                }else {
+
+
+                    text.setTextColor(Color.BLACK);
+                    text.setText(items.get(position));
+                    text.setTextSize(15);
+                    int color = Color.argb(10, 0, 20, 255);
+                    text.setBackgroundColor(color);
+                }
             }
             return mView;
         }
@@ -205,19 +228,26 @@ public class MostrarConsultaActivity extends AppCompatActivity {
 
                                         if (consultaPromocion.getFlgRegalo().trim().toString().equals("S")) {
 
-                                            listaPromocionesStr.add(consultaPromocion.getCodArticulo() + "  -  " + consultaPromocion.getDescripcion() + "\n"
+                                            listaPromocionesStr.add("*"+consultaPromocion.getCodArticulo() + "  -  " + consultaPromocion.getDescripcion() + "\n"
                                                     + "p - MARCA\t: " + consultaPromocion.getDesMarca() + "\t\t\t\tUNIDAD : " + consultaPromocion.getUndVenta() + "\n"
                                                     + "CANTIDAD \t : " + consultaPromocion.getCantidad());
                                         }else{
 
                                             listaPromocionesStr.add(consultaPromocion.getCodArticulo() + "  -  " + consultaPromocion.getDescripcion() + "\n"
-                                                    + "MARCA\t: " + consultaPromocion.getDesMarca() + "\t\t\t\tUNIDAD : " + consultaPromocion.getUndVenta() + "\n"
-                                                    + "CANTIDAD \t : " + consultaPromocion.getCantidad());
+                                                    + "MARCA\t: " + consultaPromocion.getDesMarca() + "\t\t\t\tUNIDAD : " + consultaPromocion.getUndVenta());
                                         }
                                     }
                                     progressDialog.dismiss();
+                                    /*
+
                                     ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
                                             CustomListAdapter(MostrarConsultaActivity.this, R.layout.custom_list, listaPromocionesStr);
+
+                                    */
+
+                                    CustomListAdapter1 listAdapter = new CustomListAdapter1(
+                                            MostrarConsultaActivity.this, R.layout.custom_list, listaPromocionesStr);
+
                                     lvMuestraPromociones.setAdapter(listAdapter);
                                 }
                             }else {

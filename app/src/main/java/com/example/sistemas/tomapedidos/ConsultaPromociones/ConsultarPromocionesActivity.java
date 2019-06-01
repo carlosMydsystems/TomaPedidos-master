@@ -152,7 +152,7 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
 
                                             listaPromocionesStr.add(consultaPromocion.getNroPromocion() + "  -  " + consultaPromocion.getGlosa()+"\n"
                                             +  "VALIDO DEL\t: " + consultaPromocion.getFechaEmision() +"\t\tAL\t\t"+ consultaPromocion.getFechaFinVigencia()+"\n"
-                                            + "PROMOCION POR\t" + consultaPromocion.getFormaPromocion()+"\t\t\t\t\tMINIMO "+ consultaPromocion.getImportecantidad());
+                                            + "PROMOCION POR\t" + consultaPromocion.getFormaPromocion()+"\t\t\t\tMINIMO "+ consultaPromocion.getImportecantidad());
                                             listaCodigosPromociones.add(consultaPromocion.getNroPromocion());
                                     }
 
