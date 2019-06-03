@@ -439,16 +439,15 @@ public class FechaPactadaActivity extends AppCompatActivity {
     private void RegistrarPedido(String id_pedido) {
 
         Integer cola=0;
-
-        final ProgressDialog progressDialog = new ProgressDialog(FechaPactadaActivity.this);
-        progressDialog.setMessage("... Enviando");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
+        final ProgressDialog progressDialog1 = new ProgressDialog(FechaPactadaActivity.this);
+        progressDialog1.setMessage("... Enviando");
+        progressDialog1.setCancelable(false);
+        progressDialog1.show();
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url =  ejecutaFuncionCursorTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_GENERA_PEDIDO&variables='"+id_pedido+"'";
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
@@ -463,7 +462,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                             JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
                             Boolean condicion = false,error = false;
 
-                            progressDialog.dismiss();
+                            progressDialog1.dismiss();
 
                             if (success){
 
@@ -488,13 +487,19 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                         error = false;
                                     }
                                 }
-                                if (error) {
+                                    if (error) {
 
+                                    progressDialog1.dismiss();
                                     AlertDialog.Builder dialog = new AlertDialog.Builder(
                                             FechaPactadaActivity.this);
                                     dialog.setCancelable(false);
                                     dialog.setMessage(Mensaje)
-                                            .setNegativeButton("Regresar", null)
+                                            .setNegativeButton("Aceptar", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    progressDialog1.dismiss();
+                                                }
+                                            })
                                             .create()
                                             .show();
                                 }else{
@@ -522,12 +527,16 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                                     .show();
                                 }
                             }else {
-
-                                progressDialog.dismiss();
+                                progressDialog1.dismiss();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
                                 builder.setMessage("No se llego a encontrar el registro")
                                         .setCancelable(false)
-                                        .setNegativeButton("Aceptar",null)
+                                        .setNegativeButton("Aceptar", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                progressDialog1.dismiss();
+                                            }
+                                        })
                                         .create()
                                         .show();
                             }
@@ -566,7 +575,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
                     public void onResponse(String response) {
 
                         if (response.equals("OK")){
-                            //progressDialog.dismiss();
+                            progressDialog.dismiss();
+                            //btnregistrafechapactada.setVisibility(View.GONE);
                             RegistrarPedido(id_pedido);
                         }else{
 

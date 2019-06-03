@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.icu.math.BigDecimal;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -244,47 +247,68 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
                 if (listaproductoselegidos.size()!=0){
 
-                    for (int i =0 ; i < listaproductoselegidos.size();i++){
+                    if (etproducto.getText().toString().equals("")) {
 
-                        if( etproducto.getText().toString().equals(listaproductoselegidos.get(i).getCodigo())){
-                            verficador = true;
-                            posicion = i;
-                        }
-                    }
-                    if( verficador){
-                        AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
-                                .setCancelable(false)
-                                .setMessage("EL Producto "+listaproductoselegidos.get(posicion).getCodigo()+" ya se encuentra registrado");
-                        builder.setCancelable(false)
-                                .setPositiveButton("Aceptar",null)
-                                .create()
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this);
+                        builder.setTitle("Atención !");
+                        builder.setMessage("Por favor ingrese una cantidad valida");
+                        builder.setCancelable(false);
+                        builder.setNegativeButton("Aceptar",null);
+                        builder.create()
                                 .show();
-
                         btnbuscarProducto.setVisibility(View.VISIBLE);
                         btnregresarproducto.setVisibility(View.VISIBLE);
-                        etproducto.setText("");
-                        ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
-                                CustomListAdapter(BuscarProductoActivity.this, R.layout.custom_list, listaProducto);
-                        listAdapter.clear();
-                        lvProducto.setAdapter(listAdapter);
 
-                    }else{
-                        if (etproducto.getText().toString().equals("")) {
+                    }else {
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this);
-                            builder.setTitle("Atención !");
-                            builder.setMessage("Por favor ingrese una cantidad valida");
-                            builder.setCancelable(false);
-                            builder.setNegativeButton("Aceptar",null);
-                            builder.create()
+                        if (Tipobusqueda.equals("Codigo")) {
+
+                            for (int i = 0; i < listaproductoselegidos.size(); i++) {
+
+                                etproducto.setText(String.format("%06d", Integer.valueOf(etproducto.getText().toString())));
+                                Toast.makeText(BuscarProductoActivity.this, "" + etproducto.getText(), Toast.LENGTH_SHORT).show();
+                                if (etproducto.getText().toString().equals(listaproductoselegidos.get(i).getCodigo())) {
+
+                                    verficador = true;
+                                    posicion = i;
+
+                                }
+                            }
+                        }
+
+                        if (verficador) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this)
+                                    .setCancelable(false)
+                                    .setMessage("EL Producto " + listaproductoselegidos.get(posicion).getCodigo() + " ya se encuentra registrado");
+                            builder.setCancelable(false)
+                                    .setPositiveButton("Aceptar", null)
+                                    .create()
                                     .show();
+
                             btnbuscarProducto.setVisibility(View.VISIBLE);
                             btnregresarproducto.setVisibility(View.VISIBLE);
+                            etproducto.setText("");
+                            ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
+                                    CustomListAdapter(BuscarProductoActivity.this, R.layout.custom_list, listaProducto);
+                            listAdapter.clear();
+                            lvProducto.setAdapter(listAdapter);
 
-                        }else {
+                        } else {
+                            if (etproducto.getText().toString().equals("")) {
 
-                            buscarproducto(etproducto.getText().toString().replace(" ", ""), Tipobusqueda, almacen);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this);
+                                builder.setTitle("Atención !");
+                                builder.setMessage("Por favor ingrese una cantidad valida");
+                                builder.setCancelable(false);
+                                builder.setNegativeButton("Aceptar", null);
+                                builder.create()
+                                        .show();
+                                btnbuscarProducto.setVisibility(View.VISIBLE);
+                                btnregresarproducto.setVisibility(View.VISIBLE);
 
+                            } else {
+                                buscarproducto(etproducto.getText().toString().replace(" ", ""), Tipobusqueda, almacen);
+                            }
                         }
                     }
                 }else{
@@ -300,17 +324,15 @@ public class BuscarProductoActivity extends AppCompatActivity {
                                 .show();
                         btnbuscarProducto.setVisibility(View.VISIBLE);
                         btnregresarproducto.setVisibility(View.VISIBLE);
-
                     }else {
-
                         buscarproducto(etproducto.getText().toString().replace(" ", ""), Tipobusqueda, almacen);
-
                     }
                 }
             }
         });
 
         lvProducto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            Boolean Valid = true;
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -318,30 +340,69 @@ public class BuscarProductoActivity extends AppCompatActivity {
                 cliente = new Clientes();
                 cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
 
-                Intent intent =  new Intent(BuscarProductoActivity.this,DetalleProductoActivity.class);
-                intent.putExtra("TipoPago",tipoPago);
-                intent.putExtra("Almacen",almacen);
-                intent.putExtra("id_pedido",id_pedido);
-                intent.putExtra("Index",Index);
+                // Verificar codigo duplicado
 
-                Bundle bundle = new Bundle();
                 producto =  listaProductos.get(position);
-                bundle.putSerializable("Producto",producto);
-                intent.putExtras(bundle);
-                Bundle bundle1 = new Bundle();
-                bundle1.putSerializable("Cliente",cliente);
-                intent.putExtras(bundle1);
-                Bundle bundle2 = new Bundle();
-                bundle2.putSerializable("listaproductoselegidos",listaproductoselegidos);
-                intent.putExtras(bundle2);
-                Bundle bundle3 = new Bundle();
-                bundle3.putSerializable("Usuario",usuario);
-                intent.putExtras(bundle3);
-                Bundle bundle4 = new Bundle();
-                bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                intent.putExtras(bundle4);
-                startActivity(intent);
-                finish();
+
+
+                for (int i =0 ; i < listaproductoselegidos.size();i++) {
+
+                    //etproducto.setText(String.format("%06d", Integer.valueOf(etproducto.getText().toString())));
+
+                    if (producto.getCodigo().equals(listaproductoselegidos.get(i).getCodigo())){
+
+                        Valid = false;
+                    }
+
+                /*
+
+                    if( etproducto.getText().toString().equals(listaproductoselegidos.get(i).getCodigo())){
+                        verficador = true;
+                        posicion = i;
+                    }
+
+                */
+
+                }
+
+                if (Valid) {
+
+                    Intent intent = new Intent(BuscarProductoActivity.this, DetalleProductoActivity.class);
+                    intent.putExtra("TipoPago", tipoPago);
+                    intent.putExtra("Almacen", almacen);
+                    intent.putExtra("id_pedido", id_pedido);
+                    intent.putExtra("Index", Index);
+
+                    Bundle bundle = new Bundle();
+
+                    bundle.putSerializable("Producto", producto);
+                    intent.putExtras(bundle);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("Cliente", cliente);
+                    intent.putExtras(bundle1);
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putSerializable("listaproductoselegidos", listaproductoselegidos);
+                    intent.putExtras(bundle2);
+                    Bundle bundle3 = new Bundle();
+                    bundle3.putSerializable("Usuario", usuario);
+                    intent.putExtras(bundle3);
+                    Bundle bundle4 = new Bundle();
+                    bundle4.putSerializable("listaClienteSucursal", listaClienteSucursal);
+                    intent.putExtras(bundle4);
+                    startActivity(intent);
+                    finish();
+                }else {
+
+                    lvProducto.setAdapter(null);
+                    Valid =true;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoActivity.this);
+                    builder.setTitle("Atención ...!");
+                    builder.setMessage("El Articulo ya se encuentra registrado. Por favor ingrese un nuevo articulo");
+                    builder.setCancelable(false);
+                    builder.setNegativeButton("Aceptar",null);
+                    builder.create().show();
+
+                }
             }
         });
 
@@ -368,6 +429,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
          }
         });
     }
+
 
     private void buscarproducto(String numero, String tipoConsulta,String alma) {
         progressDialog = new ProgressDialog(BuscarProductoActivity.this);
@@ -454,6 +516,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
 
                                         AlertDialog.Builder dialog = new AlertDialog.Builder(
                                                 BuscarProductoActivity.this);
+                                        dialog.setCancelable(false);
                                         dialog.setMessage(Mensaje)
                                                 .setNegativeButton("Regresar", null)
                                                 .create()
@@ -481,7 +544,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
                                     // Se hace un llamado al adaptador personalizado asociado al SML custom_list
 
                                         if (listaProductos.size()<=1){
-
 
                                             producto = new Productos();
                                             cliente = new Clientes();

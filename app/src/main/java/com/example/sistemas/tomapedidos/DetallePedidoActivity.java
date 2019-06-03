@@ -265,6 +265,16 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                         cliente.setDireccion(jsonObject.getString("DIRECCION"));
                                         cliente.setTipoDocumento(partesTrama[7]);
                                         cliente.setDocumentoCliente(jsonObject.getString("DOC_CLIENTE"));
+                                        if (cliente.getTipoDocumento().equals("FAC")){
+
+                                            cliente.setDocumentoSeleccionado("FACTURA");
+
+                                        }else if (cliente.getTipoDocumento().equals("BOL")){
+
+                                            cliente.setDocumentoSeleccionado("BOLETA");
+
+                                        }
+
                                         Toast.makeText(DetallePedidoActivity.this, ""+cliente.getDocumentoCliente(), Toast.LENGTH_SHORT).show();
                                         usuario.setNombre(jsonObject.getString("VENDEDOR"));
                                         Index = index;
