@@ -7,14 +7,24 @@ public class Pedidos implements Serializable {
     private String idPedido;
     private String cliente;
     private String fecha;
+    private String sucursalCliente;
 
-    public Pedidos(String idPedido, String cliente, String fecha) {
+    public Pedidos(String idPedido, String cliente, String fecha, String sucursalCliente) {
         this.idPedido = idPedido;
         this.cliente = cliente;
         this.fecha = fecha;
+        this.sucursalCliente = sucursalCliente;
     }
 
     public Pedidos() {
+    }
+
+    public String getSucursalCliente() {
+        return sucursalCliente;
+    }
+
+    public void setSucursalCliente(String sucursalCliente) {
+        this.sucursalCliente = sucursalCliente;
     }
 
     public String getIdPedido() {
