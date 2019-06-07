@@ -49,6 +49,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
     Clientes cliente;
     ArrayList<ClienteSucursal> listaClienteSucursal;
     ClienteSucursal clienteSucursal;
+    Boolean  auxBool;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,13 +69,13 @@ public class DetallePedidoActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(DetallePedidoActivity.this,MainActivity.class);
                 intent.putExtra("userId",userId);
+
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Usuario",usuario);
                 intent.putExtras(bundle);
 
                 startActivity(intent);
                 finish();
-
             }
         });
     }
@@ -120,42 +121,44 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                             "\n" + "Fecha \t\t: " + pedidos.getFecha());
                                     listaPedidos.add(pedidos);
                                 }
-
+                                auxBool = true;
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(DetallePedidoActivity.this,
                                         android.R.layout.simple_list_item_1, android.R.id.text1,lista);
                                 lvPendientes.setAdapter(adapter);
                                 lvPendientes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        String idPedido = listaPedidos.get(position).getIdPedido();
 
-                                        final ProgressDialog progressDialog =  new ProgressDialog(DetallePedidoActivity.this);
-                                        progressDialog.setMessage("...cargando");
-                                        progressDialog.setCancelable(false);
-                                        progressDialog.create();
-                                        progressDialog.show();
+                                        if (auxBool) {
+                                            auxBool = false;
+                                            final ProgressDialog progressDialog = new ProgressDialog(DetallePedidoActivity.this);
+                                            progressDialog.setMessage("...cargando");
+                                            progressDialog.setCancelable(false);
+                                            progressDialog.create();
+                                            progressDialog.show();
 
-                                        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+                                            String idPedido = listaPedidos.get(position).getIdPedido();
+                                            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
-                                        url = ejecutaFuncionCursorTestMovil +
-                                                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS_TRAMA&variables='"+idPedido+"'";
+                                            url = ejecutaFuncionCursorTestMovil +
+                                                    "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS_TRAMA&variables='" + idPedido + "'";
 
-                                        listaproductoselegidos = new ArrayList<>();
+                                            listaproductoselegidos = new ArrayList<>();
 
-                                        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                                                new Response.Listener<String>() {
-                                                    @Override
-                                                    public void onResponse(String response) {
+                                            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                                                    new Response.Listener<String>() {
+                                                        @Override
+                                                        public void onResponse(String response) {
 
                                                         try {
-                                                            JSONObject jsonObject=new JSONObject(response);
+                                                            JSONObject jsonObject = new JSONObject(response);
                                                             boolean success = jsonObject.getBoolean("success");
                                                             JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
 
                                                             listaPedidos = new ArrayList<>();
-                                                            if (success){
+                                                            if (success) {
 
-                                                                for(int i=0;i<jsonArray.length();i++) {
+                                                                for (int i = 0; i < jsonArray.length(); i++) {
                                                                     productos = new Productos();
                                                                     jsonObject = jsonArray.getJSONObject(i);
                                                                     String trama = jsonObject.getString("TRAMA");
@@ -168,7 +171,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
 
                                                                     //-------------------------------------------
 
-                                                                    if (productos.getTipoTupla().equals("D")){
+                                                                    if (productos.getTipoTupla().equals("D")) {
 
                                                                         productos.setIndice(Integer.valueOf(partesTrama[2]));
                                                                         productos.setCantidad(partesTrama[3]);
@@ -178,9 +181,9 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                                                         productos.setNumPromocion(partesTrama[7]);
                                                                         productos.setPresentacion(partesTrama[8]);
                                                                         productos.setEquivalencia(partesTrama[9]);
-                                                                        if (partesTrama[10].equals("N")){
+                                                                        if (partesTrama[10].equals("N")) {
 
-                                                                        }else{
+                                                                        } else {
                                                                             productos.setObservacion(partesTrama[10]);
                                                                         }
 
@@ -191,19 +194,19 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                                                         productos.setDescripcion(partesArticulo[0]);
                                                                         productos.setUnidad(partesArticulo[2]);
                                                                         Double precioAcumulado = Double.valueOf(productos.
-                                                                                getPrecio())* Double.valueOf(productos.getCantidad());
-                                                                        if (partesTrama[10].equals("N")){
+                                                                                getPrecio()) * Double.valueOf(productos.getCantidad());
+                                                                        if (partesTrama[10].equals("N")) {
 
                                                                             BigDecimal precioBig1 = new BigDecimal(productos.getPrecio());
                                                                             precioBig1 = precioBig1.setScale(2, RoundingMode.HALF_EVEN);
-                                                                            Double Descuento = (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO"))/100  );
+                                                                            Double Descuento = (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO")) / 100);
                                                                             Double precioDouble = Double.valueOf(precioBig1.toString())
-                                                                                    * Descuento *  Double.valueOf(productos.getCantidad().toString());
+                                                                                    * Descuento * Double.valueOf(productos.getCantidad().toString());
                                                                             BigDecimal precioBigTotal = new BigDecimal(precioDouble.toString());
-                                                                            precioBigTotal = precioBigTotal.setScale(2,RoundingMode.HALF_EVEN);
-                                                                            productos.setPrecioAcumulado(""+precioBigTotal);
+                                                                            precioBigTotal = precioBigTotal.setScale(2, RoundingMode.HALF_EVEN);
+                                                                            productos.setPrecioAcumulado("" + precioBigTotal);
 
-                                                                        }else{
+                                                                        } else {
 
                                                                             productos.setPrecioAcumulado("0.0");
 
@@ -211,17 +214,17 @@ public class DetallePedidoActivity extends AppCompatActivity {
 
                                                                         listaproductoselegidos.add(productos);
 
-                                                                        if (index > productos.getIndice()){
+                                                                        if (index > productos.getIndice()) {
 
-                                                                        }else {
+                                                                        } else {
 
-                                                                            index = productos.getIndice() ;
+                                                                            index = productos.getIndice();
 
                                                                         }
 
                                                                         Index = index;
 
-                                                                    }else {
+                                                                    } else {
 
                                                                         listaClienteSucursal = new ArrayList<>();
                                                                         clienteSucursal = new ClienteSucursal();
@@ -238,9 +241,9 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                                                         cliente.setTipoDocumento(partesTrama[7]);
                                                                         cliente.setDocumentoCliente(jsonObject.getString("DOC_CLIENTE"));
 
-                                                                        if (cliente.getTipoDocumento().equals("FAC")){
+                                                                        if (cliente.getTipoDocumento().equals("FAC")) {
                                                                             cliente.setDocumentoSeleccionado("FACTURA");
-                                                                        }else if (cliente.getTipoDocumento().equals("BOL")){
+                                                                        } else if (cliente.getTipoDocumento().equals("BOL")) {
                                                                             cliente.setDocumentoSeleccionado("BOLETA");
                                                                         }
 
@@ -250,11 +253,11 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                                                     }
                                                                 }
 
-                                                                Intent intent =  new Intent(DetallePedidoActivity.this,bandejaProductosActivity.class);
+                                                                Intent intent = new Intent(DetallePedidoActivity.this, bandejaProductosActivity.class);
                                                                 intent.putExtra("TipoPago", tipoPago);
                                                                 intent.putExtra("validador", "true");
                                                                 intent.putExtra("Check", "Ok");
-                                                                intent.putExtra("Index", Index+"");
+                                                                intent.putExtra("Index", Index + "");
                                                                 intent.putExtra("id_pedido", listaproductoselegidos.get(0).getIdPedido());
 
                                                                 Bundle bundle = new Bundle();
@@ -280,30 +283,35 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                                                 startActivity(intent);
                                                                 finish();
 
-                                                            }else {
+                                                            } else {
                                                                 progressDialog.dismiss();
                                                                 AlertDialog.Builder builder = new AlertDialog.Builder(DetallePedidoActivity.this);
                                                                 builder.setCancelable(false)
                                                                         .setMessage("No se llego a encontrar el registro")
-                                                                        .setNegativeButton("Aceptar",null)
+                                                                        .setNegativeButton("Aceptar", null)
                                                                         .create()
                                                                         .show();
                                                             }
-                                                        } catch (JSONException e) { e.printStackTrace(); }
-                                                    }
-                                                }, new Response.ErrorListener() {
-                                            @Override
-                                            public void onErrorResponse(VolleyError error) {
-                                                error.printStackTrace();
-                                            }
-                                        });
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        }
+                                                    }, new Response.ErrorListener() {
+                                                @Override
+                                                public void onErrorResponse(VolleyError error) {
+                                                    error.printStackTrace();
+                                                }
+                                            });
 
-                                        int socketTimeout = 30000;
+                                            int socketTimeout = 30000;
 
-                                        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                                                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-                                        stringRequest.setRetryPolicy(policy);
-                                        requestQueue.add(stringRequest);
+                                            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                                                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                                            stringRequest.setRetryPolicy(policy);
+                                            requestQueue.add(stringRequest);
+
+                                        }
+
 
                                     }
                                 });

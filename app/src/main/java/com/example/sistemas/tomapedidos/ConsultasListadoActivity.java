@@ -9,8 +9,6 @@ import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.example.sistemas.tomapedidos.ConsultaPrecio.ConsultaPrecioActivity;
 import com.example.sistemas.tomapedidos.ConsultaStock.BuscarProductoStockActivity;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;

@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.icu.math.BigDecimal;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,8 +18,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -38,7 +35,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
-
 import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
 
@@ -266,7 +262,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
                             for (int i = 0; i < listaproductoselegidos.size(); i++) {
 
                                 etproducto.setText(String.format("%06d", Integer.valueOf(etproducto.getText().toString())));
-                                Toast.makeText(BuscarProductoActivity.this, "" + etproducto.getText(), Toast.LENGTH_SHORT).show();
                                 if (etproducto.getText().toString().equals(listaproductoselegidos.get(i).getCodigo())) {
 
                                     verficador = true;
@@ -466,9 +461,9 @@ public class BuscarProductoActivity extends AppCompatActivity {
             btnregresarproducto.setVisibility(View.VISIBLE);
         }else{
 
-
             numero = numero.replace("%","%25");
-            numero = numero.toUpperCase(); // se convierten los caracteres a Mayusucla
+            numero = numero.toUpperCase(); // se convierten los caracteres a Mayuscula
+
         if (tipoConsulta.equals("Nombre")) {
             url = ejecutaFuncionCursorTestMovil +
                     "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO_S&variables='"+alma+"||"+numero.toUpperCase()+"'";

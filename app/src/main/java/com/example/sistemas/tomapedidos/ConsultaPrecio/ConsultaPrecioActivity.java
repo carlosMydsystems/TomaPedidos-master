@@ -47,7 +47,7 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
     ListView lvclientes;
     ArrayList<String> listaCliente;
     EditText etcliente;
-    String url, tipoConsulta = "Nombre";
+    String url, tipoConsulta = "Razon";
     ProgressDialog progressDialog;
     Usuario usuario;
     ImageButton ibregresomenuprincipal;
@@ -67,7 +67,7 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
         etcliente = findViewById(R.id.etCliente);
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");  //Se pasa el parametro del usuario
         ibregresomenuprincipal = findViewById(R.id.ibRetornoMenuPrincipal);
-        etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
+        etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(80)});
         etcliente.setInputType(1);
         ibregresomenuprincipal.setOnClickListener(new View.OnClickListener() {
             @Override

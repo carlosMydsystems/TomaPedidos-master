@@ -314,7 +314,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                     } else {
 
-                        Toast.makeText(bandejaProductosActivity.this, "La canasta esta vacia", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(bandejaProductosActivity.this, "La bandeja esta vacia", Toast.LENGTH_SHORT).show();
 
                     }
                 }

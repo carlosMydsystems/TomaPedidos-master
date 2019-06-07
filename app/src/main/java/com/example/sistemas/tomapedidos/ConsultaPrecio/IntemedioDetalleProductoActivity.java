@@ -18,7 +18,6 @@ import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import com.example.sistemas.tomapedidos.R;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-
 import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Dolares;
 import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Soles;
 
@@ -73,7 +72,6 @@ public class IntemedioDetalleProductoActivity extends AppCompatActivity {
         tv7 = findViewById(R.id.textView7A);
         tv16 = findViewById(R.id.textView16);
         tvtotal = findViewById(R.id.tvTotalElegido);
-
         tv9.setVisibility(View.GONE);
         tv16.setVisibility(View.GONE);
         tvtotal.setVisibility(View.GONE);
