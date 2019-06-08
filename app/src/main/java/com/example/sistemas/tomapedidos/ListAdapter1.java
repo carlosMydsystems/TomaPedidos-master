@@ -7,14 +7,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sistemas.tomapedidos.Entidades.Promociones;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
-public class ListAdapter extends BaseAdapter {
+public class ListAdapter1 extends BaseAdapter {
 
     String indice;
     private PromocionesActivity.OnRefreshViewListner mrefreshlistener;
@@ -22,9 +22,11 @@ public class ListAdapter extends BaseAdapter {
     public ArrayList<Product> listProducts;
     private Context context;
 
-    public ListAdapter(Context context, ArrayList<Product> listProducts) {
+    public ListAdapter1(Context context, ArrayList<Product> listProducts) {
+
         this.context = context;
         this.listProducts = listProducts;
+
     }
 
     @Override
@@ -47,37 +49,34 @@ public class ListAdapter extends BaseAdapter {
     {
 
         ArrayList<Promociones> listaPromocionesElegidas;
-         View row;
+        View row;
         final ListViewHolder listViewHolder;
         if(convertView == null)
-            {
-
-                LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                row = layoutInflater.inflate(R.layout.activity_custom_listview,parent,false);
-                listViewHolder = new ListViewHolder();
-                listViewHolder.ivProduct = row.findViewById(R.id.tvdescripcion);
-                listViewHolder.tvPrice = row.findViewById(R.id.tvPrice);
-                listViewHolder.btnPlus = row.findViewById(R.id.ib_addnew);
-                listViewHolder.edTextQuantity = row.findViewById(R.id.editTextQuantity);
-                listViewHolder.btnMinus = row.findViewById(R.id.ib_remove);
-                listViewHolder.tvidpromociones = row.findViewById(R.id.tvIdPromocion);  // Identificador
-                listViewHolder.tvCodArticulo = row.findViewById(R.id.tvCodArticulo);
-                listViewHolder.tvunidadpromocion = row.findViewById(R.id.tvUnidadPromocion);
-                listViewHolder.tvtasadescuento = row.findViewById(R.id.tvTasaElegida);
-                listViewHolder.tvprecio = row.findViewById(R.id.tvUnidadPromocion);
-                listViewHolder.tvPresentacionSelect = row.findViewById(R.id.tvPresentacionSelect);
-                listViewHolder.tvEquivalencia = row.findViewById(R.id.tvEquivalencia);
-                listViewHolder.tvPrecioUni = row.findViewById(R.id.tvPrecioUni);
-                listViewHolder.tvObservacionSeleccion = row.findViewById(R.id.tvObservacionSeleccion);
-                listViewHolder.tvStock = row.findViewById(R.id.tvStock);
-                row.setTag(listViewHolder);
-
-            } else{
-
-                row=convertView;
-                listViewHolder= (ListViewHolder) row.getTag();
-
-            }
+        {
+            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            row = layoutInflater.inflate(R.layout.activity_custom_listview,parent,false);
+            listViewHolder = new ListViewHolder();
+            listViewHolder.ivProduct = row.findViewById(R.id.tvdescripcion);
+            listViewHolder.tvPrice = row.findViewById(R.id.tvPrice);
+            listViewHolder.btnPlus = row.findViewById(R.id.ib_addnew);
+            listViewHolder.edTextQuantity = row.findViewById(R.id.editTextQuantity);
+            listViewHolder.btnMinus = row.findViewById(R.id.ib_remove);
+            listViewHolder.tvidpromociones = row.findViewById(R.id.tvIdPromocion);  // Identificador
+            listViewHolder.tvCodArticulo = row.findViewById(R.id.tvCodArticulo);
+            listViewHolder.tvunidadpromocion = row.findViewById(R.id.tvUnidadPromocion);
+            listViewHolder.tvtasadescuento = row.findViewById(R.id.tvTasaElegida);
+            listViewHolder.tvprecio = row.findViewById(R.id.tvUnidadPromocion);
+            listViewHolder.tvPresentacionSelect = row.findViewById(R.id.tvPresentacionSelect);
+            listViewHolder.tvEquivalencia = row.findViewById(R.id.tvEquivalencia);
+            listViewHolder.tvPrecioUni = row.findViewById(R.id.tvPrecioUni);
+            listViewHolder.tvObservacionSeleccion = row.findViewById(R.id.tvObservacionSeleccion);
+            listViewHolder.tvStock = row.findViewById(R.id.tvStock);
+            row.setTag(listViewHolder);
+        }
+        else{
+            row=convertView;
+            listViewHolder= (ListViewHolder) row.getTag();
+        }
 
         final Product products = getItem(position);
         listViewHolder.ivProduct.setText(products.ProductImage);
@@ -106,7 +105,6 @@ public class ListAdapter extends BaseAdapter {
                     indice = listViewHolder.tvidpromociones.getText().toString();
                     updateQuantity(position, listViewHolder.edTextQuantity, 1);
                     updateQuantityPrice(position, listViewHolder.tvPrice, -1, indice);
-
                 }
             }
         });
@@ -134,7 +132,6 @@ public class ListAdapter extends BaseAdapter {
 
             Product producto = getItem(i);
             listaPromocionesElegidas = new ArrayList<>();
-
             if (producto.CartQuantity>0){
 
             }
@@ -165,7 +162,6 @@ public class ListAdapter extends BaseAdapter {
             }
         }  //  Boton Negaativo
         edTextQuantity.setText(products.CartQuantity+"");
-
     }
     private void updateQuantityPrice(int position, TextView tvPrice, int value, String indice) {
 
@@ -192,7 +188,7 @@ public class ListAdapter extends BaseAdapter {
 
             if(producto.ProductName.equals(indice)){
                 producto.ProductPrice = Double.valueOf(products.ProductPrice+"");
-           }
+            }
         }
     }
 

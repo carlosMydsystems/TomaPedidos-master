@@ -33,15 +33,18 @@ public class Product {
         PrecioUni = precioUni;
         ObservacionSeleccion = observacionSeleccion;
         Stock = stock;
+
     }
 
     public Product() {
+
     }
 
     public String getJsonObject() {
         JSONObject cartItems = new JSONObject();
         try
         {
+
             cartItems.put("ProductName", ProductName);
             cartItems.put("ProductPrice", ProductPrice);
             cartItems.put("ProductImage",ProductImage);
@@ -54,6 +57,7 @@ public class Product {
             cartItems.put("PrecioUni",PrecioUni);
             cartItems.put("ObservacionSeleccion",ObservacionSeleccion);
             cartItems.put("Stock",Stock);
+
         }
         catch (Exception e) {}
         return cartItems.toString();

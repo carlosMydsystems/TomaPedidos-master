@@ -208,8 +208,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    // Con este método consultamos al usuario si nos puede dar acceso a leer los datos internos del móvil
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {

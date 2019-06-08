@@ -385,7 +385,6 @@ else if (etcantidadelegida.getText()== null){
                 progressDialog.dismiss();
                     //Toast.makeText(DetalleProductoActivity.this, "Esta intentando ingresar un valor no valido2", Toast.LENGTH_SHORT).show();
                 }
-
             }
 
 
@@ -425,7 +424,6 @@ else if (etcantidadelegida.getText()== null){
                         btndverificarproducto.setEnabled(true);
                     }
                 }
-
          };
 
         etcantidadelegida.addTextChangedListener(textWatcher);
@@ -581,7 +579,6 @@ else if (etcantidadelegida.getText()== null){
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
-
 
     private void ActualizarProducto1(String trama) {
 
