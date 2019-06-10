@@ -3,6 +3,7 @@ package com.example.sistemas.tomapedidos;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -28,11 +29,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.PHONESTATS;
 
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.PHONESTATS;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Version;
+import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.VersionCode;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -72,22 +76,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-            if(Utilitario.isOnline(getApplicationContext())){
-
-                if (etusuario.getText().equals("") || etclave.getText().equals("")) {
-                } else { verificarUsuario(etusuario.getText().toString().replace(" ", "").toUpperCase()
+            if (etusuario.getText().equals("") || etclave.getText().equals("")) {
+            } else { verificarUsuario(etusuario.getText().toString().replace(" ", "").toUpperCase()
                         , etclave.getText().toString().replace(" ", "").toUpperCase(),imei);
-                }
-
-            }else{
-
-                AlertDialog.Builder build = new AlertDialog.Builder(LoginActivity.this);
-                build.setTitle("Atención .. !");
-                build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
-                build.setCancelable(false);
-                build.setNegativeButton("ACEPTAR",null);
-                build.create().show();
-
             }
             }
         });
@@ -101,6 +92,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.show();
         Mensaje = "";
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+
 
         url =  ejecutaFuncionCursorTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_LOGIN&variables='7|"+Codigo_usuario.toUpperCase()+"|"
@@ -117,7 +109,6 @@ public class LoginActivity extends AppCompatActivity {
                 Codigo_usuario.toUpperCase()+"|"+Contraseña_usuario.toUpperCase()+"|359555085551935'";
 
 */
-
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
                 new Response.Listener<String>() {
                     @Override
@@ -195,14 +186,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                progressDialog.dismiss();
-                AlertDialog.Builder build = new AlertDialog.Builder(LoginActivity.this);
-                build.setTitle("Atención .. !");
-                build.setMessage("Error,  el servicio no se encuentra activo en estos momentos");
-                build.setCancelable(false);
-                build.setNegativeButton("ACEPTAR",null);
-                build.create().show();
-
             }
         });
 

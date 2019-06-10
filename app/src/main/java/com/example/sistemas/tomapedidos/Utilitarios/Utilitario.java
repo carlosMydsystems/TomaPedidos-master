@@ -38,4 +38,5 @@ public class Utilitario {
         return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
 
     }
+
 }
