@@ -115,26 +115,24 @@ public class ListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
 
-                indice = listViewHolder.tvidpromociones.getText().toString();
+            indice = listViewHolder.tvidpromociones.getText().toString();
 
-                if (listViewHolder.edTextQuantity.getText().toString().equals("0")){
-                }else {
-                    updateQuantityPrice(position,listViewHolder.tvPrice,1,indice);
-                }
-                updateQuantity(position,listViewHolder.edTextQuantity,-1);
+            if (listViewHolder.edTextQuantity.getText().toString().equals("0")){
+            }else {
+                updateQuantityPrice(position,listViewHolder.tvPrice,1,indice);
+            }
+            updateQuantity(position,listViewHolder.edTextQuantity,-1);
 
-                Double minuendo = Double.valueOf(listViewHolder.tvStock.getText().toString().replace(",",""));
-                Double sustraendo = Double.valueOf(listViewHolder.edTextQuantity.getText().toString());
-                Double res = minuendo - sustraendo;
+            Double minuendo = Double.valueOf(listViewHolder.tvStock.getText().toString().replace(",",""));
+            Double sustraendo = Double.valueOf(listViewHolder.edTextQuantity.getText().toString());
+            Double res = minuendo - sustraendo;
 
             }
         });
 
         for (int i = 0; i<getCount();i++){
-
             Product producto = getItem(i);
             listaPromocionesElegidas = new ArrayList<>();
-
             if (producto.CartQuantity>0){
 
             }
@@ -144,7 +142,6 @@ public class ListAdapter extends BaseAdapter {
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
         listViewHolder.tvStock.setText(formateador.format(Double.valueOf(products.Stock)));
-
         return row;
     }
 
@@ -165,7 +162,6 @@ public class ListAdapter extends BaseAdapter {
             }
         }  //  Boton Negaativo
         edTextQuantity.setText(products.CartQuantity+"");
-
     }
     private void updateQuantityPrice(int position, TextView tvPrice, int value, String indice) {
 

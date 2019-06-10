@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -83,40 +82,40 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    Intent intent =  new Intent(BusquedaClienteActivity.this,MainActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("Cliente",cliente);
-                    intent.putExtras(bundle);
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putSerializable("Usuario",usuario);
-                    intent.putExtras(bundle1);
-                    startActivity(intent);
-                    finish();
+                Intent intent =  new Intent(BusquedaClienteActivity.this,MainActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Cliente",cliente);
+                intent.putExtras(bundle);
+                Bundle bundle1 = new Bundle();
+                bundle1.putSerializable("Usuario",usuario);
+                intent.putExtras(bundle1);
+                startActivity(intent);
+                finish();
 
                 }
             });
 
-
             btnbuscar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (etcliente.getText().toString().equals(""))
-                    {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
-                        builder.setCancelable(false);
-                        builder.setMessage("Por favor ingrese un valor valido")
-                                .setNegativeButton("Aceptar",null)
-                                .create()
-                                .show();
-                    }else {
-                        progressDialog = new ProgressDialog(BusquedaClienteActivity.this);
-                        progressDialog.setMessage("Cargando...");
-                        progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
-                        progressDialog.show();
-                        progressDialog.setCancelable(false);
-                        btnbuscar.setVisibility(View.GONE);
-                        buscarCliente(etcliente.getText().toString(),tipoConsulta,usuario);
-                    }
+
+                if (etcliente.getText().toString().equals(""))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
+                    builder.setCancelable(false);
+                    builder.setMessage("Por favor ingrese un valor valido")
+                            .setNegativeButton("Aceptar",null)
+                            .create()
+                            .show();
+                }else {
+                    progressDialog = new ProgressDialog(BusquedaClienteActivity.this);
+                    progressDialog.setMessage("Cargando...");
+                    progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
+                    progressDialog.show();
+                    progressDialog.setCancelable(false);
+                    btnbuscar.setVisibility(View.GONE);
+                    buscarCliente(etcliente.getText().toString(),tipoConsulta,usuario);
+                }
                 }
             });
 
@@ -135,6 +134,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                 intent.putExtras(bundle1);
                 startActivity(intent);
                 finish();
+
                 }
             });
 
@@ -181,7 +181,6 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                 }
             });
 
-
             btnbuscar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -194,7 +193,6 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                             .setNegativeButton("Aceptar",null)
                             .create()
                             .show();
-
                 }else {
                     progressDialog = new ProgressDialog(BusquedaClienteActivity.this);
                     progressDialog.setMessage("Cargando...");
@@ -357,6 +355,8 @@ public class BusquedaClienteActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+
+
             }
         });
 
