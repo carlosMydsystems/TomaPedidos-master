@@ -9,8 +9,16 @@ public class DctoxVolumen implements Serializable {
     private String hasta;
     private String descuento;
     private String precio;
-
+    private String moneda;
     public DctoxVolumen() {
+    }
+
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
     }
 
     public String getRango() {

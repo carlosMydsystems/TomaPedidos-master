@@ -95,15 +95,15 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                    Intent intent =  new Intent(BuscarProductoPrecioActivity.this, ConsultaPrecioActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("Cliente",cliente);
-                    intent.putExtras(bundle);
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putSerializable("Usuario",usuario);
-                    intent.putExtras(bundle1);
-                    startActivity(intent);
-                    finish();
+                Intent intent =  new Intent(BuscarProductoPrecioActivity.this, ConsultaPrecioActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Cliente",cliente);
+                intent.putExtras(bundle);
+                Bundle bundle1 = new Bundle();
+                bundle1.putSerializable("Usuario",usuario);
+                intent.putExtras(bundle1);
+                startActivity(intent);
+                finish();
 
             }
         });

@@ -1,6 +1,8 @@
 package com.example.sistemas.tomapedidos.ConsultaPrecio;
 
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.support.v4.text.HtmlCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +27,8 @@ import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import com.example.sistemas.tomapedidos.ListadoAlmacenActivity;
 import com.example.sistemas.tomapedidos.R;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,6 +87,7 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
         ibVolverDetalleProductoPrecio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(DetalleProductoPrecioActivity.this, IntemedioDetalleProductoActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Producto",producto);
@@ -126,22 +131,37 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
                                     dctoxVolumen.setHasta(jsonObject.getString("HASTA"));
                                     dctoxVolumen.setDescuento(jsonObject.getString("DESCUENTO"));
                                     dctoxVolumen.setPrecio(jsonObject.getString("PRECIO"));
+
+                                    if (usuario.getMoneda().equals("1")){
+
+                                        dctoxVolumen.setMoneda(Soles);
+
+                                    }else {
+
+                                        dctoxVolumen.setMoneda(Dolares);
+
+                                    }
+
                                     listaDctoxVolumen.add(dctoxVolumen);
+
+                                    /**
                                     if (usuario.getMoneda().equals("1")){
 
                                         listaDsctoxVolumenStr.add("\t"+ " Desde :\t" + formatoDecimal(dctoxVolumen.getDesde())+
                                                 " \t\t\t\tHasta :\t" + formatoDecimal(dctoxVolumen.getHasta()) +"\n"+
                                                 "\t"+" Dscto : "+formatoDecimal(dctoxVolumen.getDescuento()) +
-                                                "%  \t\t\t - \t\t\t  Precio : "+Soles+" " + formatoDecimal(dctoxVolumen.getPrecio()));
+                                                "%  \t\t\t - \t\t\t  Precio : "+ HtmlCompat.fromHtml(Soles, Typeface.BOLD)+Soles+" " + formatoDecimal(dctoxVolumen.getPrecio()));
                                     }else {
                                         listaDsctoxVolumenStr.add("\t" + " Desde :\t" + formatoDecimal(dctoxVolumen.getDesde()) +
                                                 " \t\t\t\tHasta :\t" + formatoDecimal(dctoxVolumen.getHasta()) + "\n" +
                                                 "\t" + " Dscto : " + formatoDecimal(dctoxVolumen.getDescuento()) +
                                                 "%  \t\t\t - \t\t\t  Precio : " + Dolares + " " + formatoDecimal(dctoxVolumen.getPrecio()));
                                     }
+
+                                     */
                                 }
-                                ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
-                                        CustomListAdapter(DetalleProductoPrecioActivity.this, R.layout.custom_list, listaDsctoxVolumenStr);
+                                Utilitario.CustomListAdapter1 listAdapter = new Utilitario.
+                                        CustomListAdapter1(DetalleProductoPrecioActivity.this, R.layout.custom_list1, listaDctoxVolumen);
                                 lvPrecioxVolumen.setAdapter(listAdapter);
 
                             } else {

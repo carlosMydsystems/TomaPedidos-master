@@ -258,6 +258,7 @@ public class ProveedorActivity extends AppCompatActivity {
 
                         break;
                     case R.id.rbCodigoProveedor:
+                        etProveedor.setText("");
                         etProveedor.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
                         etProveedor.setInputType(2);
                         etProveedor.requestFocus();

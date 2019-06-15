@@ -13,7 +13,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="Codigo : "
-
+        android:textColor="#0560B4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
@@ -24,6 +24,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:text="Nombre :"
+        android:textColor="#0560B4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
@@ -34,6 +35,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:text="Direccion : "
+        android:textColor="#0560B4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvNombreCliente" />
 
@@ -112,6 +114,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="31dp"
+        android:textColor="#0560B4"
         android:text="Tipo de documento : "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
@@ -132,6 +135,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="31dp"
         android:text="Sucursal"
+        android:textColor="#0560B4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
@@ -163,6 +167,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:text="Ruc/Dni :"
+        android:textColor="#0560B4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 

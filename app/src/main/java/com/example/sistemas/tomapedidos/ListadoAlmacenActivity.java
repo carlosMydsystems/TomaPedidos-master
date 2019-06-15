@@ -146,7 +146,7 @@ public class ListadoAlmacenActivity extends AppCompatActivity {
             }
         });
 
-        //**  Fin Listado de almacenes Estaticos
+        /**  Fin Listado de almacenes Estaticos */
 
     }
     public static class CustomListAdapter extends ArrayAdapter <String> {
