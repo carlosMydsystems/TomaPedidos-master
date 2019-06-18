@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
-
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -28,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.ConsultaPromociones.ConsultarPromocionesActivity;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,16 +73,14 @@ public class BusquedaClienteActivity extends AppCompatActivity {
             if (cliente == null){
 
             }else {
-
                 cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
-
             }
-
             ibregresomenuprincipal = findViewById(R.id.ibRetornoMenuPrincipal);
             ibregresomenuprincipal.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+                if(Utilitario.isOnline(getApplicationContext())){
                     Intent intent =  new Intent(BusquedaClienteActivity.this,MainActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("Cliente",cliente);
@@ -92,14 +90,23 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                     intent.putExtras(bundle1);
                     startActivity(intent);
                     finish();
-
+                }else{
+                    AlertDialog.Builder build = new AlertDialog.Builder(BusquedaClienteActivity.this);
+                    build.setTitle("Atención .. !");
+                    build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                    build.setCancelable(false);
+                    build.setNegativeButton("ACEPTAR",null);
+                    build.create().show();
+                }
                 }
             });
-
 
             btnbuscar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                if(Utilitario.isOnline(getApplicationContext())){
+
                     if (etcliente.getText().toString().equals(""))
                     {
                         AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
@@ -117,6 +124,18 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                         btnbuscar.setVisibility(View.GONE);
                         buscarCliente(etcliente.getText().toString(),tipoConsulta,usuario);
                     }
+
+                }else{
+
+                    AlertDialog.Builder build = new AlertDialog.Builder(BusquedaClienteActivity.this);
+                    build.setTitle("Atención .. !");
+                    build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                    build.setCancelable(false);
+                    build.setNegativeButton("ACEPTAR",null);
+                    build.create().show();
+
+                }
+
                 }
             });
 
@@ -186,24 +205,37 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                if (etcliente.getText().toString().equals(""))
-                {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
-                    builder.setCancelable(false);
-                    builder.setMessage("Por favor ingrese un valor valido")
-                            .setNegativeButton("Aceptar",null)
-                            .create()
-                            .show();
+                    if(Utilitario.isOnline(getApplicationContext())){
 
-                }else {
-                    progressDialog = new ProgressDialog(BusquedaClienteActivity.this);
-                    progressDialog.setMessage("Cargando...");
-                    progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
-                    progressDialog.show();
-                    progressDialog.setCancelable(false);
-                    btnbuscar.setVisibility(View.GONE);
-                    buscarCliente(etcliente.getText().toString(),tipoConsulta,usuario);
-                }
+                        if (etcliente.getText().toString().equals(""))
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
+                            builder.setCancelable(false);
+                            builder.setMessage("Por favor ingrese un valor valido")
+                                    .setNegativeButton("Aceptar",null)
+                                    .create()
+                                    .show();
+
+                        }else {
+                            progressDialog = new ProgressDialog(BusquedaClienteActivity.this);
+                            progressDialog.setMessage("Cargando...");
+                            progressDialog.setProgressStyle(progressDialog.STYLE_SPINNER);
+                            progressDialog.show();
+                            progressDialog.setCancelable(false);
+                            btnbuscar.setVisibility(View.GONE);
+                            buscarCliente(etcliente.getText().toString(),tipoConsulta,usuario);
+                        }
+
+                    }else{
+
+                        AlertDialog.Builder build = new AlertDialog.Builder(BusquedaClienteActivity.this);
+                        build.setTitle("Atención .. !");
+                        build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                        build.setCancelable(false);
+                        build.setNegativeButton("ACEPTAR",null);
+                        build.create().show();
+                    }
+
                 }
             });
 
@@ -357,6 +389,14 @@ public class BusquedaClienteActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
+
             }
         });
 

@@ -23,6 +23,7 @@ import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Pedidos;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,7 +62,21 @@ public class DetallePedidoActivity extends AppCompatActivity {
         usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
         userId = usuario.getUser();
         cliente = new Clientes();
-        ActualizarListView(userId);
+
+        if(Utilitario.isOnline(getApplicationContext())){
+
+            ActualizarListView(userId);
+
+        }else{
+
+            AlertDialog.Builder build = new AlertDialog.Builder(DetallePedidoActivity.this);
+            build.setTitle("Atención .. !");
+            build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+            build.setCancelable(false);
+            build.setNegativeButton("ACEPTAR",null);
+            build.create().show();
+
+        }
 
         ibregresarpendientemain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -129,190 +144,195 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                                        if (auxBool) {
-                                            auxBool = false;
-                                            final ProgressDialog progressDialog = new ProgressDialog(DetallePedidoActivity.this);
-                                            progressDialog.setMessage("...cargando");
-                                            progressDialog.setCancelable(false);
-                                            progressDialog.create();
-                                            progressDialog.show();
+                                    if (auxBool) {
+                                        auxBool = false;
+                                        final ProgressDialog progressDialog = new ProgressDialog(DetallePedidoActivity.this);
+                                        progressDialog.setMessage("...cargando");
+                                        progressDialog.setCancelable(false);
+                                        progressDialog.create();
+                                        progressDialog.show();
 
-                                            String idPedido = listaPedidos.get(position).getIdPedido();
-                                            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                                        String idPedido = listaPedidos.get(position).getIdPedido();
+                                        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
 
-                                            url = ejecutaFuncionCursorTestMovil +
-                                                    "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS_TRAMA&variables='" + idPedido + "'";
+                                        url = ejecutaFuncionCursorTestMovil +
+                                                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PEDIDOS_TRAMA&variables='" + idPedido + "'";
 
-                                            listaproductoselegidos = new ArrayList<>();
+                                        listaproductoselegidos = new ArrayList<>();
 
-                                            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                                                    new Response.Listener<String>() {
-                                                        @Override
-                                                        public void onResponse(String response) {
+                                        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                                                new Response.Listener<String>() {
+                                                    @Override
+                                                    public void onResponse(String response) {
 
-                                                        try {
-                                                            JSONObject jsonObject = new JSONObject(response);
-                                                            boolean success = jsonObject.getBoolean("success");
-                                                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                                                    try {
+                                                        JSONObject jsonObject = new JSONObject(response);
+                                                        boolean success = jsonObject.getBoolean("success");
+                                                        JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
 
-                                                            listaPedidos = new ArrayList<>();
-                                                            if (success) {
+                                                        listaPedidos = new ArrayList<>();
+                                                        if (success) {
 
-                                                                for (int i = 0; i < jsonArray.length(); i++) {
-                                                                    productos = new Productos();
-                                                                    jsonObject = jsonArray.getJSONObject(i);
-                                                                    String trama = jsonObject.getString("TRAMA");
-                                                                    trama = trama.trim();
-                                                                    trama = trama.replace("|", " ");
-                                                                    String[] partesTrama = trama.split(" ");
+                                                            for (int i = 0; i < jsonArray.length(); i++) {
+                                                                productos = new Productos();
+                                                                jsonObject = jsonArray.getJSONObject(i);
+                                                                String trama = jsonObject.getString("TRAMA");
+                                                                trama = trama.trim();
+                                                                trama = trama.replace("|", " ");
+                                                                String[] partesTrama = trama.split(" ");
 
-                                                                    productos.setIdPedido(partesTrama[0]);
-                                                                    productos.setTipoTupla(partesTrama[1]);
+                                                                productos.setIdPedido(partesTrama[0]);
+                                                                productos.setTipoTupla(partesTrama[1]);
 
-                                                                    //-------------------------------------------
+                                                                //-------------------------------------------
 
-                                                                    if (productos.getTipoTupla().equals("D")) {
+                                                                if (productos.getTipoTupla().equals("D")) {
 
-                                                                        productos.setIndice(Integer.valueOf(partesTrama[2]));
-                                                                        productos.setCantidad(partesTrama[3]);
-                                                                        productos.setCodigo(partesTrama[4]);
-                                                                        productos.setPrecio(partesTrama[5]);
-                                                                        productos.setTasaDescuento(partesTrama[6]);
-                                                                        productos.setNumPromocion(partesTrama[7]);
-                                                                        productos.setPresentacion(partesTrama[8]);
-                                                                        productos.setEquivalencia(partesTrama[9]);
-                                                                        if (partesTrama[10].equals("N")) {
+                                                                    productos.setIndice(Integer.valueOf(partesTrama[2]));
+                                                                    productos.setCantidad(partesTrama[3]);
+                                                                    productos.setCodigo(partesTrama[4]);
+                                                                    productos.setPrecio(partesTrama[5]);
+                                                                    productos.setTasaDescuento(partesTrama[6]);
+                                                                    productos.setNumPromocion(partesTrama[7]);
+                                                                    productos.setPresentacion(partesTrama[8]);
+                                                                    productos.setEquivalencia(partesTrama[9]);
+                                                                    if (partesTrama[10].equals("N")) {
 
-                                                                        } else {
-                                                                            productos.setObservacion(partesTrama[10]);
-                                                                        }
+                                                                    } else {
+                                                                        productos.setObservacion(partesTrama[10]);
+                                                                    }
 
-                                                                        String articulo = jsonObject.getString("ARTICULO");
-                                                                        articulo = articulo.trim();
-                                                                        String[] partesArticulo = articulo.split(" - ");
+                                                                    String articulo = jsonObject.getString("ARTICULO");
+                                                                    articulo = articulo.trim();
+                                                                    String[] partesArticulo = articulo.split(" - ");
 
-                                                                        productos.setDescripcion(partesArticulo[0]);
-                                                                        productos.setUnidad(partesArticulo[2]);
-                                                                        Double precioAcumulado = Double.valueOf(productos.
-                                                                                getPrecio()) * Double.valueOf(productos.getCantidad());
-                                                                        if (partesTrama[10].equals("N")) {
+                                                                    productos.setDescripcion(partesArticulo[0]);
+                                                                    productos.setUnidad(partesArticulo[2]);
+                                                                    Double precioAcumulado = Double.valueOf(productos.
+                                                                            getPrecio()) * Double.valueOf(productos.getCantidad());
+                                                                    if (partesTrama[10].equals("N")) {
 
-                                                                            BigDecimal precioBig1 = new BigDecimal(productos.getPrecio());
-                                                                            precioBig1 = precioBig1.setScale(2, RoundingMode.HALF_EVEN);
-                                                                            Double Descuento = (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO")) / 100);
-                                                                            Double precioDouble = Double.valueOf(precioBig1.toString())
-                                                                                    * Descuento * Double.valueOf(productos.getCantidad().toString());
-                                                                            BigDecimal precioBigTotal = new BigDecimal(precioDouble.toString());
-                                                                            precioBigTotal = precioBigTotal.setScale(2, RoundingMode.HALF_EVEN);
-                                                                            productos.setPrecioAcumulado("" + precioBigTotal);
-
-                                                                        } else {
-
-                                                                            productos.setPrecioAcumulado("0.0");
-
-                                                                        }
-
-                                                                        listaproductoselegidos.add(productos);
-
-                                                                        if (index > productos.getIndice()) {
-
-                                                                        } else {
-
-                                                                            index = productos.getIndice();
-
-                                                                        }
-
-                                                                        Index = index;
+                                                                        BigDecimal precioBig1 = new BigDecimal(productos.getPrecio());
+                                                                        precioBig1 = precioBig1.setScale(2, RoundingMode.HALF_EVEN);
+                                                                        Double Descuento = (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO")) / 100);
+                                                                        Double precioDouble = Double.valueOf(precioBig1.toString())
+                                                                                * Descuento * Double.valueOf(productos.getCantidad().toString());
+                                                                        BigDecimal precioBigTotal = new BigDecimal(precioDouble.toString());
+                                                                        precioBigTotal = precioBigTotal.setScale(2, RoundingMode.HALF_EVEN);
+                                                                        productos.setPrecioAcumulado("" + precioBigTotal);
 
                                                                     } else {
 
-                                                                        listaClienteSucursal = new ArrayList<>();
-                                                                        clienteSucursal = new ClienteSucursal();
-                                                                        clienteSucursal.setCodSucursal(partesTrama[11]);
-                                                                        clienteSucursal.setNombreSucursal(pedidos.getSucursalCliente().toString());
-                                                                        listaClienteSucursal.add(clienteSucursal);
-                                                                        tipoPago = partesTrama[6];
-                                                                        almacen = partesTrama[3];
-                                                                        cliente.setCodCliente(partesTrama[4]);
-                                                                        cliente.setFormaPago(jsonObject.getString("FORMA_PAGO"));
-                                                                        cliente.setNombre(jsonObject.getString("CLIENTE"));
-                                                                        cliente.setCodFPago(jsonObject.getString("COD_FPAGO"));
-                                                                        cliente.setDireccion(jsonObject.getString("DIRECCION"));
-                                                                        cliente.setTipoDocumento(partesTrama[7]);
-                                                                        cliente.setDocumentoCliente(jsonObject.getString("DOC_CLIENTE"));
-
-                                                                        if (cliente.getTipoDocumento().equals("FAC")) {
-                                                                            cliente.setDocumentoSeleccionado("FACTURA");
-                                                                        } else if (cliente.getTipoDocumento().equals("BOL")) {
-                                                                            cliente.setDocumentoSeleccionado("BOLETA");
-                                                                        }
-
-                                                                        usuario.setNombre(jsonObject.getString("VENDEDOR"));
-                                                                        Index = index;
+                                                                        productos.setPrecioAcumulado("0.0");
 
                                                                     }
+
+                                                                    listaproductoselegidos.add(productos);
+
+                                                                    if (index > productos.getIndice()) {
+
+                                                                    } else {
+
+                                                                        index = productos.getIndice();
+
+                                                                    }
+
+                                                                    Index = index;
+
+                                                                } else {
+
+                                                                    listaClienteSucursal = new ArrayList<>();
+                                                                    clienteSucursal = new ClienteSucursal();
+                                                                    clienteSucursal.setCodSucursal(partesTrama[11]);
+                                                                    clienteSucursal.setNombreSucursal(pedidos.getSucursalCliente().toString());
+                                                                    listaClienteSucursal.add(clienteSucursal);
+                                                                    tipoPago = partesTrama[6];
+                                                                    almacen = partesTrama[3];
+                                                                    cliente.setCodCliente(partesTrama[4]);
+                                                                    cliente.setFormaPago(jsonObject.getString("FORMA_PAGO"));
+                                                                    cliente.setNombre(jsonObject.getString("CLIENTE"));
+                                                                    cliente.setCodFPago(jsonObject.getString("COD_FPAGO"));
+                                                                    cliente.setDireccion(jsonObject.getString("DIRECCION"));
+                                                                    cliente.setTipoDocumento(partesTrama[7]);
+                                                                    cliente.setDocumentoCliente(jsonObject.getString("DOC_CLIENTE"));
+
+                                                                    if (cliente.getTipoDocumento().equals("FAC")) {
+                                                                        cliente.setDocumentoSeleccionado("FACTURA");
+                                                                    } else if (cliente.getTipoDocumento().equals("BOL")) {
+                                                                        cliente.setDocumentoSeleccionado("BOLETA");
+                                                                    }
+
+                                                                    usuario.setNombre(jsonObject.getString("VENDEDOR"));
+                                                                    Index = index;
+
                                                                 }
-
-                                                                Intent intent = new Intent(DetallePedidoActivity.this, bandejaProductosActivity.class);
-                                                                intent.putExtra("TipoPago", tipoPago);
-                                                                intent.putExtra("validador", "true");
-                                                                intent.putExtra("Check", "Ok");
-                                                                intent.putExtra("Index", Index + "");
-                                                                intent.putExtra("id_pedido", listaproductoselegidos.get(0).getIdPedido());
-
-                                                                Bundle bundle = new Bundle();
-                                                                bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                                                                intent.putExtras(bundle);
-
-                                                                Bundle bundle1 = new Bundle();
-                                                                bundle1.putSerializable("Cliente", cliente);
-                                                                intent.putExtras(bundle1);
-
-                                                                Bundle bundle2 = new Bundle();
-                                                                bundle2.putSerializable("Usuario", usuario);
-                                                                intent.putExtras(bundle2);
-
-                                                                Bundle bundle3 = new Bundle();
-                                                                bundle3.putSerializable("Almacen", almacen);
-                                                                intent.putExtras(bundle3);
-
-                                                                Bundle bundle4 = new Bundle();
-                                                                bundle4.putSerializable("listaClienteSucursal", listaClienteSucursal);
-                                                                intent.putExtras(bundle4);
-
-                                                                startActivity(intent);
-                                                                finish();
-
-                                                            } else {
-                                                                progressDialog.dismiss();
-                                                                AlertDialog.Builder builder = new AlertDialog.Builder(DetallePedidoActivity.this);
-                                                                builder.setCancelable(false)
-                                                                        .setMessage("No se llego a encontrar el registro")
-                                                                        .setNegativeButton("Aceptar", null)
-                                                                        .create()
-                                                                        .show();
                                                             }
-                                                        } catch (JSONException e) {
-                                                            e.printStackTrace();
+
+                                                            Intent intent = new Intent(DetallePedidoActivity.this, bandejaProductosActivity.class);
+                                                            intent.putExtra("TipoPago", tipoPago);
+                                                            intent.putExtra("validador", "true");
+                                                            intent.putExtra("Check", "Ok");
+                                                            intent.putExtra("Index", Index + "");
+                                                            intent.putExtra("id_pedido", listaproductoselegidos.get(0).getIdPedido());
+
+                                                            Bundle bundle = new Bundle();
+                                                            bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                                                            intent.putExtras(bundle);
+
+                                                            Bundle bundle1 = new Bundle();
+                                                            bundle1.putSerializable("Cliente", cliente);
+                                                            intent.putExtras(bundle1);
+
+                                                            Bundle bundle2 = new Bundle();
+                                                            bundle2.putSerializable("Usuario", usuario);
+                                                            intent.putExtras(bundle2);
+
+                                                            Bundle bundle3 = new Bundle();
+                                                            bundle3.putSerializable("Almacen", almacen);
+                                                            intent.putExtras(bundle3);
+
+                                                            Bundle bundle4 = new Bundle();
+                                                            bundle4.putSerializable("listaClienteSucursal", listaClienteSucursal);
+                                                            intent.putExtras(bundle4);
+
+                                                            startActivity(intent);
+                                                            finish();
+
+                                                        } else {
+                                                            progressDialog.dismiss();
+                                                            AlertDialog.Builder builder = new AlertDialog.Builder(DetallePedidoActivity.this);
+                                                            builder.setCancelable(false)
+                                                                    .setMessage("No se llego a encontrar el registro")
+                                                                    .setNegativeButton("Aceptar", null)
+                                                                    .create()
+                                                                    .show();
                                                         }
-                                                        }
-                                                    }, new Response.ErrorListener() {
-                                                @Override
-                                                public void onErrorResponse(VolleyError error) {
-                                                    error.printStackTrace();
-                                                }
-                                            });
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    }
+                                                }, new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                error.printStackTrace();
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(DetallePedidoActivity.this);
+                                                builder.setTitle("Atención ...!");
+                                                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                                                builder.setCancelable(false);
+                                                builder.setNegativeButton("Aceptar",null);
+                                                builder.create().show();
 
-                                            int socketTimeout = 30000;
+                                            }
+                                        });
 
-                                            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                                                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-                                            stringRequest.setRetryPolicy(policy);
-                                            requestQueue.add(stringRequest);
+                                        int socketTimeout = 30000;
 
-                                        }
+                                        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                                                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+                                        stringRequest.setRetryPolicy(policy);
+                                        requestQueue.add(stringRequest);
 
-
+                                    }
                                     }
                                 });
 
@@ -332,6 +352,13 @@ public class DetallePedidoActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetallePedidoActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 

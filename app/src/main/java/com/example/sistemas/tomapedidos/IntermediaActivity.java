@@ -1,6 +1,7 @@
 package com.example.sistemas.tomapedidos;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -16,6 +17,8 @@ import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -39,85 +42,98 @@ public class IntermediaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intermedia);
-        listView = (ListView) findViewById(R.id.customListView);
-        listAdapter = new ListAdapter(this,products);
-        id_pedido = getIntent().getStringExtra("id_pedido");
-        almacen =  getIntent().getStringExtra("Almacen");
-        tipoformapago =  getIntent().getStringExtra("TipoPago");
-        cantidadlista =  getIntent().getStringExtra("cantidadlista");
-        Index = getIntent().getStringExtra("Index");
-        listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
 
-        listaproductoselegidos = (ArrayList<Productos>) getIntent()
-                .getSerializableExtra("listaProductoselegidos");
-
-        cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
-        usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
-
-        indice = listaproductoselegidos.size();
-        validador = getIntent().getStringExtra("validador");
-        Integer valorcantidadlista = Integer.valueOf(cantidadlista);
-
-        for (int i = valorcantidadlista;i<listaproductoselegidos.size();i++) {
-
-            Integer indice = Integer.valueOf(Index)+1;
-            listaproductoselegidos.get(i).setIndice(indice);
+        if(Utilitario.isOnline(getApplicationContext())){
 
 
-            Double cantidad = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
-            precio = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
+            listView = (ListView) findViewById(R.id.customListView);
+            listAdapter = new ListAdapter(this,products);
+            id_pedido = getIntent().getStringExtra("id_pedido");
+            almacen =  getIntent().getStringExtra("Almacen");
+            tipoformapago =  getIntent().getStringExtra("TipoPago");
+            cantidadlista =  getIntent().getStringExtra("cantidadlista");
+            Index = getIntent().getStringExtra("Index");
+            listaClienteSucursal = (ArrayList<ClienteSucursal>) getIntent().getSerializableExtra("listaClienteSucursal");
 
-            if (listaproductoselegidos.get(i).getNumPromocion().trim().equals("null")) {
+            listaproductoselegidos = (ArrayList<Productos>) getIntent()
+                    .getSerializableExtra("listaProductoselegidos");
+
+            cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
+            usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
+
+            indice = listaproductoselegidos.size();
+            validador = getIntent().getStringExtra("validador");
+            Integer valorcantidadlista = Integer.valueOf(cantidadlista);
+
+            for (int i = valorcantidadlista;i<listaproductoselegidos.size();i++) {
+
+                Integer indice = Integer.valueOf(Index)+1;
+                listaproductoselegidos.get(i).setIndice(indice);
 
 
-                String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
-                        get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getCodigo() + "|" +
-                        listaproductoselegidos.get(i).getPrecio() + "||" + listaproductoselegidos.get(i).getNumPromocion() + "|" +
-                        listaproductoselegidos.get(i).getPresentacion() + "|" + listaproductoselegidos.get(i)
-                        .getEquivalencia() + "|S";
-                Index = indice.toString();
-                ActualizarProducto(trama);
-            }else {
+                Double cantidad = Double.valueOf(listaproductoselegidos.get(i).getPrecio());
+                precio = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
 
-                String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
-                        get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getCodigo() + "|" +
-                        listaproductoselegidos.get(i).getPrecio() + "|" + listaproductoselegidos.get(i)
-                        .getTasaDescuento() + "|" + listaproductoselegidos.get(i).getNumPromocion() + "|" +
-                        listaproductoselegidos.get(i).getPresentacion() + "|" + listaproductoselegidos.get(i)
-                        .getEquivalencia() + "|S";
-                Index = indice.toString();
-                ActualizarProducto(trama);
+                if (listaproductoselegidos.get(i).getNumPromocion().trim().equals("null")) {
 
+
+                    String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
+                            get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getCodigo() + "|" +
+                            listaproductoselegidos.get(i).getPrecio() + "||" + listaproductoselegidos.get(i).getNumPromocion() + "|" +
+                            listaproductoselegidos.get(i).getPresentacion() + "|" + listaproductoselegidos.get(i)
+                            .getEquivalencia() + "|S";
+                    Index = indice.toString();
+                    ActualizarProducto(trama);
+                }else {
+
+                    String trama = id_pedido + "|D|" + indice + "|" + listaproductoselegidos.
+                            get(i).getCantidad() + "|" + listaproductoselegidos.get(i).getCodigo() + "|" +
+                            listaproductoselegidos.get(i).getPrecio() + "|" + listaproductoselegidos.get(i)
+                            .getTasaDescuento() + "|" + listaproductoselegidos.get(i).getNumPromocion() + "|" +
+                            listaproductoselegidos.get(i).getPresentacion() + "|" + listaproductoselegidos.get(i)
+                            .getEquivalencia() + "|S";
+                    Index = indice.toString();
+                    ActualizarProducto(trama);
+
+                }
             }
+
+            Intent intent = new Intent(IntermediaActivity.this,bandejaProductosActivity.class);
+
+            intent.putExtra("id_pedido",id_pedido);
+            intent.putExtra("Almacen",almacen);
+            intent.putExtra("TipoPago",tipoformapago);
+            intent.putExtra("cantidadlista",cantidadlista);
+            intent.putExtra("validador","false");
+            intent.putExtra("Index",Index);
+            Bundle bundle = new Bundle();
+            Bundle bundle1 = new Bundle();
+            Bundle bundle2 = new Bundle();
+            Bundle bundle3 = new Bundle();
+
+            bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+            bundle2.putSerializable("Usuario", usuario);
+            bundle1.putSerializable("Cliente", cliente);
+            bundle3.putSerializable("listaClienteSucursal", listaClienteSucursal);
+
+            intent.putExtras(bundle);
+            intent.putExtras(bundle2);
+            intent.putExtras(bundle1);
+            intent.putExtras(bundle3);
+
+            startActivity(intent);
+            finish();
+
+        }else{
+
+            AlertDialog.Builder build = new AlertDialog.Builder(IntermediaActivity.this);
+            build.setTitle("Atención .. !");
+            build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+            build.setCancelable(false);
+            build.setNegativeButton("ACEPTAR",null);
+            build.create().show();
+
         }
-
-        Intent intent = new Intent(IntermediaActivity.this,bandejaProductosActivity.class);
-
-        intent.putExtra("id_pedido",id_pedido);
-        intent.putExtra("Almacen",almacen);
-        intent.putExtra("TipoPago",tipoformapago);
-        intent.putExtra("cantidadlista",cantidadlista);
-        intent.putExtra("validador","false");
-        intent.putExtra("Index",Index);
-        Bundle bundle = new Bundle();
-        Bundle bundle1 = new Bundle();
-        Bundle bundle2 = new Bundle();
-        Bundle bundle3 = new Bundle();
-
-        bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-        bundle2.putSerializable("Usuario", usuario);
-        bundle1.putSerializable("Cliente", cliente);
-        bundle3.putSerializable("listaClienteSucursal", listaClienteSucursal);
-
-        intent.putExtras(bundle);
-        intent.putExtras(bundle2);
-        intent.putExtras(bundle1);
-        intent.putExtras(bundle3);
-
-
-
-        startActivity(intent);
-        finish();
     }
 
 

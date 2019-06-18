@@ -32,6 +32,8 @@ import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import com.example.sistemas.tomapedidos.ListadoAlmacenActivity;
 import com.example.sistemas.tomapedidos.R;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -132,28 +134,42 @@ public class BuscarProductoStockActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-            InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(etproducto.getWindowToken(), 0);
+                if(Utilitario.isOnline(getApplicationContext())){
 
-            btnbuscarProducto.setVisibility(View.GONE);
-            btnregresarproducto.setVisibility(View.GONE);
-            Boolean verficador = false;
-            Integer posicion=0;
+                    InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(etproducto.getWindowToken(), 0);
 
-            if (etproducto.getText().toString().trim().equals("")) {
+                    btnbuscarProducto.setVisibility(View.GONE);
+                    btnregresarproducto.setVisibility(View.GONE);
+                    Boolean verficador = false;
+                    Integer posicion=0;
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoStockActivity.this);
-                builder.setTitle("Atención !");
-                builder.setMessage("Por favor ingrese una cantidad valida");
-                builder.setCancelable(false);
-                builder.setNegativeButton("Aceptar",null);
-                builder.create()
-                        .show();
-                btnregresarproducto.setVisibility(View.VISIBLE);
-                btnbuscarProducto.setVisibility(View.VISIBLE);
-            }else {
-                buscarproducto(etproducto.getText().toString().replace(" ", ""), Tipobusqueda, usuario);
-            }
+                    if (etproducto.getText().toString().trim().equals("")) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoStockActivity.this);
+                        builder.setTitle("Atención !");
+                        builder.setMessage("Por favor ingrese una cantidad valida");
+                        builder.setCancelable(false);
+                        builder.setNegativeButton("Aceptar",null);
+                        builder.create()
+                                .show();
+                        btnregresarproducto.setVisibility(View.VISIBLE);
+                        btnbuscarProducto.setVisibility(View.VISIBLE);
+                    }else {
+
+                        buscarproducto(etproducto.getText().toString().replace(" ", ""), Tipobusqueda, usuario);
+                    }
+
+                }else{
+
+                    AlertDialog.Builder build = new AlertDialog.Builder(BuscarProductoStockActivity.this);
+                    build.setTitle("Atención .. !");
+                    build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                    build.setCancelable(false);
+                    build.setNegativeButton("ACEPTAR",null);
+                    build.create().show();
+
+                }
             }
         });
 

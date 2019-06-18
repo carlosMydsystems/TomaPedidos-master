@@ -25,8 +25,10 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
+import com.example.sistemas.tomapedidos.Entidades.DetallePedido;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +38,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-
 import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
 import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Dolares;
@@ -119,16 +120,43 @@ public class DetalleProductoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-            btndverificarproducto.setVisibility(View.GONE);
-            progressDialog =  new ProgressDialog(DetalleProductoActivity.this);
-            progressDialog.setMessage("... Por favor esperar");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-            if(etcantidadelegida.getText().toString().equals("")|| etcantidadelegida.getText().toString().equals("0")){
-                progressDialog.dismiss();
-            }else {
-                VerificarCantidad(etcantidadelegida.getText().toString());
-            }
+                if(Utilitario.isOnline(getApplicationContext())){
+
+                    btndverificarproducto.setVisibility(View.GONE);
+                    progressDialog =  new ProgressDialog(DetalleProductoActivity.this);
+                    progressDialog.setMessage("... Por favor esperar");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+                    if(etcantidadelegida.getText().toString().equals("")|| etcantidadelegida.getText().toString().equals("0")){
+                        progressDialog.dismiss();
+                    }else {
+
+                        if(Utilitario.isOnline(getApplicationContext())){
+
+                            VerificarCantidad(etcantidadelegida.getText().toString());
+
+                        }else{
+
+                            AlertDialog.Builder build = new AlertDialog.Builder(DetalleProductoActivity.this);
+                            build.setTitle("Atención .. !");
+                            build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                            build.setCancelable(false);
+                            build.setNegativeButton("ACEPTAR",null);
+                            build.create().show();
+
+                        }
+                    }
+
+                }else{
+
+                    AlertDialog.Builder build = new AlertDialog.Builder(DetalleProductoActivity.this);
+                    build.setTitle("Atención .. !");
+                    build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                    build.setCancelable(false);
+                    build.setNegativeButton("ACEPTAR",null);
+                    build.create().show();
+
+                }
             }
         });
 
@@ -139,11 +167,8 @@ public class DetalleProductoActivity extends AppCompatActivity {
         tvtotal = findViewById(R.id.tvTotalElegido);
 
         tvstock.setText(productos.getStock());
-
         Aux1 = Double.valueOf(tvstock.getText().toString());
         tvstock.setText(formateador.format((double) Aux1) + " ");
-
-
         tvunidades.setText(productos.getUnidad());
 
 if (tvstock.getText() == null){
@@ -273,7 +298,21 @@ else if (etcantidadelegida.getText()== null){
                                     productos.getCodigo() + "|" + tvpreciorealjson.getText().toString().replace(",","") +
                                     "|" + tvtasa.getText().toString().trim() + "||"+productos.getPresentacion()+
                                     "|"+productos.getEquivalencia()+"|N";  // Tasas
-                            ActualizarProducto1(trama);
+
+                            if(Utilitario.isOnline(getApplicationContext())){
+
+                                ActualizarProducto1(trama);
+
+                            }else{
+
+                                AlertDialog.Builder build = new AlertDialog.Builder(DetalleProductoActivity.this);
+                                build.setTitle("Atención .. !");
+                                build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                                build.setCancelable(false);
+                                build.setNegativeButton("ACEPTAR",null);
+                                build.create().show();
+
+                            }
 
                         }else {
 
@@ -281,7 +320,21 @@ else if (etcantidadelegida.getText()== null){
                                     productos.getCodigo() + "|" + tvpreciorealjson.getText().toString().replace(",", "") +
                                     "|" + tvtasa.getText().toString().trim() + "|" + productos.getNumPromocion().trim() + "|" + productos.getPresentacion() +
                                     "|" + productos.getEquivalencia() + "|N";  // Tasas
-                            ActualizarProducto1(trama);
+
+                            if(Utilitario.isOnline(getApplicationContext())){
+
+                                ActualizarProducto1(trama);
+
+                            }else{
+
+                                AlertDialog.Builder build = new AlertDialog.Builder(DetalleProductoActivity.this);
+                                build.setTitle("Atención .. !");
+                                build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                                build.setCancelable(false);
+                                build.setNegativeButton("ACEPTAR",null);
+                                build.create().show();
+
+                            }
 
                         }
                 }
@@ -570,6 +623,13 @@ else if (etcantidadelegida.getText()== null){
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 
@@ -668,6 +728,13 @@ else if (etcantidadelegida.getText()== null){
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 
@@ -765,6 +832,13 @@ else if (etcantidadelegida.getText()== null){
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 

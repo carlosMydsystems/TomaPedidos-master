@@ -350,12 +350,20 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
+
                             }
                         }
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoPrecioActivity.this);
+                    builder.setTitle("Atención ...!");
+                    builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                    builder.setCancelable(false);
+                    builder.setNegativeButton("Aceptar",null);
+                    builder.create().show();
+
                 }
             });
             int socketTimeout = 10000;

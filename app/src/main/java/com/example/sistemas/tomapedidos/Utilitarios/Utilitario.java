@@ -75,13 +75,10 @@ public class Utilitario {
 
             DctoxVolumen dctoxVolumen = new DctoxVolumen();
 
-
             TextView tvDesdeHasta = mView.findViewById(R.id.tvDesdeHasta);
             TextView tvDscto = mView.findViewById(R.id.tvDscto);
 
             TextView tvPrecioDscto = mView.findViewById(R.id.tvPrecioDscto);
-
-
 
             if(items.get(position) != null )
             {

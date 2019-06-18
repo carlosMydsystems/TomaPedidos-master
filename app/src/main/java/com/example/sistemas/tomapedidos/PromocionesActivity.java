@@ -22,6 +22,8 @@ import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Promociones;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -75,7 +77,21 @@ public class PromocionesActivity extends AppCompatActivity {
         cantidadlista = ""+listaproductoselegidos.size();
         id = id_pedido;
 
-        CalcularPromociones(id);
+
+        if(Utilitario.isOnline(getApplicationContext())){
+
+            CalcularPromociones(id);
+
+        }else{
+
+            AlertDialog.Builder build = new AlertDialog.Builder(PromocionesActivity.this);
+            build.setTitle("Atención .. !");
+            build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+            build.setCancelable(false);
+            build.setNegativeButton("ACEPTAR",null);
+            build.create().show();
+
+        }
     }
 
     private void placeOrder(ArrayList<Productos> listaproductoselegidos) // Captura el listado
@@ -309,34 +325,34 @@ public class PromocionesActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
 
-                                                        placeOrder(listaproductoselegidos);
-                                                        Intent intent = new Intent(PromocionesActivity.this, IntermediaActivity.class);
-                                                        intent.putExtra("cantidadlista", cantidadlista);
-                                                        intent.putExtra("Almacen", almacen);
-                                                        intent.putExtra("TipoPago", tipoformapago);
-                                                        intent.putExtra("Ind", Ind);
-                                                        intent.putExtra("Index", Index);
-                                                        intent.putExtra("id_pedido", id_pedido);
-                                                        intent.putExtra("validador", "false");
+                                                    placeOrder(listaproductoselegidos);
+                                                    Intent intent = new Intent(PromocionesActivity.this, IntermediaActivity.class);
+                                                    intent.putExtra("cantidadlista", cantidadlista);
+                                                    intent.putExtra("Almacen", almacen);
+                                                    intent.putExtra("TipoPago", tipoformapago);
+                                                    intent.putExtra("Ind", Ind);
+                                                    intent.putExtra("Index", Index);
+                                                    intent.putExtra("id_pedido", id_pedido);
+                                                    intent.putExtra("validador", "false");
 
-                                                        Bundle bundle = new Bundle();
-                                                        bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                                                        intent.putExtras(bundle);
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                                                    intent.putExtras(bundle);
 
-                                                        Bundle bundle1 = new Bundle();
-                                                        bundle1.putSerializable("Cliente", cliente);
-                                                        intent.putExtras(bundle1);
+                                                    Bundle bundle1 = new Bundle();
+                                                    bundle1.putSerializable("Cliente", cliente);
+                                                    intent.putExtras(bundle1);
 
-                                                        Bundle bundle2 = new Bundle();
-                                                        bundle2.putSerializable("Usuario", usuario);
-                                                        intent.putExtras(bundle2);
+                                                    Bundle bundle2 = new Bundle();
+                                                    bundle2.putSerializable("Usuario", usuario);
+                                                    intent.putExtras(bundle2);
 
-                                                        Bundle bundle3 = new Bundle();
-                                                        bundle3.putSerializable("listaClienteSucursal", listaClienteSucursal);
-                                                        intent.putExtras(bundle3);
+                                                    Bundle bundle3 = new Bundle();
+                                                    bundle3.putSerializable("listaClienteSucursal", listaClienteSucursal);
+                                                    intent.putExtras(bundle3);
 
-                                                        startActivity(intent);
-                                                        finish();
+                                                    startActivity(intent);
+                                                    finish();
 
                                                     }
                                                 });
@@ -416,33 +432,33 @@ public class PromocionesActivity extends AppCompatActivity {
                                         .setNegativeButton("Regresar",new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
-                                                Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
-                                                intent.putExtra("cantidadlista",cantidadlista);
-                                                intent.putExtra("Almacen",almacen);
-                                                intent.putExtra("TipoPago",tipoformapago);
-                                                intent.putExtra("Ind",Ind);
-                                                intent.putExtra("Index",Index);
-                                                intent.putExtra("id_pedido",id_pedido);
-                                                intent.putExtra("validador","false");
+                                            Intent intent = new Intent(PromocionesActivity.this,bandejaProductosActivity.class);
+                                            intent.putExtra("cantidadlista",cantidadlista);
+                                            intent.putExtra("Almacen",almacen);
+                                            intent.putExtra("TipoPago",tipoformapago);
+                                            intent.putExtra("Ind",Ind);
+                                            intent.putExtra("Index",Index);
+                                            intent.putExtra("id_pedido",id_pedido);
+                                            intent.putExtra("validador","false");
 
-                                                Bundle bundle = new Bundle();
-                                                bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                                                intent.putExtras(bundle);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                                            intent.putExtras(bundle);
 
-                                                Bundle bundle1 = new Bundle();
-                                                bundle1.putSerializable("Cliente", cliente);
-                                                intent.putExtras(bundle1);
+                                            Bundle bundle1 = new Bundle();
+                                            bundle1.putSerializable("Cliente", cliente);
+                                            intent.putExtras(bundle1);
 
-                                                Bundle bundle2 = new Bundle();
-                                                bundle2.putSerializable("Usuario", usuario);
-                                                intent.putExtras(bundle2);
+                                            Bundle bundle2 = new Bundle();
+                                            bundle2.putSerializable("Usuario", usuario);
+                                            intent.putExtras(bundle2);
 
-                                                Bundle bundle3 = new Bundle();
-                                                bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                                                intent.putExtras(bundle3);
+                                            Bundle bundle3 = new Bundle();
+                                            bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                                            intent.putExtras(bundle3);
 
-                                                startActivity(intent);
-                                                finish();
+                                            startActivity(intent);
+                                            finish();
                                             }
                                         })
                                         .create()

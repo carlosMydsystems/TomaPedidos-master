@@ -23,7 +23,9 @@ import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.ConsultaPromocion;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import com.example.sistemas.tomapedidos.ListadoAlmacenActivity;
+import com.example.sistemas.tomapedidos.LoginActivity;
 import com.example.sistemas.tomapedidos.R;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,24 +57,37 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         ibRetornoMenuConsultaPromocion = findViewById(R.id.ibRetornoMenuConsultaPromocion);
         trama = usuario.getLugar()+"|"+clientes.getCodCliente()+"|"+usuario.getCodTienda();
-        buscarpromociones(trama);
-        lvmuestrapromociones = findViewById(R.id.lvMuestraPromociones);
 
-        ibRetornoMenuConsultaPromocion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ConsultarPromocionesActivity.this, BusquedaClienteActivity.class);
-                intent.putExtra("consultaPromociones","true");
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Usuario",usuario);
-                intent.putExtras(bundle);
-                Bundle bundle1 = new Bundle();
-                bundle1.putSerializable("Cliente",clientes);
-                intent.putExtras(bundle1);
-                startActivity(intent);
-                finish();
-            }
-        });
+        if(Utilitario.isOnline(getApplicationContext())){
+
+            buscarpromociones(trama);
+            lvmuestrapromociones = findViewById(R.id.lvMuestraPromociones);
+            ibRetornoMenuConsultaPromocion.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ConsultarPromocionesActivity.this, BusquedaClienteActivity.class);
+                    intent.putExtra("consultaPromociones","true");
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Usuario",usuario);
+                    intent.putExtras(bundle);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("Cliente",clientes);
+                    intent.putExtras(bundle1);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+        }else{
+
+            AlertDialog.Builder build = new AlertDialog.Builder(ConsultarPromocionesActivity.this);
+            build.setTitle("Atención .. !");
+            build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+            build.setCancelable(false);
+            build.setNegativeButton("ACEPTAR",null);
+            build.create().show();
+
+        }
     }
 
     private void buscarpromociones(String trama) {

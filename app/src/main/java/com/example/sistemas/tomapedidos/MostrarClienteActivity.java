@@ -23,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,87 +54,97 @@ public class MostrarClienteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_cliente);
 
-        cliente  = new Clientes();
-        cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
-        cliente.setTipoDocumento("FAC");
-        usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
-        tvcodigo = findViewById(R.id.tvCofigoProducto);
-        tvNombre = findViewById(R.id.tvNombreCliente);
-        tvDireccion = findViewById(R.id.tvDireccion);
-        tvGiro = findViewById(R.id.tvNomProdElegido);
-        tvTipoCiente = findViewById(R.id.tvAlmProdElegido);
-        tvDeuda = findViewById(R.id.tvStockElegido);
-        tvestado = findViewById(R.id.tvPrecioElegido);
-        tvUsuarioUltPedido = findViewById(R.id.tvTotalElegido);
-        btnregresodetallecliente = findViewById(R.id.btnRetornoDetCliente);
-        spopcionesdocumento = findViewById(R.id.spTipoDocumento);
-        spsucursal = findViewById(R.id.spSucursal);
-        tvDireccionFiscalCliente = findViewById(R.id.tvDireccionFiscalCliente);
-        tvRucDni = findViewById(R.id.tvRucDni);
-        tvcodigo.setText(cliente.getCodCliente());
-        tvNombre.setText(cliente.getNombre());
-        tvDireccion.setText(cliente.getDireccion());
-        opdoc = new ArrayList<>();
-        tvRucDni.setText(cliente.getDocumentoCliente());
-        if (cliente.getDocumentoCliente().length() == 11){
-            opdoc.add("FACTURA");
-            opdoc.add("BOLETA");
-        }else if(cliente.getDocumentoCliente().length() == 8){
-            opdoc.add("BOLETA");
-        }
+        if(Utilitario.isOnline(getApplicationContext())){
 
-        spopcionesdocumento.setAdapter(new SpinnerAdapter(this,opdoc));
+            cliente  = new Clientes();
+            cliente = (Clientes)getIntent().getSerializableExtra("Cliente");
+            cliente.setTipoDocumento("FAC");
+            usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
+            tvcodigo = findViewById(R.id.tvCofigoProducto);
+            tvNombre = findViewById(R.id.tvNombreCliente);
+            tvDireccion = findViewById(R.id.tvDireccion);
+            tvGiro = findViewById(R.id.tvNomProdElegido);
+            tvTipoCiente = findViewById(R.id.tvAlmProdElegido);
+            tvDeuda = findViewById(R.id.tvStockElegido);
+            tvestado = findViewById(R.id.tvPrecioElegido);
+            tvUsuarioUltPedido = findViewById(R.id.tvTotalElegido);
+            btnregresodetallecliente = findViewById(R.id.btnRetornoDetCliente);
+            spopcionesdocumento = findViewById(R.id.spTipoDocumento);
+            spsucursal = findViewById(R.id.spSucursal);
+            tvDireccionFiscalCliente = findViewById(R.id.tvDireccionFiscalCliente);
+            tvRucDni = findViewById(R.id.tvRucDni);
+            tvcodigo.setText(cliente.getCodCliente());
+            tvNombre.setText(cliente.getNombre());
+            tvDireccion.setText(cliente.getDireccion());
+            opdoc = new ArrayList<>();
+            tvRucDni.setText(cliente.getDocumentoCliente());
+            if (cliente.getDocumentoCliente().length() == 11){
+                opdoc.add("FACTURA");
+                opdoc.add("BOLETA");
+            }else if(cliente.getDocumentoCliente().length() == 8){
+                opdoc.add("BOLETA");
+            }
 
-        ListaSucursalesClientes(cliente.getCodCliente(),cliente);
-        spopcionesdocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String muestra = (String)parent.getItemAtPosition(position);
-                if (muestra.equals("FACTURA")){
-                    cliente.setTipoDocumento("FAC");
-                    cliente.setDocumentoSeleccionado("FACTURA");
-                }else if ( muestra.equals("BOLETA")){
-                    cliente.setTipoDocumento("BOL");
-                    cliente.setDocumentoSeleccionado("BOLETA");
+            spopcionesdocumento.setAdapter(new SpinnerAdapter(this,opdoc));
+
+            ListaSucursalesClientes(cliente.getCodCliente(),cliente);
+            spopcionesdocumento.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String muestra = (String)parent.getItemAtPosition(position);
+                    if (muestra.equals("FACTURA")){
+                        cliente.setTipoDocumento("FAC");
+                        cliente.setDocumentoSeleccionado("FACTURA");
+                    }else if ( muestra.equals("BOLETA")){
+                        cliente.setTipoDocumento("BOL");
+                        cliente.setDocumentoSeleccionado("BOLETA");
+                    }
                 }
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
 
-            }
-        });
-        btnpedido = findViewById(R.id.btnPedido);
-        btnpedido.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                }
+            });
+            btnpedido = findViewById(R.id.btnPedido);
+            btnpedido.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                Intent intent = new Intent(MostrarClienteActivity.this,ListadoAlmacenActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Cliente",cliente);
-                intent.putExtras(bundle);
-                Bundle bundle1 = new Bundle();
-                bundle1.putSerializable("Usuario",usuario);
-                intent.putExtras(bundle1);
-                Bundle bundle2 = new Bundle();
-                bundle2.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                intent.putExtras(bundle2);
-                startActivity(intent);
-                finish();
-            }
-        });
+                    Intent intent = new Intent(MostrarClienteActivity.this,ListadoAlmacenActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Cliente",cliente);
+                    intent.putExtras(bundle);
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("Usuario",usuario);
+                    intent.putExtras(bundle1);
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                    intent.putExtras(bundle2);
+                    startActivity(intent);
+                    finish();
+                }
+            });
 
-        btnregresodetallecliente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent =  new Intent(MostrarClienteActivity.this,BusquedaClienteActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Usuario",usuario);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                finish();
-            }
-        });
+            btnregresodetallecliente.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent =  new Intent(MostrarClienteActivity.this,BusquedaClienteActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("Usuario",usuario);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }else{
+            AlertDialog.Builder build = new AlertDialog.Builder(MostrarClienteActivity.this);
+            build.setTitle("Atención .. !");
+            build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+            build.setCancelable(false);
+            build.setNegativeButton("ACEPTAR",null);
+            build.create().show();
+        }
     }
 
     private void ListaSucursalesClientes(String codCliente,final Clientes cliente) {

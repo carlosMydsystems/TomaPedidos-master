@@ -26,6 +26,7 @@ import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,7 +35,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
-
 import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
 import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Dolares;
@@ -93,6 +93,7 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
         tvtasaelegida = findViewById(R.id.tvTasaElegida);
         textView7A = findViewById(R.id.textView7A);
         textView9A = findViewById(R.id.textView9A);
+
         if (usuario.getMoneda().toString().equals("1")){
             textView7A.setText("Precio : " + Soles);
             textView9A.setText("Total   :  " + Soles);
@@ -108,10 +109,20 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
             progressDialog.setCancelable(false);
             progressDialog.setMessage("... Por favor esperar");
             progressDialog.show();
-            if (etcantprodelegida.getText()==null || etcantprodelegida.getText().toString().equals("")){
-            }else{
-                VerificarCantidad(etcantprodelegida.getText().toString());
-            }
+                if (etcantprodelegida.getText()==null || etcantprodelegida.getText().toString().equals("")){
+
+                }else{
+                    if(Utilitario.isOnline(getApplicationContext())){
+                        VerificarCantidad(etcantprodelegida.getText().toString());
+                    }else{
+                        AlertDialog.Builder build = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this);
+                        build.setTitle("Atención .. !");
+                        build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                        build.setCancelable(false);
+                        build.setNegativeButton("ACEPTAR",null);
+                        build.create().show();
+                    }
+                }
             }
         });
 
@@ -124,78 +135,93 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                // Se genera un nuevo Progress dialog
-                Double validarStock;
-                Double stockDouble = Double.valueOf(tvstockelegido.getText().toString().replace(",",""));
-                Double cantidadElegida = Double.valueOf(etcantprodelegida.getText().toString());
+            // Se genera un nuevo Progress dialog
+            Double validarStock;
+            Double stockDouble = Double.valueOf(tvstockelegido.getText().toString().replace(",",""));
+            Double cantidadElegida = Double.valueOf(etcantprodelegida.getText().toString());
 
-                    validarStock = stockDouble - cantidadElegida;
+                validarStock = stockDouble - cantidadElegida;
 
-                if (validarStock < 0) {
+            if (validarStock < 0) {
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this)
-                            .setMessage("El Stock es insuficiente, por favor ingrese una cantidad menor");
-                    builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.create()
-                           .show();
-                }else {
-                    if (etcantprodelegida.getText().toString().equals("")) {
-                    } else {
-                        String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
-                                    productos.getCodigo() + "|" + tvpreciorealjsonelegido.getText().toString().replace(",", "") +
-                                    "|" + tvtasaelegida.getText().toString().trim() + "|" + productos.getNumPromocion().trim() + "|" + productos.getPresentacion() +
-                                    "|" + productos.getEquivalencia() + "|N";  // Tasas
+                AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this)
+                        .setMessage("El Stock es insuficiente, por favor ingrese una cantidad menor");
+                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.create()
+                       .show();
+            }else {
+                if (etcantprodelegida.getText().toString().equals("")) {
+                } else {
+                    String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
+                                productos.getCodigo() + "|" + tvpreciorealjsonelegido.getText().toString().replace(",", "") +
+                                "|" + tvtasaelegida.getText().toString().trim() + "|" + productos.getNumPromocion().trim() + "|" + productos.getPresentacion() +
+                                "|" + productos.getEquivalencia() + "|N";  // Tasas
+
+
+                    if(Utilitario.isOnline(getApplicationContext())){
 
                         ActualizarProducto(trama);
-                        productos.setCantidad(etcantprodelegida.getText().toString());
-                        preciounitario = Double.valueOf(tvprecioelegido.getText().toString().replace(",",""));
-                        cantidad = Double.valueOf(etcantprodelegida.getText().toString());
-                        redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
-                        productos.setPrecio(tvprecioelegido.getText().toString());
-                        productos.setPrecioAcumulado(tvtotalelegido.getText().toString()); // Se hace la definicion del precio que se va ha acumular
-                        productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
-                        productos.setAlmacen(almacen);
-                        Integer i = Integer.valueOf(position);
-                        listaproductoselegidos.get(i).setCantidad(redondeado.toString());
-                        listaproductoselegidos.get(i).setPrecio(tvprecioelegido.getText().toString());
-                        listaproductoselegidos.get(i).setPrecioAcumulado(tvtotalelegido.getText().toString());
 
-                        Intent intent = new Intent(ActualizarRegistroPedidosActivity.this, bandejaProductosActivity.class);
-                        intent.putExtra("TipoPago", tipoformapago);
-                        intent.putExtra("id_pedido", id_pedido);
-                        intent.putExtra("validador", "true");
-                        intent.putExtra("Almacen", almacen);
-                        intent.putExtra("Index", Index);
+                    }else{
 
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
-                        intent.putExtras(bundle);
+                        AlertDialog.Builder build = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this);
+                        build.setTitle("Atención .. !");
+                        build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                        build.setCancelable(false);
+                        build.setNegativeButton("ACEPTAR",null);
+                        build.create().show();
 
-                        Bundle bundle1 = new Bundle();
-                        bundle1.putSerializable("Cliente", cliente);
-                        intent.putExtras(bundle1);
-
-                        Bundle bundle2 = new Bundle();
-                        bundle2.putSerializable("Usuario", usuario);
-                        intent.putExtras(bundle2);
-
-                        Bundle bundle3 = new Bundle();
-                        bundle3.putSerializable("Almacen", almacen);
-                        intent.putExtras(bundle3);
-
-                        Bundle bundle4 = new Bundle();
-                        bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                        intent.putExtras(bundle4);
-
-                        startActivity(intent);
-                        finish();
                     }
+
+                    productos.setCantidad(etcantprodelegida.getText().toString());
+                    preciounitario = Double.valueOf(tvprecioelegido.getText().toString().replace(",",""));
+                    cantidad = Double.valueOf(etcantprodelegida.getText().toString());
+                    redondeado = new BigDecimal(cantidad).setScale(2, RoundingMode.HALF_EVEN);
+                    productos.setPrecio(tvprecioelegido.getText().toString());
+                    productos.setPrecioAcumulado(tvtotalelegido.getText().toString()); // Se hace la definicion del precio que se va ha acumular
+                    productos.setEstado(String.valueOf(redondeado)); // Se define la cantidad que se debe de tener
+                    productos.setAlmacen(almacen);
+                    Integer i = Integer.valueOf(position);
+                    listaproductoselegidos.get(i).setCantidad(redondeado.toString());
+                    listaproductoselegidos.get(i).setPrecio(tvprecioelegido.getText().toString());
+                    listaproductoselegidos.get(i).setPrecioAcumulado(tvtotalelegido.getText().toString());
+
+                    Intent intent = new Intent(ActualizarRegistroPedidosActivity.this, bandejaProductosActivity.class);
+                    intent.putExtra("TipoPago", tipoformapago);
+                    intent.putExtra("id_pedido", id_pedido);
+                    intent.putExtra("validador", "true");
+                    intent.putExtra("Almacen", almacen);
+                    intent.putExtra("Index", Index);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("listaProductoselegidos", listaproductoselegidos);
+                    intent.putExtras(bundle);
+
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("Cliente", cliente);
+                    intent.putExtras(bundle1);
+
+                    Bundle bundle2 = new Bundle();
+                    bundle2.putSerializable("Usuario", usuario);
+                    intent.putExtras(bundle2);
+
+                    Bundle bundle3 = new Bundle();
+                    bundle3.putSerializable("Almacen", almacen);
+                    intent.putExtras(bundle3);
+
+                    Bundle bundle4 = new Bundle();
+                    bundle4.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                    intent.putExtras(bundle4);
+
+                    startActivity(intent);
+                    finish();
                 }
+            }
             }
         });
 
@@ -313,8 +339,6 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                         producto.setPrecio(jsonObject.getString("PRECIO_DOLARES"));
                                     }
 
-                                    // producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
-
                                     precioDouble = Double.valueOf(jsonObject.getString("PRECIO_SOLES")) * (1 - Double.valueOf(jsonObject.getString("TASA_DESCUENTO")) / 100);
                                     BigDecimal precioBig = new BigDecimal(precioDouble.toString());
                                     precioBig = precioBig.setScale(4, RoundingMode.HALF_EVEN);
@@ -340,14 +364,12 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                                     if (etcantprodelegida.getText().toString().equals("")) {
 
                                     } else {
-
                                         BigDecimal precioTotalBig = new BigDecimal(precioDouble.toString());
                                         precioTotalBig = precioTotalBig.setScale(2, RoundingMode.HALF_UP);
                                         tvunidadelegida.setText(producto.getUnidad().toUpperCase());
                                         Double Aux1 = Double.valueOf(producto.getStock());
                                         tvstockelegido.setText(formateador.format((double) Aux1) + " ");
                                         tvtotalelegido.setText(precioTotalBig.toString());
-
                                     }
                                 }
                             }
@@ -365,7 +387,14 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
             }
         });
 
@@ -398,6 +427,13 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ActualizarRegistroPedidosActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 

@@ -35,6 +35,8 @@ import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Proveedor;
 import com.example.sistemas.tomapedidos.Entidades.SucursalProveedor;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -288,8 +290,20 @@ public class ProveedorActivity extends AppCompatActivity {
 
                 }else{
 
-                    buscarproveedor(etProveedor.getText().toString().trim(),TipodeConsulta);
+                    if(Utilitario.isOnline(getApplicationContext())){
 
+                        buscarproveedor(etProveedor.getText().toString().trim(),TipodeConsulta);
+
+                    }else{
+
+                        AlertDialog.Builder build = new AlertDialog.Builder(ProveedorActivity.this);
+                        build.setTitle("Atención .. !");
+                        build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                        build.setCancelable(false);
+                        build.setNegativeButton("ACEPTAR",null);
+                        build.create().show();
+
+                    }
                 }
             }
         });

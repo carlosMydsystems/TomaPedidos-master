@@ -26,6 +26,7 @@ import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
@@ -199,19 +200,30 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
-                    EliminarProductoporIdpedido(id_pedido);
-                    Intent intent = new Intent(bandejaProductosActivity.this, MostrarClienteActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("Cliente", cliente);
-                    intent.putExtras(bundle);
-                    Bundle bundle1 = new Bundle();
-                    bundle1.putSerializable("Usuario", usuario);
-                    intent.putExtras(bundle1);
-                    Bundle bundle3 = new Bundle();
-                    bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
-                    intent.putExtras(bundle3);
-                    startActivity(intent);
-                    finish();
+                    if(Utilitario.isOnline(getApplicationContext())){
+
+                        EliminarProductoporIdpedido(id_pedido);
+                        Intent intent = new Intent(bandejaProductosActivity.this, MostrarClienteActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Cliente", cliente);
+                        intent.putExtras(bundle);
+                        Bundle bundle1 = new Bundle();
+                        bundle1.putSerializable("Usuario", usuario);
+                        intent.putExtras(bundle1);
+                        Bundle bundle3 = new Bundle();
+                        bundle3.putSerializable("listaClienteSucursal",listaClienteSucursal);
+                        intent.putExtras(bundle3);
+                        startActivity(intent);
+                        finish();
+
+                    }else{
+                        AlertDialog.Builder build = new AlertDialog.Builder(bandejaProductosActivity.this);
+                        build.setTitle("Atención .. !");
+                        build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                        build.setCancelable(false);
+                        build.setNegativeButton("ACEPTAR",null);
+                        build.create().show();
+                    }
                 }
             });
 
@@ -375,6 +387,8 @@ public class bandejaProductosActivity extends AppCompatActivity {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 
+                if(Utilitario.isOnline(getApplicationContext())){
+
                     if (listaproductoselegidos.get(position).getObservacion() == null) {
 
                         final AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
@@ -391,72 +405,73 @@ public class bandejaProductosActivity extends AppCompatActivity {
                         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int i, long id) {
-                                usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
+                            usuario = (Usuario) getIntent().getSerializableExtra("Usuario");
 
-                                switch (i) {
-                                    case 0: // Editar producto
+                            switch (i) {
+                                case 0: // Editar producto
 
-                                        EliminaPromocion();
-                                        if (listaproductoselegidos.get(position).getObservacion() == null) {
-                                            btnterminar.setVisibility(View.VISIBLE);
-                                            btngrabarpedido.setVisibility(View.GONE);
-                                            Editarproductoselecionado(position);
-                                            valida = true;
-                                            break;
+                                    EliminaPromocion();
 
-                                        } else {
-                                            salirlistview();
-                                            break;
-                                        }
+                                    if (listaproductoselegidos.get(position).getObservacion() == null) {
+                                        btnterminar.setVisibility(View.VISIBLE);
+                                        btngrabarpedido.setVisibility(View.GONE);
+                                        Editarproductoselecionado(position);
+                                        valida = true;
+                                        break;
 
-                                    case 1: // Eliminar el Producto
-
-                                        EliminaPromocion();
-                                        if (listaproductoselegidos.get(position).getObservacion() == null) {
-                                            final String trama1 = id_pedido + "|" + listaproductoselegidos.get(position).getIndice();
-
-                                            final AlertDialog.Builder builder1 = new AlertDialog.Builder(
-                                                    bandejaProductosActivity.this);
-                                            builder1.setMessage("Esta seguro que desea eliminar el pedido?")
-                                                    .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialogInterface, int i) {
-
-                                                            EliminarProducto(trama1);
-                                                            dialogInterface.cancel();
-                                                            salirlistview();
-                                                        }
-                                                    })
-                                                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            dialog.cancel();
-                                                            salirlistview();
-                                                        }
-                                                    })
-                                                    .create()
-                                                    .show();
-
-                                            listaproductoselegidos.remove(position);
-                                            btnterminar.setVisibility(View.VISIBLE);
-                                            btngrabarpedido.setVisibility(View.GONE);
-                                            valida = true;
-                                            break;
-
-                                        } else {
-                                            salirlistview();
-                                            break;
-                                        }
-
-                                    case 2: // Cancela la accion pero elimina la promocion
-
-                                        EliminaPromocion();
+                                    } else {
                                         salirlistview();
+                                        break;
+                                    }
+
+                                case 1: // Eliminar el Producto
+
+                                    EliminaPromocion();
+                                    if (listaproductoselegidos.get(position).getObservacion() == null) {
+                                        final String trama1 = id_pedido + "|" + listaproductoselegidos.get(position).getIndice();
+
+                                        final AlertDialog.Builder builder1 = new AlertDialog.Builder(
+                                                bandejaProductosActivity.this);
+                                        builder1.setMessage("Esta seguro que desea eliminar el pedido?")
+                                                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                        EliminarProducto(trama1);
+                                                        dialogInterface.cancel();
+                                                        salirlistview();
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                        salirlistview();
+                                                    }
+                                                })
+                                                .create()
+                                                .show();
+
+                                        listaproductoselegidos.remove(position);
                                         btnterminar.setVisibility(View.VISIBLE);
                                         btngrabarpedido.setVisibility(View.GONE);
                                         valida = true;
                                         break;
-                                }
+
+                                    } else {
+                                        salirlistview();
+                                        break;
+                                    }
+
+                                case 2: // Cancela la accion pero elimina la promocion
+
+                                    EliminaPromocion();
+                                    salirlistview();
+                                    btnterminar.setVisibility(View.VISIBLE);
+                                    btngrabarpedido.setVisibility(View.GONE);
+                                    valida = true;
+                                    break;
+                            }
                             }
                         });
 
@@ -469,6 +484,18 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     } else {
                         return true;
                     }
+
+                }else{
+
+                    AlertDialog.Builder build = new AlertDialog.Builder(bandejaProductosActivity.this);
+                    build.setTitle("Atención .. !");
+                    build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                    build.setCancelable(false);
+                    build.setNegativeButton("ACEPTAR",null);
+                    build.create().show();
+
+                }
+                    return true;
                 }
             });
 
@@ -594,55 +621,64 @@ public class bandejaProductosActivity extends AppCompatActivity {
     }
 
     private void EliminarProducto(String trama) {
-
-        RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
-        url =  ejecutaFuncionTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_TRAMA_MOVIL&variables='"+trama+"'";
-
-        StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response.equals("OK")){
-                            // insertaCampos(listaproductoselegidos,id);
+            RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
+            url =  ejecutaFuncionTestMovil +
+                    "PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_TRAMA_MOVIL&variables='"+trama+"'";
+            StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            if (response.equals("OK")){
+                                // insertaCampos(listaproductoselegidos,id);
+                            }
                         }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    error.printStackTrace();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
+                    builder.setTitle("Atención ...!");
+                    builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                    builder.setCancelable(false);
+                    builder.setNegativeButton("Aceptar",null);
+                    builder.create().show();
 
-        int socketTimeout = 30000;
-        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(policy);
-        requestQueue.add(stringRequest);
+                }
+            });
+
+            int socketTimeout = 30000;
+            RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+            stringRequest.setRetryPolicy(policy);
+            requestQueue.add(stringRequest);
     }
 
     private void EliminarProductoporIdpedido(String idpedido) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
-
         url =  ejecutaFuncionTestMovil +
                 "PKG_WEB_HERRAMIENTAS.FN_WS_ELIMINA_PEDIDO_TRAMA&variables='"+idpedido+"'";
-
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response.equals("OK")){
-                            // insertaCampos(listaproductoselegidos,id);
-                        }
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    if (response.equals("OK")){
+                        // insertaCampos(listaproductoselegidos,id);
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
-        });
+                }
+            }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            error.printStackTrace();
+            AlertDialog.Builder builder = new AlertDialog.Builder(bandejaProductosActivity.this);
+            builder.setTitle("Atención ...!");
+            builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+            builder.setCancelable(false);
+            builder.setNegativeButton("Aceptar",null);
+            builder.create().show();
+
+        }
+    });
 
         int socketTimeout = 30000;
         RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,

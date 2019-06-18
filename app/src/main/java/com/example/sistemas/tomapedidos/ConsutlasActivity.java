@@ -21,6 +21,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.PedidosConsulta;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,7 +68,21 @@ public class ConsutlasActivity extends AppCompatActivity {
             }
         });
         listaPedidosConsulta = new ArrayList<>();
-        ListarPedidos(usuario.getUser().trim(),fecha);
+
+        if(Utilitario.isOnline(getApplicationContext())){
+
+            ListarPedidos(usuario.getUser().trim(),fecha);
+
+        }else{
+
+            AlertDialog.Builder build = new AlertDialog.Builder(ConsutlasActivity.this);
+            build.setTitle("Atención .. !");
+            build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+            build.setCancelable(false);
+            build.setNegativeButton("ACEPTAR",null);
+            build.create().show();
+
+        }
     }
 
     private void ListarPedidos(final String usuariost, String fechaingresada) {
@@ -175,6 +190,13 @@ public class ConsutlasActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ConsutlasActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 

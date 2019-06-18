@@ -13,13 +13,9 @@ public class DctoxVolumen implements Serializable {
     public DctoxVolumen() {
     }
 
-    public String getMoneda() {
-        return moneda;
-    }
+    public String getMoneda() { return moneda; }
 
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
-    }
+    public void setMoneda(String moneda) { this.moneda = moneda; }
 
     public String getRango() {
         return rango;

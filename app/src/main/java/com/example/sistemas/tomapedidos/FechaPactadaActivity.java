@@ -43,6 +43,7 @@ import com.example.sistemas.tomapedidos.Entidades.Proveedor;
 import com.example.sistemas.tomapedidos.Entidades.SucursalProveedor;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import com.example.sistemas.tomapedidos.Request.EnvioRequest;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -195,35 +196,62 @@ public class FechaPactadaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                calendar = Calendar.getInstance();
-                year = calendar.get(Calendar.YEAR);
-                month = calendar.get(Calendar.MONTH);
-                dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-                datePickerDialog = new DatePickerDialog(FechaPactadaActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                                String trama = id_pedido+"|"+ formatoFecha(day) + "/" + formatoFecha(month + 1) + "/" + year;
-                                String fecha = formatoFecha(day) + "/" + formatoFecha(month + 1) + "/" + year;
-                                String fechaActual = formatoFecha(dayOfMonth) + "/" + formatoFecha(month+1) + "/"+formatoFecha(year);
+                if(Utilitario.isOnline(getApplicationContext())){
+
+                    calendar = Calendar.getInstance();
+                    year = calendar.get(Calendar.YEAR);
+                    month = calendar.get(Calendar.MONTH);
+                    dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+                    datePickerDialog = new DatePickerDialog(FechaPactadaActivity.this,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                                    String trama = id_pedido+"|"+ formatoFecha(day) + "/" + formatoFecha(month + 1) + "/" + year;
+                                    String fecha = formatoFecha(day) + "/" + formatoFecha(month + 1) + "/" + year;
+                                    String fechaActual = formatoFecha(dayOfMonth) + "/" + formatoFecha(month+1) + "/"+formatoFecha(year);
 /*
-                                if(fecha.equals(fechaActual)){
+                    if(fecha.equals(fechaActual)){
 
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
-                                    builder.setCancelable(false);
-                                    builder.setTitle("Atencion !");
-                                    builder.setMessage("Debe elegir una fecha posterior al dia de Hoy");
-                                    builder.setNegativeButton("Aceptar",null);
-                                    builder.create().show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
+                        builder.setCancelable(false);
+                        builder.setTitle("Atencion !");
+                        builder.setMessage("Debe elegir una fecha posterior al dia de Hoy");
+                        builder.setNegativeButton("Aceptar",null);
+                        builder.create().show();
 
-                                }else {
+                    }else {
 */
-                                    VerificaFecha(trama);
-                                //}
-                            }
-                        }, year, month, dayOfMonth);
-                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
-                datePickerDialog.show();
+                                    if(Utilitario.isOnline(getApplicationContext())){
+
+                                        VerificaFecha(trama);
+
+                                    }else{
+
+                                        AlertDialog.Builder build = new AlertDialog.Builder(FechaPactadaActivity.this);
+                                        build.setTitle("Atención .. !");
+                                        build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                                        build.setCancelable(false);
+                                        build.setNegativeButton("ACEPTAR",null);
+                                        build.create().show();
+
+                                    }
+                                    //}
+                                }
+                            }, year, month, dayOfMonth);
+                    datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+                    datePickerDialog.show();
+
+
+                }else{
+
+                    AlertDialog.Builder build = new AlertDialog.Builder(FechaPactadaActivity.this);
+                    build.setTitle("Atención .. !");
+                    build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+                    build.setCancelable(false);
+                    build.setNegativeButton("ACEPTAR",null);
+                    build.create().show();
+
+                }
             }
         });
 
@@ -379,6 +407,13 @@ public class FechaPactadaActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
         int socketTimeout = 30000;
@@ -546,6 +581,13 @@ public class FechaPactadaActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 
@@ -593,6 +635,13 @@ public class FechaPactadaActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
         int socketTimeout = 30000;

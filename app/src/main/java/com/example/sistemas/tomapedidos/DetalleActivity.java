@@ -20,6 +20,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.DetallePedido;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,7 +68,20 @@ public class DetalleActivity extends AppCompatActivity {
             }
         });
 
-        VerificarCantidad(numeroPedido);
+        if(Utilitario.isOnline(getApplicationContext())){
+
+            VerificarCantidad(numeroPedido);
+
+        }else{
+
+            AlertDialog.Builder build = new AlertDialog.Builder(DetalleActivity.this);
+            build.setTitle("Atención .. !");
+            build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+            build.setCancelable(false);
+            build.setNegativeButton("ACEPTAR",null);
+            build.create().show();
+
+        }
     }
 
     private void VerificarCantidad(String numeroPedido) {
@@ -164,6 +179,13 @@ public class DetalleActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetalleActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
         int socketTimeout = 30000;

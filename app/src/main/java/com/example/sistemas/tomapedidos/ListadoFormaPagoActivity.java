@@ -27,6 +27,8 @@ import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
+import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,13 +75,18 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
 
         // Donde se va a colocar el nuevo id del pedido
 
-
-        ObtenerId();
-
-        // id segun el antiguo metodo
-
-        id_pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
-
+        if(Utilitario.isOnline(getApplicationContext())){
+            ObtenerId();
+            // id segun el antiguo metodo
+            id_pedido = formatonumerico(dia)+formatonumerico(mes)+formatonumerico(hora)+formatonumerico(minuto);
+        }else{
+            AlertDialog.Builder build = new AlertDialog.Builder(ListadoFormaPagoActivity.this);
+            build.setTitle("Atención .. !");
+            build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
+            build.setCancelable(false);
+            build.setNegativeButton("ACEPTAR",null);
+            build.create().show();
+        }
     }
 
     private void Consultartipopago(String COD_FPAGO_LIMITE,final ProgressDialog progressdialog) {
