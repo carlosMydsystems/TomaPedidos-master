@@ -25,11 +25,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.sistemas.tomapedidos.Entidades.ClienteSucursal;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
-import com.example.sistemas.tomapedidos.Entidades.DetallePedido;
 import com.example.sistemas.tomapedidos.Entidades.Productos;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -137,6 +135,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
 
                         }else{
 
+                            progressDialog.dismiss();
                             AlertDialog.Builder build = new AlertDialog.Builder(DetalleProductoActivity.this);
                             build.setTitle("Atención .. !");
                             build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
@@ -623,6 +622,7 @@ else if (etcantidadelegida.getText()== null){
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
                 AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
                 builder.setTitle("Atención ...!");
                 builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
@@ -728,6 +728,7 @@ else if (etcantidadelegida.getText()== null){
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
                 AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
                 builder.setTitle("Atención ...!");
                 builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
@@ -832,6 +833,7 @@ else if (etcantidadelegida.getText()== null){
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
                 AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoActivity.this);
                 builder.setTitle("Atención ...!");
                 builder.setMessage("EL servicio no se encuentra disponible en estos momentos");

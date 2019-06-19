@@ -49,7 +49,6 @@ public class MostrarConsultaActivity extends AppCompatActivity {
     ArrayList<ConsultaPromocion> listaPromocionesObjetos;
     ConsultaPromocion consultaPromocion;
     ArrayList<String> listaPromocionesStr;
-    Clientes clientes;
     TextView textView30,tvTituloPromocion;
 
     @Override
@@ -69,18 +68,19 @@ public class MostrarConsultaActivity extends AppCompatActivity {
         imgPromocionElegida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MostrarConsultaActivity.this, ConsultarPromocionesActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("listaPromocionAux",listaPromocionAux);
-                intent.putExtras(bundle);
-                Bundle bundle1 = new Bundle();
-                bundle1.putSerializable("Cliente",cliente);
-                intent.putExtras(bundle1);
-                Bundle bundle2 = new Bundle();
-                bundle2.putSerializable("Usuario",usuario);
-                intent.putExtras(bundle2);
-                startActivity(intent);
-                finish();
+            Intent intent = new Intent(MostrarConsultaActivity.this, ConsultarPromocionesActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("listaPromocionAux",listaPromocionAux);
+            intent.putExtras(bundle);
+            Bundle bundle1 = new Bundle();
+            bundle1.putSerializable("Cliente",cliente);
+            intent.putExtras(bundle1);
+            Bundle bundle2 = new Bundle();
+            bundle2.putSerializable("Usuario",usuario);
+            intent.putExtras(bundle2);
+            startActivity(intent);
+            finish();
+
             }
         });
         textView30.setText("Promoción :"+listaPromocionesObjetos.get(Integer.valueOf(position)).getNroPromocion());
@@ -115,14 +115,9 @@ public class MostrarConsultaActivity extends AppCompatActivity {
                 mView = vi.inflate(id, null);
 
             }
-
             TextView text = (TextView) mView.findViewById(R.id.textView);
-
             if(items.get(position) != null )
             {
-
-
-
                 if (String.valueOf(items.get(position).charAt(0)).equals("*")){
 
                     text.setTextColor(Color.RED);
@@ -130,10 +125,7 @@ public class MostrarConsultaActivity extends AppCompatActivity {
                     text.setTextSize(15);
                     int color = Color.argb(70,255, 255, 0);
                     text.setBackgroundColor(color);
-
                 }else {
-
-
                     text.setTextColor(Color.BLACK);
                     text.setText(items.get(position));
                     text.setTextSize(15);
@@ -152,7 +144,6 @@ public class MostrarConsultaActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
-
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url = ejecutaFuncionCursorTestMovil +
@@ -164,107 +155,115 @@ public class MostrarConsultaActivity extends AppCompatActivity {
 
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        String Mensaje = "";
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                String Mensaje = "";
 
-                        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
-                        simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
-                        simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
-                        final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
-                        try {
-                            JSONObject jsonObject=new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
-                            Boolean condicion = false,error = false;
-                            if (success) {
-                                String Aux = response.replace("{", "|");
-                                Aux = Aux.replace("}", "|");
-                                Aux = Aux.replace("[", "|");
-                                Aux = Aux.replace("]", "|");
-                                Aux = Aux.replace("\"", "|");
-                                Aux = Aux.replace(",", " ");
-                                Aux = Aux.replace("|", "");
-                                Aux = Aux.replace(":", " ");
-                                String partes[] = Aux.split(" ");
-                                for (String palabras : partes) {
-                                    if (condicion) {
-                                        Mensaje += palabras + " ";
-                                    }
-                                    if (palabras.equals("ERROR")) {
-                                        condicion = true;
-                                        error = true;
-                                    }
-                                }
-                                if (error) {
-
-                                    AlertDialog.Builder dialog = new AlertDialog.Builder(
-                                            MostrarConsultaActivity.this);
-                                    dialog.setMessage(Mensaje)
-                                            .setNegativeButton("Regresar", null)
-                                            .create()
-                                            .show();
-                                } else {
-
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        jsonObject = jsonArray.getJSONObject(i);
-                                        consultaPromocion = new ConsultaPromocion();
-                                        consultaPromocion.setCodArticulo(jsonObject.getString("COD_ARTICULO"));
-                                        consultaPromocion.setDescripcion(jsonObject.getString("DESCRIPCION"));
-                                        consultaPromocion.setDesMarca(jsonObject.getString("DES_MARCA"));
-                                        consultaPromocion.setUndVenta(jsonObject.getString("UND_VENTA"));
-                                        consultaPromocion.setCantidad(jsonObject.getString("CANTIDAD"));
-                                        consultaPromocion.setFlgRegalo(jsonObject.getString("FLG_REGALO"));
-                                        listaPromocionesObjetos.add(consultaPromocion);
-                                        Double Aux1 = Double.valueOf(consultaPromocion.getCantidad().toString());
-                                        consultaPromocion.setCantidad(formateador.format((double) Aux1) + "");
-
-                                        // String[] list = consultaPromocion.getDescripcion().split(" ");
-
-                                        if (consultaPromocion.getFlgRegalo().trim().toString().equals("S")) {
-
-                                            listaPromocionesStr.add("*"+consultaPromocion.getCodArticulo() + "  -  " + consultaPromocion.getDescripcion() + "\n"
-                                                    + "p - MARCA\t: " + consultaPromocion.getDesMarca() + "\t\t\t\tUNIDAD : " + consultaPromocion.getUndVenta() + "\n"
-                                                    + "CANTIDAD \t : " + consultaPromocion.getCantidad());
-                                        }else{
-
-                                            listaPromocionesStr.add(consultaPromocion.getCodArticulo() + "  -  " + consultaPromocion.getDescripcion() + "\n"
-                                                    + "MARCA\t: " + consultaPromocion.getDesMarca() + "\t\t\t\tUNIDAD : " + consultaPromocion.getUndVenta());
-                                        }
-                                    }
-                                    progressDialog.dismiss();
-                                    /*
-
-                                    ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
-                                            CustomListAdapter(MostrarConsultaActivity.this, R.layout.custom_list, listaPromocionesStr);
-
-                                    */
-
-                                    CustomListAdapter1 listAdapter = new CustomListAdapter1(
-                                            MostrarConsultaActivity.this, R.layout.custom_list, listaPromocionesStr);
-
-                                    lvMuestraPromociones.setAdapter(listAdapter);
-                                }
-                            }else {
-                                progressDialog.dismiss();
-                                listaPromocionesStr.clear();
-                                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
-                                        , R.layout.support_simple_spinner_dropdown_item,listaPromocionesStr);
-                                lvMuestraPromociones.setAdapter(adapter);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(MostrarConsultaActivity.this);
-                                builder.setMessage("No se llego a encontrar el registro")
-                                        .setNegativeButton("Aceptar",null)
-                                        .create()
-                                        .show();
+                DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+                simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
+                simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
+                final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
+                try {
+                    JSONObject jsonObject=new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                    Boolean condicion = false,error = false;
+                    if (success) {
+                        String Aux = response.replace("{", "|");
+                        Aux = Aux.replace("}", "|");
+                        Aux = Aux.replace("[", "|");
+                        Aux = Aux.replace("]", "|");
+                        Aux = Aux.replace("\"", "|");
+                        Aux = Aux.replace(",", " ");
+                        Aux = Aux.replace("|", "");
+                        Aux = Aux.replace(":", " ");
+                        String partes[] = Aux.split(" ");
+                        for (String palabras : partes) {
+                            if (condicion) {
+                                Mensaje += palabras + " ";
                             }
+                            if (palabras.equals("ERROR")) {
+                                condicion = true;
+                                error = true;
+                            }
+                        }
+                        if (error) {
 
-                        } catch (JSONException e) { e.printStackTrace(); }
+                            AlertDialog.Builder dialog = new AlertDialog.Builder(
+                                    MostrarConsultaActivity.this);
+                            dialog.setMessage(Mensaje)
+                                    .setNegativeButton("Regresar", null)
+                                    .create()
+                                    .show();
+                        } else {
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                jsonObject = jsonArray.getJSONObject(i);
+                                consultaPromocion = new ConsultaPromocion();
+                                consultaPromocion.setCodArticulo(jsonObject.getString("COD_ARTICULO"));
+                                consultaPromocion.setDescripcion(jsonObject.getString("DESCRIPCION"));
+                                consultaPromocion.setDesMarca(jsonObject.getString("DES_MARCA"));
+                                consultaPromocion.setUndVenta(jsonObject.getString("UND_VENTA"));
+                                consultaPromocion.setCantidad(jsonObject.getString("CANTIDAD"));
+                                consultaPromocion.setFlgRegalo(jsonObject.getString("FLG_REGALO"));
+                                listaPromocionesObjetos.add(consultaPromocion);
+                                Double Aux1 = Double.valueOf(consultaPromocion.getCantidad().toString());
+                                consultaPromocion.setCantidad(formateador.format((double) Aux1) + "");
+
+                                // String[] list = consultaPromocion.getDescripcion().split(" ");
+
+                                if (consultaPromocion.getFlgRegalo().trim().toString().equals("S")) {
+
+                                    listaPromocionesStr.add("*"+consultaPromocion.getCodArticulo() + "  -  " + consultaPromocion.getDescripcion() + "\n"
+                                            + "p - MARCA\t: " + consultaPromocion.getDesMarca() + "\t\t\t\tUNIDAD : " + consultaPromocion.getUndVenta() + "\n"
+                                            + "CANTIDAD \t : " + consultaPromocion.getCantidad());
+                                }else{
+
+                                    listaPromocionesStr.add(consultaPromocion.getCodArticulo() + "  -  " + consultaPromocion.getDescripcion() + "\n"
+                                            + "MARCA\t: " + consultaPromocion.getDesMarca() + "\t\t\t\tUNIDAD : " + consultaPromocion.getUndVenta());
+                                }
+                            }
+                            progressDialog.dismiss();
+                            /*
+
+                            ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
+                                    CustomListAdapter(MostrarConsultaActivity.this, R.layout.custom_list, listaPromocionesStr);
+
+                            */
+
+                            CustomListAdapter1 listAdapter = new CustomListAdapter1(
+                                    MostrarConsultaActivity.this, R.layout.custom_list, listaPromocionesStr);
+
+                            lvMuestraPromociones.setAdapter(listAdapter);
+                        }
+                    }else {
+                        progressDialog.dismiss();
+                        listaPromocionesStr.clear();
+                        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
+                                , R.layout.support_simple_spinner_dropdown_item,listaPromocionesStr);
+                        lvMuestraPromociones.setAdapter(adapter);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MostrarConsultaActivity.this);
+                        builder.setMessage("No se llego a encontrar el registro")
+                                .setNegativeButton("Aceptar",null)
+                                .create()
+                                .show();
                     }
+
+                } catch (JSONException e) { e.printStackTrace(); }
+                }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(MostrarConsultaActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
         int socketTimeout = 30000;

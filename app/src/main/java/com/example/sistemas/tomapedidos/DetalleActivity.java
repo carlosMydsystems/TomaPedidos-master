@@ -179,6 +179,7 @@ public class DetalleActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.show();
                 AlertDialog.Builder builder = new AlertDialog.Builder(DetalleActivity.this);
                 builder.setTitle("Atención ...!");
                 builder.setMessage("EL servicio no se encuentra disponible en estos momentos");

@@ -190,6 +190,7 @@ public class ConsutlasActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
                 AlertDialog.Builder builder = new AlertDialog.Builder(ConsutlasActivity.this);
                 builder.setTitle("Atención ...!");
                 builder.setMessage("EL servicio no se encuentra disponible en estos momentos");

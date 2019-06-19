@@ -394,7 +394,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     verificaPesosporfecha(listadiaspactados);
                                 }
                             }else {
-
+                                progressDialog.dismiss();
                                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
                                 builder.setMessage("No se llego a encontrar el registro")
                                         .setNegativeButton("Aceptar",null)
@@ -407,6 +407,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
                 builder.setTitle("Atención ...!");
                 builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
@@ -581,6 +582,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog1.dismiss();
                 AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
                 builder.setTitle("Atención ...!");
                 builder.setMessage("EL servicio no se encuentra disponible en estos momentos");

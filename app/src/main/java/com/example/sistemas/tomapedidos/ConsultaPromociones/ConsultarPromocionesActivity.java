@@ -207,13 +207,20 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
                                         .create()
                                         .show();
                             }
-
                         } catch (JSONException e) { e.printStackTrace(); }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ConsultarPromocionesActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 

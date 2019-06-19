@@ -127,6 +127,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
 
                 }else{
 
+                    progressDialog.dismiss();
                     AlertDialog.Builder build = new AlertDialog.Builder(BusquedaClienteActivity.this);
                     build.setTitle("Atención .. !");
                     build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
@@ -389,6 +390,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
                 AlertDialog.Builder builder = new AlertDialog.Builder(BusquedaClienteActivity.this);
                 builder.setTitle("Atención ...!");
                 builder.setMessage("EL servicio no se encuentra disponible en estos momentos");

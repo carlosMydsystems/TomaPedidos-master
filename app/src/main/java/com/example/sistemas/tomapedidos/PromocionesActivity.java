@@ -472,6 +472,14 @@ public class PromocionesActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(PromocionesActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
         int socketTimeout = 30000;

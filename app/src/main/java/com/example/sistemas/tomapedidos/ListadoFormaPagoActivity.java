@@ -155,6 +155,14 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressdialog.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ListadoFormaPagoActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 
@@ -254,6 +262,14 @@ public class ListadoFormaPagoActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ListadoFormaPagoActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 

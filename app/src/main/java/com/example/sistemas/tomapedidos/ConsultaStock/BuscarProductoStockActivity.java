@@ -405,7 +405,7 @@ public class BuscarProductoStockActivity extends AppCompatActivity {
             requestQueue.add(stringRequest);
         }
     }
-
+/*
     private void ActualizarProducto(String trama) {
 
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
@@ -425,6 +425,14 @@ public class BuscarProductoStockActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoStockActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 
@@ -452,6 +460,15 @@ public class BuscarProductoStockActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoStockActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
+
             }
         });
         int socketTimeout = 30000;
@@ -460,4 +477,6 @@ public class BuscarProductoStockActivity extends AppCompatActivity {
         stringRequest.setRetryPolicy(policy);
         requestQueue.add(stringRequest);
     }
+
+    */
 }

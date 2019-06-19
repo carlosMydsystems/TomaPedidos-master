@@ -233,130 +233,130 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
             listaProducto = new ArrayList<>();
 
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            String Mensaje = "";
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                    String Mensaje = "";
 
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                boolean success = jsonObject.getBoolean("success");
-                                JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
-                                Boolean condicion = false, error = false;
-                                if (success) {
-                                    String Aux = response.replace("{", "|");
-                                    Aux = Aux.replace("}", "|");
-                                    Aux = Aux.replace("[", "|");
-                                    Aux = Aux.replace("]", "|");
-                                    Aux = Aux.replace("\"", "|");
-                                    Aux = Aux.replace(",", " ");
-                                    Aux = Aux.replace("|", "");
-                                    Aux = Aux.replace(":", " ");
-                                    String partes[] = Aux.split(" ");
-                                    for (String palabras : partes) {
-                                        if (condicion) {
-                                            Mensaje += palabras + " ";
-                                        }
-                                        if (palabras.equals("ERROR")) {
-                                            condicion = true;
-                                            error = true;
-                                        }
-                                    }
-                                    if (error) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        boolean success = jsonObject.getBoolean("success");
+                        JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                        Boolean condicion = false, error = false;
+                        if (success) {
+                            String Aux = response.replace("{", "|");
+                            Aux = Aux.replace("}", "|");
+                            Aux = Aux.replace("[", "|");
+                            Aux = Aux.replace("]", "|");
+                            Aux = Aux.replace("\"", "|");
+                            Aux = Aux.replace(",", " ");
+                            Aux = Aux.replace("|", "");
+                            Aux = Aux.replace(":", " ");
+                            String partes[] = Aux.split(" ");
+                            for (String palabras : partes) {
+                                if (condicion) {
+                                    Mensaje += palabras + " ";
+                                }
+                                if (palabras.equals("ERROR")) {
+                                    condicion = true;
+                                    error = true;
+                                }
+                            }
+                            if (error) {
 
-                                        progressDialog.dismiss();
-                                        btnbuscarProducto.setVisibility(View.VISIBLE);
-                                        btnregresarproducto.setVisibility(View.VISIBLE);
-                                        AlertDialog.Builder dialog = new AlertDialog.Builder(
-                                                BuscarProductoPrecioActivity.this);
-                                        dialog.setMessage(Mensaje)
-                                                .setNegativeButton("Regresar", null)
-                                                .create()
-                                                .show();
+                                progressDialog.dismiss();
+                                btnbuscarProducto.setVisibility(View.VISIBLE);
+                                btnregresarproducto.setVisibility(View.VISIBLE);
+                                AlertDialog.Builder dialog = new AlertDialog.Builder(
+                                        BuscarProductoPrecioActivity.this);
+                                dialog.setMessage(Mensaje)
+                                        .setNegativeButton("Regresar", null)
+                                        .create()
+                                        .show();
+                            } else {
+
+                                producto = new Productos();
+                                listaProducto.clear();
+                                listaProductos.clear();
+
+
+                                for (int i = 0; i < jsonArray.length(); i++) {
+
+                                    jsonObject = jsonArray.getJSONObject(i);
+                                    producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
+                                    producto.setMarca(jsonObject.getString("DES_MARCA"));
+                                    producto.setDescripcion(jsonObject.getString("DES_ARTICULO")); //
+                                    producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
+                                    if (usuario.getMoneda().equals("1")) {
+                                        producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
                                     } else {
-
-                                        producto = new Productos();
-                                        listaProducto.clear();
-                                        listaProductos.clear();
-
-
-                                        for (int i = 0; i < jsonArray.length(); i++) {
-
-                                            jsonObject = jsonArray.getJSONObject(i);
-                                            producto.setCodigo(jsonObject.getString("COD_ARTICULO"));
-                                            producto.setMarca(jsonObject.getString("DES_MARCA"));
-                                            producto.setDescripcion(jsonObject.getString("DES_ARTICULO")); //
-                                            producto.setUnidad(jsonObject.getString("UND_MEDIDA"));
-                                            if (usuario.getMoneda().equals("1")) {
-
-                                                producto.setPrecio(jsonObject.getString("PRECIO_SOLES"));
-                                            } else {
-                                                producto.setPrecio(jsonObject.getString("PRECIO_DOLARES"));
-                                            }
-
-                                            producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
-                                            producto.setAlmacen(jsonObject.getString("COD_ALMACEN"));
-                                            listaProductos.add(producto);
-                                            listaProducto.add(producto.getCodigo() + " - " + producto.getDescripcion());
-                                        }
-
-                                        // Se hace un llamado al adaptador personalizado asociado al SML custom_list
-
-                                        if (listaProductos.size() <= 1) {
-
-                                            producto = new Productos();
-                                            cliente = new Clientes();
-                                            cliente = (Clientes) getIntent().getSerializableExtra("Cliente");
-
-                                            Intent intent = new Intent(BuscarProductoPrecioActivity.this, IntemedioDetalleProductoActivity.class);
-                                            Bundle bundle = new Bundle();
-                                            producto = listaProductos.get(0);
-                                            bundle.putSerializable("Producto", producto);
-                                            intent.putExtras(bundle);
-                                            Bundle bundle1 = new Bundle();
-                                            bundle1.putSerializable("Cliente", cliente);
-                                            intent.putExtras(bundle1);
-                                            Bundle bundle2 = new Bundle();
-                                            bundle2.putSerializable("Usuario", usuario);
-                                            intent.putExtras(bundle2);
-                                            startActivity(intent);
-                                            finish();
-
-                                        } else {
-
-                                            progressDialog.dismiss();
-                                            btnbuscarProducto.setVisibility(View.VISIBLE);
-                                            btnregresarproducto.setVisibility(View.VISIBLE);
-                                            ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
-                                                    CustomListAdapter(BuscarProductoPrecioActivity.this, R.layout.custom_list, listaProducto);
-                                            lvProducto.setAdapter(listAdapter);
-                                        }
+                                        producto.setPrecio(jsonObject.getString("PRECIO_DOLARES"));
                                     }
-
-                                } else {
-                                    progressDialog.dismiss();
-                                    listaProducto.clear();
-                                    btnbuscarProducto.setVisibility(View.VISIBLE);
-                                    btnregresarproducto.setVisibility(View.VISIBLE);
-                                    final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
-                                            , R.layout.support_simple_spinner_dropdown_item, listaProducto);
-                                    lvProducto.setAdapter(adapter);
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoPrecioActivity.this);
-                                    builder.setMessage("No se llego a encontrar el registro")
-                                            .setNegativeButton("Aceptar", null)
-                                            .create()
-                                            .show();
+                                    producto.setStock(jsonObject.getString("STOCK_DISPONIBLE"));
+                                    producto.setAlmacen(jsonObject.getString("COD_ALMACEN"));
+                                    listaProductos.add(producto);
+                                    listaProducto.add(producto.getCodigo() + " - " + producto.getDescripcion());
                                 }
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                // Se hace un llamado al adaptador personalizado asociado al SML custom_list
 
+                                if (listaProductos.size() <= 1) {
+
+                                    producto = new Productos();
+                                    cliente = new Clientes();
+                                    cliente = (Clientes) getIntent().getSerializableExtra("Cliente");
+
+                                    Intent intent = new Intent(BuscarProductoPrecioActivity.this, IntemedioDetalleProductoActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    producto = listaProductos.get(0);
+                                    bundle.putSerializable("Producto", producto);
+                                    intent.putExtras(bundle);
+                                    Bundle bundle1 = new Bundle();
+                                    bundle1.putSerializable("Cliente", cliente);
+                                    intent.putExtras(bundle1);
+                                    Bundle bundle2 = new Bundle();
+                                    bundle2.putSerializable("Usuario", usuario);
+                                    intent.putExtras(bundle2);
+                                    startActivity(intent);
+                                    finish();
+
+                                } else {
+
+                                    progressDialog.dismiss();
+                                    btnbuscarProducto.setVisibility(View.VISIBLE);
+                                    btnregresarproducto.setVisibility(View.VISIBLE);
+                                    ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
+                                            CustomListAdapter(BuscarProductoPrecioActivity.this, R.layout.custom_list, listaProducto);
+                                    lvProducto.setAdapter(listAdapter);
+                                }
                             }
+
+                        } else {
+                            progressDialog.dismiss();
+                            listaProducto.clear();
+                            btnbuscarProducto.setVisibility(View.VISIBLE);
+                            btnregresarproducto.setVisibility(View.VISIBLE);
+                            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
+                                    , R.layout.support_simple_spinner_dropdown_item, listaProducto);
+                            lvProducto.setAdapter(adapter);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoPrecioActivity.this);
+                            builder.setMessage("No se llego a encontrar el registro")
+                                    .setNegativeButton("Aceptar", null)
+                                    .create()
+                                    .show();
                         }
-                    }, new Response.ErrorListener() {
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+
+                    }
+                    }
+                }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+
                     error.printStackTrace();
+                    progressDialog.dismiss();
                     AlertDialog.Builder builder = new AlertDialog.Builder(BuscarProductoPrecioActivity.this);
                     builder.setTitle("Atención ...!");
                     builder.setMessage("EL servicio no se encuentra disponible en estos momentos");

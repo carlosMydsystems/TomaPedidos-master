@@ -157,7 +157,6 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
                                                 "\t" + " Dscto : " + formatoDecimal(dctoxVolumen.getDescuento()) +
                                                 "%  \t\t\t - \t\t\t  Precio : " + Dolares + " " + formatoDecimal(dctoxVolumen.getPrecio()));
                                     }
-
                                      */
                                 }
                                 Utilitario.CustomListAdapter1 listAdapter = new Utilitario.
@@ -185,6 +184,13 @@ public class DetalleProductoPrecioActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetalleProductoPrecioActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 

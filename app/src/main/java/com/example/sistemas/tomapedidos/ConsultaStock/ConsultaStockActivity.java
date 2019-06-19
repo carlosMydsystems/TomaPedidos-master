@@ -99,90 +99,98 @@ public class ConsultaStockActivity extends AppCompatActivity {
         listaStockDisponible = new ArrayList<>();
 
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        String Mensaje = "";
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    String Mensaje = "";
 
-                        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
-                        simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
-                        simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
-                        final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
-                        try {
-                            JSONObject jsonObject=new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
-                            Boolean condicion = false,error = false;
-                            if (success) {
-                                String Aux = response.replace("{", "|");
-                                Aux = Aux.replace("}", "|");
-                                Aux = Aux.replace("[", "|");
-                                Aux = Aux.replace("]", "|");
-                                Aux = Aux.replace("\"", "|");
-                                Aux = Aux.replace(",", " ");
-                                Aux = Aux.replace("|", "");
-                                Aux = Aux.replace(":", " ");
-                                String partes[] = Aux.split(" ");
-                                for (String palabras : partes) {
-                                    if (condicion) {
-                                        Mensaje += palabras + " ";
-                                    }
-                                    if (palabras.equals("ERROR")) {
-                                        condicion = true;
-                                        error = true;
-                                    }
-                                }
-                                if (error) {
+                    DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+                    simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
+                    simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
+                    final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
+                try {
+                    JSONObject jsonObject=new JSONObject(response);
+                    boolean success = jsonObject.getBoolean("success");
+                    JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
+                    Boolean condicion = false,error = false;
+                    if (success) {
+                        String Aux = response.replace("{", "|");
+                        Aux = Aux.replace("}", "|");
+                        Aux = Aux.replace("[", "|");
+                        Aux = Aux.replace("]", "|");
+                        Aux = Aux.replace("\"", "|");
+                        Aux = Aux.replace(",", " ");
+                        Aux = Aux.replace("|", "");
+                        Aux = Aux.replace(":", " ");
+                        String partes[] = Aux.split(" ");
+                        for (String palabras : partes) {
+                            if (condicion) {
+                                Mensaje += palabras + " ";
+                            }
+                            if (palabras.equals("ERROR")) {
+                                condicion = true;
+                                error = true;
+                            }
+                        }
+                        if (error) {
 
-                                    progressDialog.dismiss();
-                                    AlertDialog.Builder dialog = new AlertDialog.Builder(
-                                            ConsultaStockActivity.this);
-                                    dialog.setMessage(Mensaje)
-                                            .setNegativeButton("Regresar", null)
-                                            .create()
-                                            .show();
-                                } else {
+                            progressDialog.dismiss();
+                            AlertDialog.Builder dialog = new AlertDialog.Builder(
+                                    ConsultaStockActivity.this);
+                            dialog.setMessage(Mensaje)
+                                    .setNegativeButton("Regresar", null)
+                                    .create()
+                                    .show();
+                        } else {
 
-                                    listaStock.clear();
-                                    listaStock.clear();
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        jsonObject = jsonArray.getJSONObject(i);
-                                        stock = new Stock();
-                                        stock.setCodalmacen(jsonObject.getString("COD_ALMACEN"));
-                                        stock.setStockDisponible(jsonObject.getString("STK_DISPONIBLE"));
-                                        listaStockDisponible.add(stock);
-                                        listaStock.add("\t\t\t\t\t"+stock.getCodalmacen() +
-                                                "\t\t\t\t\t\t\t- \t\t\t\t\t\t\t\t\t" + formateador.format(Double.valueOf(stock.getStockDisponible() )));
-                                    }
-
-                                    tvTituloCodAlamcen.setVisibility(View.VISIBLE);
-                                    tvTituloStock.setVisibility(View.VISIBLE);
-                                    ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
-                                            CustomListAdapter(ConsultaStockActivity.this, R.layout.custom_list, listaStock);
-                                    lvStock.setAdapter(listAdapter);
-                                    progressDialog.dismiss();
-                                }
-
-                            }else {
-                                progressDialog.dismiss();
-                                listaStock.clear();
-
-                                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
-                                        , R.layout.support_simple_spinner_dropdown_item,listaStock);
-                                lvStock.setAdapter(adapter);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(ConsultaStockActivity.this);
-                                builder.setMessage("No se llego a encontrar el registro")
-                                        .setNegativeButton("Aceptar",null)
-                                        .create()
-                                        .show();
+                            listaStock.clear();
+                            listaStock.clear();
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                jsonObject = jsonArray.getJSONObject(i);
+                                stock = new Stock();
+                                stock.setCodalmacen(jsonObject.getString("COD_ALMACEN"));
+                                stock.setStockDisponible(jsonObject.getString("STK_DISPONIBLE"));
+                                listaStockDisponible.add(stock);
+                                listaStock.add("\t\t\t\t\t"+stock.getCodalmacen() +
+                                        "\t\t\t\t\t\t\t- \t\t\t\t\t\t\t\t\t" + formateador.format(Double.valueOf(stock.getStockDisponible() )));
                             }
 
-                        } catch (JSONException e) { e.printStackTrace(); }
+                            tvTituloCodAlamcen.setVisibility(View.VISIBLE);
+                            tvTituloStock.setVisibility(View.VISIBLE);
+                            ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
+                                    CustomListAdapter(ConsultaStockActivity.this, R.layout.custom_list, listaStock);
+                            lvStock.setAdapter(listAdapter);
+                            progressDialog.dismiss();
+                        }
+
+                    }else {
+                        progressDialog.dismiss();
+                        listaStock.clear();
+
+                        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
+                                , R.layout.support_simple_spinner_dropdown_item,listaStock);
+                        lvStock.setAdapter(adapter);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ConsultaStockActivity.this);
+                        builder.setMessage("No se llego a encontrar el registro")
+                                .setNegativeButton("Aceptar",null)
+                                .create()
+                                .show();
                     }
-                }, new Response.ErrorListener() {
+
+                } catch (JSONException e) { e.printStackTrace(); }
+                }
+            }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ConsultaStockActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 

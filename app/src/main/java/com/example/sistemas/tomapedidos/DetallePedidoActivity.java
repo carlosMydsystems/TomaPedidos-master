@@ -315,6 +315,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
                                                 error.printStackTrace();
+                                                progressDialog.dismiss();
                                                 AlertDialog.Builder builder = new AlertDialog.Builder(DetallePedidoActivity.this);
                                                 builder.setTitle("Atención ...!");
                                                 builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
@@ -352,6 +353,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
                 AlertDialog.Builder builder = new AlertDialog.Builder(DetallePedidoActivity.this);
                 builder.setTitle("Atención ...!");
                 builder.setMessage("EL servicio no se encuentra disponible en estos momentos");

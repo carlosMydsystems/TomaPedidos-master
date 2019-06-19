@@ -427,6 +427,14 @@ public class ProveedorActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProveedorActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
+
             }
         });
 
@@ -573,7 +581,6 @@ public class ProveedorActivity extends AppCompatActivity {
                                      public void onNothingSelected(AdapterView<?> parent) {
                                      }
                                  });
-
                                 }
                             }else {
                                 listaProveedorPrueba.clear();
@@ -589,6 +596,13 @@ public class ProveedorActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                progressDialog.dismiss();
+                AlertDialog.Builder builder = new AlertDialog.Builder(ProveedorActivity.this);
+                builder.setTitle("Atención ...!");
+                builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                builder.setCancelable(false);
+                builder.setNegativeButton("Aceptar",null);
+                builder.create().show();
             }
         });
 
@@ -602,7 +616,4 @@ public class ProveedorActivity extends AppCompatActivity {
         InputMethodManager teclado = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         teclado.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
-
-
-
 }

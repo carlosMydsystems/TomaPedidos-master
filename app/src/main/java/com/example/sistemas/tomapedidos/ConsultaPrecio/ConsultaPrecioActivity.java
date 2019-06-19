@@ -110,43 +110,44 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                cliente = new Clientes();
-                cliente =  listaClientes.get(position);
-                Intent intent =  new Intent(ConsultaPrecioActivity.this, BuscarProductoPrecioActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Cliente",cliente);
-                intent.putExtras(bundle);
-                Bundle bundle1 = new Bundle();
-                bundle1.putSerializable("Usuario",usuario);
-                intent.putExtras(bundle1);
-                startActivity(intent);
-                finish();
+            cliente = new Clientes();
+            cliente =  listaClientes.get(position);
+            Intent intent =  new Intent(ConsultaPrecioActivity.this, BuscarProductoPrecioActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("Cliente",cliente);
+            intent.putExtras(bundle);
+            Bundle bundle1 = new Bundle();
+            bundle1.putSerializable("Usuario",usuario);
+            intent.putExtras(bundle1);
+            startActivity(intent);
+            finish();
+
             }
         });
 
         rggrupocliente.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                etcliente.setText("");
-                switch (rggrupocliente.getCheckedRadioButtonId()){
+            etcliente.setText("");
+            switch (rggrupocliente.getCheckedRadioButtonId()){
 
-                    case R.id.rbNombre:
-                        etcliente.setInputType(2);
-                        etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
-                        tipoConsulta = "Nombre";
-                        break;
+                case R.id.rbNombre:
+                    etcliente.setInputType(2);
+                    etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(8)});
+                    tipoConsulta = "Nombre";
+                    break;
 
-                    case R.id.rbCodigo:
-                        etcliente.setInputType(2);
-                        etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(11)});
-                        tipoConsulta = "Codigo";
-                        break;
-                    case R.id.rbrazon:
-                        etcliente.setInputType(1);
-                        etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(80)});
-                        tipoConsulta = "Razon";
-                        break;
-                }
+                case R.id.rbCodigo:
+                    etcliente.setInputType(2);
+                    etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(11)});
+                    tipoConsulta = "Codigo";
+                    break;
+                case R.id.rbrazon:
+                    etcliente.setInputType(1);
+                    etcliente.setFilters(new InputFilter[] {new InputFilter.LengthFilter(80)});
+                    tipoConsulta = "Razon";
+                    break;
+            }
             }
         });
     }
@@ -181,7 +182,7 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
             btnbuscar.setVisibility(View.VISIBLE);
         }else {
 
-            /*
+        /*
             if (tipoConsulta == "Nombre") {
 
                 url = ejecutaFuncionCursorTestMovil +
@@ -196,8 +197,7 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
                         "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='|"+ numero +"|'";
             }
 
-*/
-
+        */
             if (tipoConsulta == "Nombre") {
 
                 url = ejecutaFuncionCursorTestMovil +
@@ -212,9 +212,6 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
                         "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='|"+ numero.trim().replace("%","%25").toUpperCase() +"|'";
 
             }
-
-
-
 
             listaCliente = new ArrayList<>();
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -265,6 +262,14 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     error.printStackTrace();
+                    progressDialog.dismiss();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ConsultaPrecioActivity.this);
+                    builder.setTitle("Atención ...!");
+                    builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
+                    builder.setCancelable(false);
+                    builder.setNegativeButton("Aceptar",null);
+                    builder.create().show();
+
                 }
             });
 
