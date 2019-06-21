@@ -209,18 +209,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                                     String trama = id_pedido+"|"+ formatoFecha(day) + "/" + formatoFecha(month + 1) + "/" + year;
                                     String fecha = formatoFecha(day) + "/" + formatoFecha(month + 1) + "/" + year;
                                     String fechaActual = formatoFecha(dayOfMonth) + "/" + formatoFecha(month+1) + "/"+formatoFecha(year);
-/*
-                    if(fecha.equals(fechaActual)){
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(FechaPactadaActivity.this);
-                        builder.setCancelable(false);
-                        builder.setTitle("Atencion !");
-                        builder.setMessage("Debe elegir una fecha posterior al dia de Hoy");
-                        builder.setNegativeButton("Aceptar",null);
-                        builder.create().show();
-
-                    }else {
-*/
                                     if(Utilitario.isOnline(getApplicationContext())){
 
                                         VerificaFecha(trama);
@@ -240,7 +228,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
                             }, year, month, dayOfMonth);
                     datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
                     datePickerDialog.show();
-
 
                 }else{
 

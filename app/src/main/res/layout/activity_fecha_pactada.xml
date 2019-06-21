@@ -115,7 +115,7 @@
         android:layout_marginEnd="16dp"
         android:backgroundTint="#9B9494"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:digits="ABCDEFGHIJKLMNÑOPQRSTUVWXYZabcdefghijklmnñopqrstuvwxyz0123456789 "
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.8"

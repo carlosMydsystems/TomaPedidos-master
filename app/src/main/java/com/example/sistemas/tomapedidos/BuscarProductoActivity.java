@@ -622,8 +622,12 @@ public class BuscarProductoActivity extends AppCompatActivity {
                                             progressDialog.dismiss();
                                             btnbuscarProducto.setVisibility(View.VISIBLE);
                                             btnregresarproducto.setVisibility(View.VISIBLE);
+
+
+
                                             CustomListAdapter.CustomListAdapter1 listAdapter1 = new CustomListAdapter.CustomListAdapter1(BuscarProductoActivity.
                                                     this,R.layout.custom_list,listaProducto);
+
                                             ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
                                                     CustomListAdapter(BuscarProductoActivity.this, R.layout.custom_list, listaProducto);
                                             //lvProducto.setAdapter(listAdapter);

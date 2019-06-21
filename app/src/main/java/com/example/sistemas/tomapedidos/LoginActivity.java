@@ -51,8 +51,8 @@ public class LoginActivity extends AppCompatActivity {
 
         if (validador) {
 
-            ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorTestMovil.php?funcion=";
-            ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionTestMovil.php?funcion=";
+            ejecutaFuncionCursorTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionCursorDesaMovil.php?funcion=";
+            ejecutaFuncionTestMovil = "http://www.taiheng.com.pe:8494/oracle/ejecutaFuncionDesaMovil.php?funcion=";
 
         }else{
 
