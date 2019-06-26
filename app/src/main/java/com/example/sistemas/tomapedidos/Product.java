@@ -59,6 +59,7 @@ public class Product {
             cartItems.put("Stock",Stock);
 
         }
+
         catch (Exception e) {}
         return cartItems.toString();
     }
