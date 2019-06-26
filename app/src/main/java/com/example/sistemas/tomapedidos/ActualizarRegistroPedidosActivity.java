@@ -155,14 +155,23 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
                 builder.create()
                        .show();
             }else {
+                String trama;
                 if (etcantprodelegida.getText().toString().equals("")) {
                 } else {
-                    String trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
+
+                    if(productos.getNumPromocion().trim().equals("null")){
+
+                         trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
+                                productos.getCodigo() + "|" + tvpreciorealjsonelegido.getText().toString().replace(",", "") +
+                                "|" + tvtasaelegida.getText().toString().trim() + "||" + productos.getPresentacion() +
+                                "|" + productos.getEquivalencia() + "|N";  // Tasas
+                    }else {
+                         trama = id_pedido + "|D|" + listaproductoselegidos.get(Integer.valueOf(position)).getIndice() + "|" + etcantprodelegida.getText() + "|" +
                                 productos.getCodigo() + "|" + tvpreciorealjsonelegido.getText().toString().replace(",", "") +
                                 "|" + tvtasaelegida.getText().toString().trim() + "|" + productos.getNumPromocion().trim() + "|" + productos.getPresentacion() +
                                 "|" + productos.getEquivalencia() + "|N";  // Tasas
 
-
+                    }
                     if(Utilitario.isOnline(getApplicationContext())){
 
                         ActualizarProducto(trama);

@@ -438,6 +438,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(DialogInterface dialogInterface, int i) {
 
+                                                        listaproductoselegidos.remove(position);
                                                         EliminarProducto(trama1);
                                                         dialogInterface.cancel();
                                                         salirlistview();
@@ -453,7 +454,6 @@ public class bandejaProductosActivity extends AppCompatActivity {
                                                 .create()
                                                 .show();
 
-                                        listaproductoselegidos.remove(position);
                                         btnterminar.setVisibility(View.VISIBLE);
                                         btngrabarpedido.setVisibility(View.GONE);
                                         valida = true;

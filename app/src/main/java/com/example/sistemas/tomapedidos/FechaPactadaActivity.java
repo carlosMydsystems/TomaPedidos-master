@@ -17,9 +17,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -27,6 +31,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -147,6 +153,30 @@ public class FechaPactadaActivity extends AppCompatActivity {
             locationStart();
         }
 
+        etComentario.setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                switch(keyCode) {
+                    case KeyEvent.KEYCODE_ENTER:
+
+                        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+
+                        inputMethodManager.hideSoftInputFromWindow(etComentario.getWindowToken(), 0);
+                        //Toast.makeText(FechaPactadaActivity.this, "Ingreso", Toast.LENGTH_SHORT).show();
+                        break;
+
+                    default:
+                        return false;
+                }
+
+                return true;
+
+            }
+        });
+
+
         ibRetornoFechaPactadaProveedores.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,6 +221,7 @@ public class FechaPactadaActivity extends AppCompatActivity {
                 finish();
             }
         });
+
 
         btnfechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -305,6 +336,8 @@ public class FechaPactadaActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void VerificaFecha(String trama) {
         Integer cola = 0;
