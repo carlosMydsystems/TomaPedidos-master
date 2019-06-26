@@ -36,7 +36,6 @@ import com.example.sistemas.tomapedidos.Entidades.Proveedor;
 import com.example.sistemas.tomapedidos.Entidades.SucursalProveedor;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -52,7 +51,6 @@ public class ProveedorActivity extends AppCompatActivity {
             codProveedor,valida,NombreProveedor,SucursalProveedor;
     Usuario usuario;
     Clientes cliente;
-
     ArrayList<Productos> listaproductoselegidos;
     ImageButton ibretornoMenuProveedor;
     RadioGroup rgBuscarProveedor;

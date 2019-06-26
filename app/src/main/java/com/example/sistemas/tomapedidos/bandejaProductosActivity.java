@@ -340,6 +340,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
                     btnterminar.setVisibility(View.VISIBLE);
                     btngrabarpedido.setVisibility(View.GONE);
                     btnregresarbandeja.setVisibility(View.GONE);
+                    imgbtnregresar.setVisibility(View.GONE);
                 }
             });
 
