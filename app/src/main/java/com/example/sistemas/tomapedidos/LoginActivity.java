@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 for (String palabras : partes){
                                     if (condicion){ Mensaje += palabras+" "; }
-                                    if (palabras.equals("ERROR")){
+                                    if (palabras.equals("ERROR")||(palabras.equals("ERROR "))){
                                         condicion = true;
                                         error = true;
                                     }
@@ -171,6 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }
 
                             }else{
+
                                 AlertDialog.Builder build1 = new AlertDialog.Builder(LoginActivity.this);
                                 build1.setTitle("Usuario  o Clave incorrecta")
                                         .setNegativeButton("Regresar",null)
@@ -178,6 +179,7 @@ public class LoginActivity extends AppCompatActivity {
                                         .show();
                             }
                         } catch (JSONException e) {
+                            Toast.makeText(LoginActivity.this, "El error es : " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }

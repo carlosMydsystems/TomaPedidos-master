@@ -303,6 +303,7 @@ public class PromocionesActivity extends AppCompatActivity {
                                         productopromocion.setPrecioAcumulado("0.0");
                                         productopromocion.setObservacion("T");
                                         listaproductoselegidos.add(productopromocion);
+
                                     }
                                 }
 
@@ -420,8 +421,7 @@ public class PromocionesActivity extends AppCompatActivity {
 
                                             startActivity(intent);
                                             finish();
-
-                                        }
+                                    }
                                     }
                                 });
 
