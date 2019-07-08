@@ -60,6 +60,7 @@ public class DetalleProductoActivity extends AppCompatActivity {
     BigDecimal redondeado, precioBigTotal , precioBigUnitario;
     ImageButton imgbtnvolverdetalleproducto;
     ArrayList<ClienteSucursal> listaClienteSucursal;
+    boolean validacionrepetdos = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -219,6 +220,8 @@ else if (etcantidadelegida.getText()== null){
 
             @Override
             public void onClick(View v) {
+            if (validacionrepetdos) {
+                validacionrepetdos = false;
             try{
                 progressDialog.setMessage("... Guardando");
                 progressDialog.setCancelable(false);
@@ -343,6 +346,11 @@ else if (etcantidadelegida.getText()== null){
                 //Toast.makeText(DetalleProductoActivity.this, "Esta intentando ingresar un valor no valido1", Toast.LENGTH_SHORT).show();
 }
             }
+
+
+            }
+
+
         });
         btnguardaryagregar.setOnClickListener(new View.OnClickListener() {
 

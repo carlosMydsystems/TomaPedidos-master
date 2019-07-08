@@ -23,8 +23,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
     }
 
     public class ViewHolderDatos extends RecyclerView.ViewHolder {
+
         public ViewHolderDatos(@NonNull View itemView) {
             super(itemView);
         }
+
     }
 }

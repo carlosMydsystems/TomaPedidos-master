@@ -187,6 +187,8 @@ public class ActualizarRegistroPedidosActivity extends AppCompatActivity {
 
                     }
 
+                    // se hace el enlace de los elementos en el XML
+
                     productos.setCantidad(etcantprodelegida.getText().toString());
                     preciounitario = Double.valueOf(tvprecioelegido.getText().toString().replace(",",""));
                     cantidad = Double.valueOf(etcantprodelegida.getText().toString());

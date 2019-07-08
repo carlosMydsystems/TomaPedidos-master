@@ -78,7 +78,6 @@ public class LoginActivity extends AppCompatActivity {
 
                         verificarUsuario(etusuario.getText().toString().replace(" ", "").toUpperCase()
                             , etclave.getText().toString().replace(" ", "").toUpperCase(),imei);
-
                     }
 
                 }else{
