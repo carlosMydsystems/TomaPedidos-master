@@ -363,6 +363,7 @@ public class BusquedaClienteActivity extends AppCompatActivity {
                                     cliente.setDocumentoCliente(jsonObject.getString("DOC_CLIENTE"));
                                     listaClientes.add(cliente);
                                     listaCliente.add(cliente.getCodCliente() + " - " + cliente.getNombre());
+
                                 }
 
                                 ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
