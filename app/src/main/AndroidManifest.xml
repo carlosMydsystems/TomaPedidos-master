@@ -3,7 +3,7 @@
     package="com.example.sistemas.tomapedidos">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
@@ -17,28 +17,36 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ConsultaPrecio.IntemedioDetalleProductoActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ConsultaPrecio.DetalleProductoPrecioActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ConsultaPrecio.BuscarProductoPrecioActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ConsultaPrecio.ConsultaPrecioActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ConsultaPromociones.MostrarConsultaActivity"
-            android:screenOrientation="portrait"/>
+        <activity android:name=".ConsultaPromocionesPaquetes.MostrarDetallePromocionPaqueteActivity"></activity>
+        <activity android:name=".ConsultaPromocionesPaquetes.ListaPaquetePromocionActivity" />
+        <activity android:name=".ConsultaPromocionesPaquetes.ConsultaPromocionesPaquetesActivity" />
+        <activity
+            android:name=".ConsultaPrecio.IntemedioDetalleProductoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ConsultaPrecio.DetalleProductoPrecioActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ConsultaPrecio.BuscarProductoPrecioActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ConsultaPrecio.ConsultaPrecioActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ConsultaPromociones.MostrarConsultaActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ConsultaStock.BuscarProductoStockActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ConsultaPromociones.ConsultarPromocionesActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ConsultaStock.ConsultaStockActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ProveedorActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DetalleActivity"
             android:screenOrientation="portrait" />

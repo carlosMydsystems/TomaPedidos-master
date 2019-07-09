@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     Button btnlogeo;
     Usuario usuario;
     String url, Mensaje = "",imei = "",puerto = "8494", versionName = "1.0.12";
-    boolean validador = true;
+    boolean validador = false;
     TextView tvVersion;
     public static String ejecutaFuncionCursorTestMovil;
     public static String ejecutaFuncionTestMovil;

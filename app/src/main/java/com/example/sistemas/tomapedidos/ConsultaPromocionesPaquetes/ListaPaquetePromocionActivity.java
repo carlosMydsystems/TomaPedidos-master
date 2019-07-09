@@ -1,4 +1,4 @@
-package com.example.sistemas.tomapedidos.ConsultaPromociones;
+package com.example.sistemas.tomapedidos.ConsultaPromocionesPaquetes;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,7 +20,7 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.sistemas.tomapedidos.BusquedaClienteActivity;
+import com.example.sistemas.tomapedidos.ConsultaPromociones.MostrarConsultaActivity;
 import com.example.sistemas.tomapedidos.Entidades.Clientes;
 import com.example.sistemas.tomapedidos.Entidades.ConsultaPromocion;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
@@ -29,13 +31,14 @@ import com.example.sistemas.tomapedidos.Utilitarios.Utilitario;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
 import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 
-public class ConsultarPromocionesActivity extends AppCompatActivity {
+public class ListaPaquetePromocionActivity extends AppCompatActivity {
 
     Clientes clientes;
     Usuario usuario;
@@ -44,27 +47,29 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
     ArrayList<String> listaPromocionesStr,listaCodigosPromociones;
     ArrayList<ConsultaPromocion>  listaPromocionesObjetos,listaPromocionAux;
     ConsultaPromocion consultaPromocion;
-    ListView lvmuestrapromociones;
+    ListView lvmuestrapaquetepromocion;
     ImageButton ibRetornoMenuConsultaPromocion;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_consultar_promociones);
+        setContentView(R.layout.activity_lista_paquete_promocion);
 
         clientes = (Clientes)getIntent().getSerializableExtra("Cliente");
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         ibRetornoMenuConsultaPromocion = findViewById(R.id.ibRetornoMenuConsultaPromocionPaquete);
-        trama = usuario.getLugar()+"|"+clientes.getCodCliente()+"|"+usuario.getCodTienda();
+        trama = usuario.getLugar()+"||"+clientes.getCodCliente()+"|"+usuario.getCodTienda();
 
         if(Utilitario.isOnline(getApplicationContext())){
 
             buscarpromociones(trama);
-            lvmuestrapromociones = findViewById(R.id.lvMuestraPromociones);
+            lvmuestrapaquetepromocion = findViewById(R.id.lvListaPaquetePromocion);
             ibRetornoMenuConsultaPromocion.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(ConsultarPromocionesActivity.this, BusquedaClienteActivity.class);
+                    Intent intent = new Intent(ListaPaquetePromocionActivity.this, ConsultaPromocionesPaquetesActivity.class);
                     intent.putExtra("consultaPromociones","true");
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("Usuario",usuario);
@@ -79,7 +84,7 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
 
         }else{
 
-            AlertDialog.Builder build = new AlertDialog.Builder(ConsultarPromocionesActivity.this);
+            AlertDialog.Builder build = new AlertDialog.Builder(ListaPaquetePromocionActivity.this);
             build.setTitle("Atención .. !");
             build.setMessage("El Servicio de Internet no esta Activo, por favor revisar");
             build.setCancelable(false);
@@ -91,7 +96,7 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
 
     private void buscarpromociones(String trama) {
 
-        progressDialog = new ProgressDialog(ConsultarPromocionesActivity.this);
+        progressDialog = new ProgressDialog(ListaPaquetePromocionActivity.this);
         progressDialog.setMessage("Cargando...");
         progressDialog.setCancelable(false);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -100,7 +105,7 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());
 
         url = ejecutaFuncionCursorTestMovil +
-                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTAR_PROMOCIONES_CAB&variables=%27"+trama+"%27";
+                "PKG_WEB_HERRAMIENTAS.FN_WS_LISTA_PAQUETE&variables=%27"+trama+"%27";
 
         listaPromocionesStr = new ArrayList<>();
         listaPromocionesObjetos = new ArrayList<>();
@@ -144,7 +149,7 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
                                 if (error) {
 
                                     AlertDialog.Builder dialog = new AlertDialog.Builder(
-                                            ConsultarPromocionesActivity.this);
+                                            ListaPaquetePromocionActivity.this);
                                     dialog.setMessage(Mensaje)
                                             .setNegativeButton("Regresar", null)
                                             .create()
@@ -158,27 +163,29 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
 
                                         consultaPromocion.setNroPromocion(jsonObject.getString("NRO_PROMOCION"));
                                         consultaPromocion.setGlosa(jsonObject.getString("GLOSA"));
-                                        consultaPromocion.setFechaEmision(jsonObject.getString("FECHA_EMISION"));
+                                        consultaPromocion.setFechaEmision(jsonObject.getString("FECHA_INI_VIGENCIA"));
                                         consultaPromocion.setFechaFinVigencia(jsonObject.getString("FECHA_FIN_VIGENCIA"));
-                                        consultaPromocion.setFormaPromocion(jsonObject.getString("FORMA_PROMOCION"));
-                                        consultaPromocion.setImportecantidad(jsonObject.getString("IMPORTE_CANTIDAD_MINIMO"));
+                                        consultaPromocion.setMoneda(jsonObject.getString("MONEDA"));
+                                        consultaPromocion.setPreciopaquete(jsonObject.getString("P_PAQUETE"));
+                                        consultaPromocion.setPrecioregular(jsonObject.getString("P_REGULAR"));
+                                        consultaPromocion.setAhorro(jsonObject.getString("AHORRO"));
                                         listaPromocionesObjetos.add(consultaPromocion);
 
-                                            listaPromocionesStr.add(consultaPromocion.getNroPromocion() + "  -  " + consultaPromocion.getGlosa()+"\n"
-                                            +  "VALIDO DEL\t: " + consultaPromocion.getFechaEmision() +"\t\tAL\t\t"+ consultaPromocion.getFechaFinVigencia()+"\n"
-                                            + "PROMOCION POR\t" + consultaPromocion.getFormaPromocion()+"\t\t\t\tMINIMO "+ consultaPromocion.getImportecantidad());
-                                            listaCodigosPromociones.add(consultaPromocion.getNroPromocion());
+                                        listaPromocionesStr.add(consultaPromocion.getNroPromocion() + "  -  " + consultaPromocion.getGlosa()+"\n"
+                                                +  "VALIDO DEL\t: " + consultaPromocion.getFechaEmision() +"\t\tAL\t\t"+ consultaPromocion.getFechaFinVigencia()+"\n"
+                                                + "PRECIO PAQUETE : \t" + consultaPromocion.getMoneda()+" "+ formateador.format(Double.valueOf(consultaPromocion.getPrecioregular())));
+                                        listaCodigosPromociones.add(consultaPromocion.getNroPromocion());
                                     }
 
                                     progressDialog.dismiss();
                                     ListadoAlmacenActivity.CustomListAdapter listAdapter = new ListadoAlmacenActivity.
-                                            CustomListAdapter(ConsultarPromocionesActivity.this, R.layout.custom_list, listaPromocionesStr);
-                                    lvmuestrapromociones.setAdapter(listAdapter);
-                                    lvmuestrapromociones.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                            CustomListAdapter(ListaPaquetePromocionActivity.this, R.layout.custom_list, listaPromocionesStr);
+                                    lvmuestrapaquetepromocion.setAdapter(listAdapter);
+                                    lvmuestrapaquetepromocion.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                         @Override
                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                                            Intent intent = new Intent(ConsultarPromocionesActivity.this, MostrarConsultaActivity.class);
+                                            Intent intent = new Intent(ListaPaquetePromocionActivity.this, MostrarDetallePromocionPaqueteActivity.class);
                                             Bundle bundle = new Bundle();
                                             intent.putExtra("position",""+position);
                                             bundle.putSerializable("listaPromocionesObjetos",listaPromocionesObjetos);
@@ -199,21 +206,25 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
                                 listaPromocionesStr.clear();
                                 final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext()
                                         , R.layout.support_simple_spinner_dropdown_item,listaPromocionesStr);
-                                lvmuestrapromociones.setAdapter(adapter);
-                                AlertDialog.Builder builder = new AlertDialog.Builder(ConsultarPromocionesActivity.this);
+                                lvmuestrapaquetepromocion.setAdapter(adapter);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ListaPaquetePromocionActivity.this);
                                 builder.setMessage("No se llego a encontrar el registro")
                                         .setNegativeButton("Aceptar",null)
                                         .create()
                                         .show();
                             }
-                        } catch (JSONException e) { e.printStackTrace(); }
+                        } catch (JSONException e) {
+
+                            progressDialog.dismiss();
+                            Toast.makeText(ListaPaquetePromocionActivity.this, "error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            e.printStackTrace(); }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
                 progressDialog.dismiss();
-                AlertDialog.Builder builder = new AlertDialog.Builder(ConsultarPromocionesActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(ListaPaquetePromocionActivity.this);
                 builder.setTitle("Atención ...!");
                 builder.setMessage("EL servicio no se encuentra disponible en estos momentos");
                 builder.setCancelable(false);
@@ -230,3 +241,4 @@ public class ConsultarPromocionesActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 }
+

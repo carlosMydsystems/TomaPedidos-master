@@ -10,6 +10,7 @@ import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import com.example.sistemas.tomapedidos.ConsultaPrecio.ConsultaPrecioActivity;
+import com.example.sistemas.tomapedidos.ConsultaPromocionesPaquetes.ConsultaPromocionesPaquetesActivity;
 import com.example.sistemas.tomapedidos.ConsultaStock.BuscarProductoStockActivity;
 import com.example.sistemas.tomapedidos.Entidades.Usuario;
 import java.util.ArrayList;
@@ -34,9 +35,10 @@ public class ConsultasListadoActivity extends AppCompatActivity {
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         lvConsultaTipo = findViewById(R.id.lvConsultasTipo);
         listaTipoConsulta.add("Consulta Pedido");
-        listaTipoConsulta.add("Consulta Promociones");
+        listaTipoConsulta.add("Consulta Promociones Bonificadas");
         listaTipoConsulta.add("Consulta Stock");
         listaTipoConsulta.add("Consulta Precios");
+        listaTipoConsulta.add("Consulta Promociones Paquetes");
         ibRetornoMenu = findViewById(R.id.ibRetornoMenu);
         ibRetornoMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +113,15 @@ public class ConsultasListadoActivity extends AppCompatActivity {
                         bundle2.putSerializable("Usuario",usuario);
                         intent2.putExtras(bundle2);
                         startActivity(intent2);
+                        finish();
+                        break;
+                    case 4:
+
+                        Intent intent3 = new Intent(ConsultasListadoActivity.this, ConsultaPromocionesPaquetesActivity.class);
+                        Bundle bundle3 = new Bundle();
+                        bundle3.putSerializable("Usuario",usuario);
+                        intent3.putExtras(bundle3);
+                        startActivity(intent3);
                         finish();
                         break;
                 }

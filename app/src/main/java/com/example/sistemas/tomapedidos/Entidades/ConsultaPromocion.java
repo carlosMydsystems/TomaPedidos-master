@@ -11,6 +11,9 @@ public class ConsultaPromocion implements Serializable {
     private String fechaEmision;
     private String fechaFinVigencia;
     private String moneda;
+    private String precioregular;
+    private String preciopaquete;
+    private String ahorro;
     private String formaPromocion;
     private String importecantidad;
     private String nomCanal;
@@ -22,30 +25,50 @@ public class ConsultaPromocion implements Serializable {
     private String undVenta;
     private String flgRegalo;
     private String cantidad;
-
-    public ConsultaPromocion(String nroPromocion, String glosa, String fechaEmision, String fechaFinVigencia,
-                             String moneda, String formaPromocion, String importecantidad, String nomCanal,
-                             String codTipoListapre, String codCanal, String codArticulo, String descripcion,
-                             String desMarca, String undVenta, String flgRegalo, String cantidad) {
-        this.nroPromocion = nroPromocion;
-        this.glosa = glosa;
-        this.fechaEmision = fechaEmision;
-        this.fechaFinVigencia = fechaFinVigencia;
-        this.moneda = moneda;
-        this.formaPromocion = formaPromocion;
-        this.importecantidad = importecantidad;
-        this.nomCanal = nomCanal;
-        this.codTipoListapre = codTipoListapre;
-        this.codCanal = codCanal;
-        this.codArticulo = codArticulo;
-        this.descripcion = descripcion;
-        this.desMarca = desMarca;
-        this.undVenta = undVenta;
-        this.flgRegalo = flgRegalo;
-        this.cantidad = cantidad;
-    }
+    private String tasadescuento;
+    private String subtotal;
 
     public ConsultaPromocion() {
+    }
+
+    public String getTasadescuento() {
+        return tasadescuento;
+    }
+
+    public void setTasadescuento(String tasadescuento) {
+        this.tasadescuento = tasadescuento;
+    }
+
+    public String getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(String subtotal) {
+        this.subtotal = subtotal;
+    }
+
+    public String getPrecioregular() {
+        return precioregular;
+    }
+
+    public void setPrecioregular(String precioregular) {
+        this.precioregular = precioregular;
+    }
+
+    public String getPreciopaquete() {
+        return preciopaquete;
+    }
+
+    public void setPreciopaquete(String preciopaquete) {
+        this.preciopaquete = preciopaquete;
+    }
+
+    public String getAhorro() {
+        return ahorro;
+    }
+
+    public void setAhorro(String ahorro) {
+        this.ahorro = ahorro;
     }
 
     public String getNroPromocion() {
