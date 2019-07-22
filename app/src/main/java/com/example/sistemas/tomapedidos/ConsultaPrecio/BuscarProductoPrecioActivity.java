@@ -131,7 +131,7 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
                 btnbuscarProducto.setVisibility(View.VISIBLE);
             }else {
 
-                buscarproducto(etproducto.getText().toString().replace(" ", ""), Tipobusqueda, usuario);
+                buscarproducto(etproducto.getText().toString().trim(), Tipobusqueda, usuario);
             }
             }
         });
@@ -224,11 +224,12 @@ public class BuscarProductoPrecioActivity extends AppCompatActivity {
 
             RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
             numero = numero.replace("%", "%25");
-            numero = numero.toUpperCase(); // se convierten los caracteres a Mayusucla
+            numero = numero.replace(" ", "%20");
+            numero = numero.toUpperCase(); // se convierten los caracteres a Mayusculas
 
             url = ejecutaFuncionCursorTestMovil +
                     "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables=%27" + usuario.getCodAlmacen() + "|" + usuario.
-                    getLugar() + "|" + etproducto.getText().toString().trim().replace("%", "%25").toUpperCase() + "||" + cliente.getCodCliente() + "|||1%27";
+                    getLugar() + "|" + numero + "||" + cliente.getCodCliente() + "|||1%27";
 
             listaProducto = new ArrayList<>();
 

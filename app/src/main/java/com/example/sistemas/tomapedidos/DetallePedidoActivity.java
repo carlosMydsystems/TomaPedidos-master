@@ -63,6 +63,8 @@ public class DetallePedidoActivity extends AppCompatActivity {
         userId = usuario.getUser();
         cliente = new Clientes();
 
+        // Rutina que permite ver si el equipo tiene activo la opcion de internet
+
         if(Utilitario.isOnline(getApplicationContext())){
 
             ActualizarListView(userId);
@@ -124,7 +126,7 @@ public class DetallePedidoActivity extends AppCompatActivity {
                             if (success){
 
                                 for(int i=0;i<jsonArray.length();i++) {
-                                    pedidos = new Pedidos();
+                                    pedidos = new Pedidos(); // Instancia cada uno de los pedidos
                                     jsonObject = jsonArray.getJSONObject(i);
                                     pedidos.setIdPedido(jsonObject.getString("ID_PEDIDO"));
                                     pedidos.setCliente(jsonObject.getString("CLIENTE"));
@@ -134,12 +136,12 @@ public class DetallePedidoActivity extends AppCompatActivity {
                                     lista.add("Id  \t\t\t\t\t:\t" + pedidos.getIdPedido() +
                                             "\n" + "Cliente \t:\t" + pedidos.getCliente() +
                                             "\n" + "Fecha \t\t: " + pedidos.getFecha());
-                                    listaPedidos.add(pedidos);
+                                    listaPedidos.add(pedidos); // Hace la agragacion de cada uno de los objetos del pedido
                                 }
                                 auxBool = true;
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(DetallePedidoActivity.this,
-                                        android.R.layout.simple_list_item_1, android.R.id.text1,lista);
-                                lvPendientes.setAdapter(adapter);
+                                        android.R.layout.simple_list_item_1, android.R.id.text1,lista); // Instancia el adaptador de tipo ArrayAdapter de tipo String
+                                lvPendientes.setAdapter(adapter); // Adapta el objeto a ListVIew a la lista de tipo String
                                 lvPendientes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

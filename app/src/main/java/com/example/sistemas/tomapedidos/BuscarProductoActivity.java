@@ -355,7 +355,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
                             btnregresarproducto.setVisibility(View.VISIBLE);
                         }else {
 
-                            buscarproducto(etproducto.getText().toString().replace(" ", ""), Tipobusqueda, almacen);
+                            buscarproducto(etproducto.getText().toString().trim(), Tipobusqueda, almacen);
 
                         }
                     }
@@ -415,7 +415,6 @@ public class BuscarProductoActivity extends AppCompatActivity {
                     intent.putExtra("Almacen", almacen);
                     intent.putExtra("id_pedido", id_pedido);
                     intent.putExtra("Index", Index);
-
                     Bundle bundle = new Bundle();
 
                     bundle.putSerializable("Producto", producto);
@@ -452,27 +451,22 @@ public class BuscarProductoActivity extends AppCompatActivity {
      rbcodigoproducto.setOnClickListener(new View.OnClickListener() {
          @Override
              public void onClick(View v) {
-
                  etproducto.setInputType(2);   // envia el teclado de tipo numerico
                  Tipobusqueda = "Codigo";
                  etproducto.setText("");
                  etproducto.setFilters(new InputFilter[] {new InputFilter.LengthFilter(6)});
-
          }
         });
      rbnombreproducto.setOnClickListener(new View.OnClickListener() {
          @Override
              public void onClick(View v) {
-
                  etproducto.setInputType(16384 );  // envia el teclado de tipo alfanumerico
                  Tipobusqueda = "Nombre";
                  etproducto.setText("");
                  etproducto.setFilters(new InputFilter[] {new InputFilter.LengthFilter(80)});
-
          }
         });
     }
-
 
     private void buscarproducto(String numero, String tipoConsulta,String alma) {
         progressDialog = new ProgressDialog(BuscarProductoActivity.this);
@@ -510,6 +504,7 @@ public class BuscarProductoActivity extends AppCompatActivity {
         }else{
 
             numero = numero.replace("%","%25");
+            numero = numero.replace(" ", "%20");
             numero = numero.toUpperCase(); // se convierten los caracteres a Mayuscula
 
         if (tipoConsulta.equals("Nombre")) {

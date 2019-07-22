@@ -95,13 +95,13 @@ public class MostrarDetallePromocionPaqueteActivity extends AppCompatActivity {
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
 
-        titulo = "Promoción :"+listaPromocionesObjetos.get(Integer.valueOf(position)).getNroPromocion();
+        titulo = "PAQUETE :"+listaPromocionesObjetos.get(Integer.valueOf(position)).getNroPromocion();
         textView30.setText(titulo);
 
         moneda = listaPromocionesObjetos.get(Integer.valueOf(position)).getMoneda();
-        subtitulo = "PRECIO "+moneda+formateador.format(Double.valueOf(listaPromocionesObjetos.get(Integer.valueOf(position)).
-                getPrecioregular()))+"\t\t PRECIO PQTE : "+ moneda+ formateador.format(Double.valueOf(listaPromocionesObjetos.get(Integer.valueOf(position)).
-                getPreciopaquete()))+" AHORRO : "+ moneda+formateador.format(Double.valueOf(listaPromocionesObjetos.get(Integer.valueOf(position)).getAhorro()));
+        subtitulo = "PRECIO REGULAR : "+moneda+formateador.format(Double.valueOf(listaPromocionesObjetos.get(Integer.valueOf(position)).
+                getPrecioregular()))+ "\n" +"PRECIO PAQUETE : "+ moneda+ formateador.format(Double.valueOf(listaPromocionesObjetos.get(Integer.valueOf(position)).
+                getPreciopaquete()))+ "\n" +"AHORRO : "+ moneda+formateador.format(Double.valueOf(listaPromocionesObjetos.get(Integer.valueOf(position)).getAhorro()));
         tvTituloPromocion.setText(subtitulo);
 
         listaPromociones = new ArrayList<>();

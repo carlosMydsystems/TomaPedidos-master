@@ -35,10 +35,11 @@ public class ConsultasListadoActivity extends AppCompatActivity {
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         lvConsultaTipo = findViewById(R.id.lvConsultasTipo);
         listaTipoConsulta.add("Consulta Pedido");
-        listaTipoConsulta.add("Consulta Promociones Bonificadas");
+        listaTipoConsulta.add("Consulta Promoción Bonificada");
+        listaTipoConsulta.add("Consulta Promoción Paquete");
         listaTipoConsulta.add("Consulta Stock");
         listaTipoConsulta.add("Consulta Precios");
-        listaTipoConsulta.add("Consulta Promociones Paquetes");
+
         ibRetornoMenu = findViewById(R.id.ibRetornoMenu);
         ibRetornoMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +99,17 @@ public class ConsultasListadoActivity extends AppCompatActivity {
 
                     case 2:
 
+                        Intent intent3 = new Intent(ConsultasListadoActivity.this, ConsultaPromocionesPaquetesActivity.class);
+                        Bundle bundle3 = new Bundle();
+                        bundle3.putSerializable("Usuario",usuario);
+                        intent3.putExtras(bundle3);
+                        startActivity(intent3);
+                        finish();
+                        break;
+
+
+                    case 3:
+
                         Intent intent = new Intent(ConsultasListadoActivity.this, BuscarProductoStockActivity.class);
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("Usuario",usuario);
@@ -106,8 +118,8 @@ public class ConsultasListadoActivity extends AppCompatActivity {
                         finish();
                         break;
 
-                    case 3:
 
+                    case 4:
                         Intent intent2 = new Intent(ConsultasListadoActivity.this, ConsultaPrecioActivity.class);
                         Bundle bundle2 = new Bundle();
                         bundle2.putSerializable("Usuario",usuario);
@@ -115,15 +127,7 @@ public class ConsultasListadoActivity extends AppCompatActivity {
                         startActivity(intent2);
                         finish();
                         break;
-                    case 4:
 
-                        Intent intent3 = new Intent(ConsultasListadoActivity.this, ConsultaPromocionesPaquetesActivity.class);
-                        Bundle bundle3 = new Bundle();
-                        bundle3.putSerializable("Usuario",usuario);
-                        intent3.putExtras(bundle3);
-                        startActivity(intent3);
-                        finish();
-                        break;
                 }
                 }
             });

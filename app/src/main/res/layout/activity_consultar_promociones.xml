@@ -22,7 +22,7 @@
         android:layout_width="0dp"
         android:layout_height="43dp"
         android:background="#014284"
-        android:text="LISTADO DE PROMOCIONES"
+        android:text="PROMOCIÓN"
         android:textColor="#fff"
         android:textSize="18sp"
         android:textAlignment="center"

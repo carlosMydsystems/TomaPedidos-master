@@ -157,7 +157,7 @@ public class BuscarProductoStockActivity extends AppCompatActivity {
                         btnbuscarProducto.setVisibility(View.VISIBLE);
                     }else {
 
-                        buscarproducto(etproducto.getText().toString().replace(" ", ""), Tipobusqueda, usuario);
+                        buscarproducto(etproducto.getText().toString().trim(), Tipobusqueda, usuario);
                     }
 
                 }else{
@@ -259,6 +259,7 @@ public class BuscarProductoStockActivity extends AppCompatActivity {
         }else {
 
             numero = numero.replace("%", "%25");
+            numero = numero.replace(" ", "%20");
             numero = numero.toUpperCase(); // se convierten los caracteres a Mayusucla
             if (tipoConsulta.equals("Nombre")) {
                 url = ejecutaFuncionCursorTestMovil +

@@ -36,6 +36,8 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionCursorTestMovil;
 import static com.example.sistemas.tomapedidos.LoginActivity.ejecutaFuncionTestMovil;
 import static com.example.sistemas.tomapedidos.Utilitarios.Utilitario.Dolares;
@@ -465,9 +467,23 @@ else if (etcantidadelegida.getText()== null){
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+                    btnguardaryagregar.setEnabled(false);
+                    btnguardaryrevisar.setEnabled(false);
                     btndverificarproducto.setVisibility(View.VISIBLE);
                     btnguardaryagregar.setVisibility(View.GONE);
                     btnguardaryrevisar.setVisibility(View.GONE);
+
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            // this code will be executed after 2 seconds
+
+
+
+                        }
+                    }, 10);
+
+
                 }
 
                 @Override
@@ -501,7 +517,7 @@ else if (etcantidadelegida.getText()== null){
 
             url = ejecutaFuncionCursorTestMovil+
                     "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_PRODUCTO&variables='"+almacen+"|"+usuario.
-                    getLugar()+"|"+productos.getCodigo()+"||"+cliente.getCodCliente()+"|||"+cantidad+"'";
+                    getLugar()+"|"+productos.getCodigo()+"||"+cliente.getCodCliente()+"|||"+cantidad.trim()+"'";
 
         listaProducto = new ArrayList<>();
         StringRequest stringRequest=new StringRequest(Request.Method.GET, url ,
@@ -518,7 +534,6 @@ else if (etcantidadelegida.getText()== null){
                             boolean success = jsonObject.getBoolean("success");
                             JSONArray jsonArray = jsonObject.getJSONArray("hojaruta");
                             if (success){
-
 
                                 response = response.trim();
                                 Boolean condicion = false,error = false;
@@ -598,6 +613,8 @@ else if (etcantidadelegida.getText()== null){
                                         tvEquivalencia.setText(producto.getEquivalencia());
                                         producto.setAlmacen(almacen);
                                         tvtasa.setText(producto.getTasaDescuento());
+                                        btnguardaryagregar.setEnabled(true);
+                                        btnguardaryrevisar.setEnabled(true);
 
                                         if (etcantidadelegida.getText().toString().equals("")) {
 

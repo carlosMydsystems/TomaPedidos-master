@@ -84,17 +84,23 @@ public class DetalleActivity extends AppCompatActivity {
         }
     }
 
+    // Parte que hace la verificación de la cantidad ingresada
+
     private void VerificarCantidad(String numeroPedido) {
 
         final ProgressDialog progressDialog = new ProgressDialog(DetalleActivity.this);
         progressDialog.setMessage("...Cargando");
         progressDialog.setCancelable(false);
         progressDialog.show();
+
+        // Permite el formateo de un número en formato de comas con dos decimales
+
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.'); // Se define el simbolo para el separador decimal
         simbolos.setGroupingSeparator(',');// Se define el simbolo para el separador de los miles
         final DecimalFormat formateador = new DecimalFormat("###,##0.00",simbolos); // Se crea el formato del numero con los simbolo
 
+        // Se hace la instanciación de los dos Arraylist
         listaDetallePedido = new ArrayList<>();
         listadetallemostrarPedido = new ArrayList<>();
         RequestQueue requestQueue= Volley.newRequestQueue(getApplicationContext());

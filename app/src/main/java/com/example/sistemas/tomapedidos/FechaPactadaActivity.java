@@ -222,7 +222,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
             }
         });
 
-
         btnfechapactada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -336,8 +335,6 @@ public class FechaPactadaActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
     private void VerificaFecha(String trama) {
         Integer cola = 0;
