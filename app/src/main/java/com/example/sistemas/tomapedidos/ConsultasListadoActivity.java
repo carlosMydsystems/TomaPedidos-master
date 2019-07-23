@@ -35,7 +35,7 @@ public class ConsultasListadoActivity extends AppCompatActivity {
         usuario = (Usuario)getIntent().getSerializableExtra("Usuario");
         lvConsultaTipo = findViewById(R.id.lvConsultasTipo);
         listaTipoConsulta.add("Consulta Pedido");
-        listaTipoConsulta.add("Consulta Promoción Bonificada");
+        listaTipoConsulta.add("Consulta Promoción Bonificación");
         listaTipoConsulta.add("Consulta Promoción Paquete");
         listaTipoConsulta.add("Consulta Stock");
         listaTipoConsulta.add("Consulta Precios");

@@ -433,6 +433,7 @@ public class bandejaProductosActivity extends AppCompatActivity {
 
                                         final AlertDialog.Builder builder1 = new AlertDialog.Builder(
                                                 bandejaProductosActivity.this);
+                                        builder1.setCancelable(false);
                                         builder1.setMessage("Esta seguro que desea eliminar el pedido?")
                                                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                                                     @Override

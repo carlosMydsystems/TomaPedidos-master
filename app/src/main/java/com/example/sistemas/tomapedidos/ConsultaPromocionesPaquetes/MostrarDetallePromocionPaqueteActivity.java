@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,7 +87,6 @@ public class MostrarDetallePromocionPaqueteActivity extends AppCompatActivity {
                 intent.putExtras(bundle2);
                 startActivity(intent);
                 finish();
-
             }
         });
 
@@ -98,11 +98,13 @@ public class MostrarDetallePromocionPaqueteActivity extends AppCompatActivity {
         titulo = "PAQUETE :"+listaPromocionesObjetos.get(Integer.valueOf(position)).getNroPromocion();
         textView30.setText(titulo);
 
+
+
         moneda = listaPromocionesObjetos.get(Integer.valueOf(position)).getMoneda();
-        subtitulo = "PRECIO REGULAR : "+moneda+formateador.format(Double.valueOf(listaPromocionesObjetos.get(Integer.valueOf(position)).
-                getPrecioregular()))+ "\n" +"PRECIO PAQUETE : "+ moneda+ formateador.format(Double.valueOf(listaPromocionesObjetos.get(Integer.valueOf(position)).
-                getPreciopaquete()))+ "\n" +"AHORRO : "+ moneda+formateador.format(Double.valueOf(listaPromocionesObjetos.get(Integer.valueOf(position)).getAhorro()));
-        tvTituloPromocion.setText(subtitulo);
+        subtitulo = "<b>PRECIO PAQUETE : </b>"+ moneda+ formateador.format(Double.valueOf(listaPromocionesObjetos.get(Integer.valueOf(position)).
+                getPreciopaquete()))+ "<br>" +"AHORRO : "+ moneda+formateador.format(Double.valueOf(listaPromocionesObjetos.get(Integer.valueOf(position)).getAhorro()));
+        tvTituloPromocion.setText(Html.fromHtml(subtitulo));
+
 
         listaPromociones = new ArrayList<>();
         BuscarDetallePromocion(listaPromocionesObjetos.get(Integer.valueOf(position)).getNroPromocion(),moneda);

@@ -173,7 +173,7 @@ public class ListaPaquetePromocionActivity extends AppCompatActivity {
 
                                         listaPromocionesStr.add(consultaPromocion.getNroPromocion() + "  -  " + consultaPromocion.getGlosa()+"\n"
                                                 +  "VALIDO DEL\t: " + consultaPromocion.getFechaEmision() +"\t\tAL\t\t"+ consultaPromocion.getFechaFinVigencia()+"\n"
-                                                + "PRECIO PAQUETE : \t" + consultaPromocion.getMoneda()+" "+ formateador.format(Double.valueOf(consultaPromocion.getPrecioregular())));
+                                                + "PRECIO PAQUETE : \t" + consultaPromocion.getMoneda()+" "+ formateador.format(Double.valueOf(consultaPromocion.getPreciopaquete())));
                                         listaCodigosPromociones.add(consultaPromocion.getNroPromocion());
                                     }
 

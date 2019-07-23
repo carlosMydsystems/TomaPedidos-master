@@ -209,7 +209,7 @@ public class ConsultaPrecioActivity extends AppCompatActivity {
             }else if(tipoConsulta == "Razon"){
 
                 url = ejecutaFuncionCursorTestMovil +
-                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='|"+ numero.trim().replace("%","%25").toUpperCase() +"|'";
+                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='|"+ numero.trim().replace("%","%25").replace(" ","%20").toUpperCase() +"|'";
 
             }
 

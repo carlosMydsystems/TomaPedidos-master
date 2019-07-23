@@ -117,7 +117,6 @@ public class ConsultaPromocionesPaquetesActivity extends AppCompatActivity {
 
                 cliente = new Clientes();
                 cliente =  listaClientes.get(position);
-                Toast.makeText(ConsultaPromocionesPaquetesActivity.this, "indice " + position, Toast.LENGTH_SHORT).show();
                 Intent intent =  new Intent(ConsultaPromocionesPaquetesActivity.this, ListaPaquetePromocionActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("Cliente",cliente);
@@ -216,7 +215,7 @@ public class ConsultaPromocionesPaquetesActivity extends AppCompatActivity {
             }else if(tipoConsulta == "Razon"){
 
                 url = ejecutaFuncionCursorTestMovil +
-                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='|"+ numero.trim().replace("%","%25").toUpperCase() +"|'";
+                        "PKG_WEB_HERRAMIENTAS.FN_WS_CONSULTAR_CLIENTE&variables='|"+ numero.trim().replace("%","%25").replace(" ","%20").toUpperCase() +"|'";
 
             }
 
