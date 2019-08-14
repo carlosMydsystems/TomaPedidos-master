@@ -11,9 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Codigo : "
-        android:textColor="#0560B4"
+        android:layout_marginTop="8dp"
+        android:text="Código : "
+        android:textColor="#013D77"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
@@ -22,9 +23,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="9dp"
         android:text="Nombre :"
-        android:textColor="#0560B4"
+        android:textColor="#013D77"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
@@ -33,19 +35,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:text="Direccion : "
-        android:textColor="#0560B4"
+        android:layout_marginTop="9dp"
+        android:text="Dirección : "
+        android:textColor="#013D77"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNombreCliente" />
+        app:layout_constraintTop_toBottomOf="@+id/textView34" />
 
     <Button
         android:id="@+id/btnPedido"
         android:layout_width="100dp"
-        android:layout_height="90dp"
+        android:layout_height="80dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:background="#014284"
+        android:layout_marginTop="16dp"
+        android:background="#013D77"
         android:text="Pedido"
         android:textColor="#fff"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,10 +56,10 @@
 
     <TextView
         android:id="@+id/tvCofigoProducto"
-        android:layout_width="220dp"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
-
-        android:layout_marginTop="16dp"
+        android:textColor="#000"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:textAlignment="textEnd"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,34 +67,44 @@
 
     <TextView
         android:id="@+id/tvDireccion"
-        android:layout_width="220dp"
-        android:layout_height="16dp"
-
-        android:layout_marginTop="20dp"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:textColor="#000"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="8dp"
         android:textAlignment="textEnd"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvNombreCliente" />
+        app:layout_constraintTop_toBottomOf="@+id/tvCanal" />
 
     <TextView
         android:id="@+id/textView15"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="38dp"
+        android:background="#013D77"
         android:text="Detalle Cliente"
         android:textAlignment="center"
         android:textColor="#fff"
-        android:background="#014284"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageButton
+        android:id="@+id/ibVolverBusquedaCLiente"
+        android:layout_width="72dp"
+        android:layout_height="40dp"
+        android:textColor="#000"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_media_rew" />
+
     <TextView
         android:id="@+id/tvNombreCliente"
-        android:layout_width="220dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="8dp"
+        android:textColor="#000"
         android:textAlignment="textEnd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvRucDni" />
@@ -99,10 +112,10 @@
     <Button
         android:id="@+id/btnRetornoDetCliente"
         android:layout_width="100dp"
-        android:layout_height="90dp"
-        android:layout_marginTop="28dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:background="#014284"
+        android:background="#013D77"
         android:text="REGRESAR"
         android:textColor="#fff"
         app:layout_constraintEnd_toEndOf="parent"
@@ -113,9 +126,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="31dp"
-        android:textColor="#0560B4"
-        android:text="Tipo de documento : "
+        android:layout_marginTop="21dp"
+        android:text="Tipo documento : "
+        android:textColor="#013D77"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
@@ -123,8 +137,9 @@
         android:id="@+id/spTipoDocumento"
         android:layout_width="200sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="#000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDireccion" />
 
@@ -133,9 +148,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="31dp"
-        android:text="Sucursal"
-        android:textColor="#0560B4"
+        android:layout_marginTop="25dp"
+        android:text="Sucursal :"
+        android:textColor="#013D77"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
@@ -143,8 +159,9 @@
         android:id="@+id/spSucursal"
         android:layout_width="200sp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="#000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spTipoDocumento" />
 
@@ -156,6 +173,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="left"
+        android:textColor="#000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spSucursal" />
@@ -165,20 +183,108 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="9dp"
         android:text="Ruc/Dni :"
-        android:textColor="#0560B4"
+
+        android:textColor="#013D77"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <TextView
         android:id="@+id/tvRucDni"
-        android:layout_width="220dp"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="8dp"
+        android:textColor="#000"
         android:gravity="right"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvCofigoProducto" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="9dp"
+        android:text="Línea Crédito : "
+        android:textColor="#013D77"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/textView27"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="9dp"
+        android:text="Crédito Disponible :"
+        android:textColor="#013D77"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+    <TextView
+        android:id="@+id/textView34"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="9dp"
+        android:text="Canal : "
+        android:textColor="#013D77"
+        android:textSize="15sp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView27" />
+
+    <TextView
+        android:id="@+id/tvLineaCredito"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="#000"
+        android:gravity="right"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNombreCliente" />
+
+    <TextView
+        android:id="@+id/tvCreditoDisponible"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="#000"
+        android:gravity="right"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvLineaCredito" />
+
+    <TextView
+        android:id="@+id/tvCanal"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="#000"
+        android:gravity="right"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCreditoDisponible" />
+
+    <Button
+        android:id="@+id/btnDocumentos"
+        android:layout_width="110dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:background="#013D77"
+        android:text="DOCUMENTOS"
+        android:textColor="#fff"
+        app:layout_constraintEnd_toStartOf="@+id/btnRetornoDetCliente"
+        app:layout_constraintStart_toEndOf="@+id/btnPedido"
+        app:layout_constraintTop_toBottomOf="@+id/tvDireccionFiscalCliente" />
 
 </android.support.constraint.ConstraintLayout>

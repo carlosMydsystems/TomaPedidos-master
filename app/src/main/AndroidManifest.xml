@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sistemas.tomapedidos">
+    package="com.example.sistemas.pedidosTemporal">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -16,60 +16,62 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:screenOrientation="portrait"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ConsultaPromocionesPaquetes.MostrarDetallePromocionPaqueteActivity"></activity>
-        <activity android:name=".ConsultaPromocionesPaquetes.ListaPaquetePromocionActivity" />
-        <activity android:name=".ConsultaPromocionesPaquetes.ConsultaPromocionesPaquetesActivity" />
+        <activity android:name="com.example.sistemas.pedidosTemporal.ListaDocumentosActivity"></activity>
+        <activity android:name="com.example.sistemas.pedidosTemporal.ConsultaPromocionesPaquetes.MostrarDetallePromocionPaqueteActivity" />
+        <activity android:name="com.example.sistemas.pedidosTemporal.ConsultaPromocionesPaquetes.ListaPaquetePromocionActivity" />
+        <activity android:name="com.example.sistemas.pedidosTemporal.ConsultaPromocionesPaquetes.ConsultaPromocionesPaquetesActivity" />
         <activity
-            android:name=".ConsultaPrecio.IntemedioDetalleProductoActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ConsultaPrecio.IntemedioDetalleProductoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ConsultaPrecio.DetalleProductoPrecioActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ConsultaPrecio.DetalleProductoPrecioActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ConsultaPrecio.BuscarProductoPrecioActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ConsultaPrecio.BuscarProductoPrecioActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ConsultaPrecio.ConsultaPrecioActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ConsultaPrecio.ConsultaPrecioActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ConsultaPromociones.MostrarConsultaActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ConsultaPromociones.MostrarConsultaActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ConsultaStock.BuscarProductoStockActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ConsultaStock.BuscarProductoStockActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ConsultaPromociones.ConsultarPromocionesActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ConsultaPromociones.ConsultarPromocionesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ConsultaStock.ConsultaStockActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ConsultaStock.ConsultaStockActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ProveedorActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ProveedorActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".DetalleActivity"
+            android:name="com.example.sistemas.pedidosTemporal.DetalleActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ConsutlasActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ConsutlasActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ConsultasListadoActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ConsultasListadoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".DetallePedidoActivity"
+            android:name="com.example.sistemas.pedidosTemporal.DetallePedidoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".FechaPactadaActivity"
+            android:name="com.example.sistemas.pedidosTemporal.FechaPactadaActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".IntermediaActivity"
+            android:name="com.example.sistemas.pedidosTemporal.IntermediaActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PromocionesActivity"
+            android:name="com.example.sistemas.pedidosTemporal.PromocionesActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".LoginActivity"
+            android:name="com.example.sistemas.pedidosTemporal.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -78,33 +80,33 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.sistemas.pedidosTemporal.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".BusquedaClienteActivity"
+            android:name="com.example.sistemas.pedidosTemporal.BusquedaClienteActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MostrarClienteActivity"
+            android:name="com.example.sistemas.pedidosTemporal.MostrarClienteActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ListadoAlmacenActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ListadoAlmacenActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ListadoFormaPagoActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ListadoFormaPagoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".BuscarProductoActivity"
+            android:name="com.example.sistemas.pedidosTemporal.BuscarProductoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".DetalleProductoActivity"
+            android:name="com.example.sistemas.pedidosTemporal.DetalleProductoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".bandejaProductosActivity"
+            android:name="com.example.sistemas.pedidosTemporal.bandejaProductosActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ActualizarRegistroPedidosActivity"
+            android:name="com.example.sistemas.pedidosTemporal.ActualizarRegistroPedidosActivity"
             android:screenOrientation="portrait" />
     </application>
 
